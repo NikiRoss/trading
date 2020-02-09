@@ -10,6 +10,8 @@ import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class TransactionServiceImpl implements TransactionService{
 
@@ -28,13 +30,16 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public Transaction createPurchaseTransaction(Stocks s, Account a, long volume) {
         Transaction t = new Transaction();
+        Date date = new Date();
         double balance = a.getAccountBalance();
         double totalCost = volume * s.getSharePrice();
         if (totalCost > balance){
             System.out.println("No Funds");
         } else{
+            t.setDate(date);
             t.setPrice(totalCost);
             t.setVolume(volume);
+            t.setAccount(a);
             double balanceAfterDeduction = balance - totalCost;
             long volumeAfterDeduction = s.getVolume() - volume;
             a.setAccountBalance(balanceAfterDeduction);

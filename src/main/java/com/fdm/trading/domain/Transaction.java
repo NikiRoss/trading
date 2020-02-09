@@ -1,6 +1,7 @@
 package com.fdm.trading.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Transaction {
@@ -20,8 +21,8 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    /*@Column(name = "date")
-    private Date date;*/
+    @Column(name = "date")
+    private Date date;
 
     public long getTransactionId() {
         return transactionId;
@@ -53,5 +54,13 @@ public class Transaction {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
