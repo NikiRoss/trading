@@ -1,9 +1,5 @@
 package com.fdm.trading.test.domain.transactions;
 
-
-import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.Stocks;
-import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.accountServiceImpl.AccountService;
 import com.fdm.trading.service.stocksServiceImpl.StocksService;
 import com.fdm.trading.service.transactionService.TransactionService;

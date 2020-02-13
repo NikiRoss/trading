@@ -10,7 +10,9 @@ import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -28,6 +30,7 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
+    @Transactional
     public Transaction createPurchaseTransaction(Stocks s, Account a, long volume) {
         Transaction t = new Transaction();
         Date date = new Date();
@@ -44,8 +47,10 @@ public class TransactionServiceImpl implements TransactionService{
             long volumeAfterDeduction = s.getVolume() - volume;
             a.setAccountBalance(balanceAfterDeduction);
             s.setVolume(volumeAfterDeduction);
-            //a.getStocksList().add(s);
-            //a.getTransactionList().add(t);
+            a.getStocksList().add(s);
+            List<Transaction> transactionList = a.getTransactionList();
+            transactionList.add(t);
+            a.setTransactionList(transactionList);
             accountService.save(a);
             transDao.save(t);
             stockService.save(s);
