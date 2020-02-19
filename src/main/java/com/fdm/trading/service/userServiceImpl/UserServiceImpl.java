@@ -7,9 +7,7 @@ import com.fdm.trading.security.UserRole;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
