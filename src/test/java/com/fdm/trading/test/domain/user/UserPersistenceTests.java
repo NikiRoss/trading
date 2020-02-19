@@ -3,6 +3,8 @@ package com.fdm.trading.test.domain.user;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.security.Role;
+import com.fdm.trading.security.UserRole;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,7 @@ public class UserPersistenceTests {
         u.setSurname("ross");
         u.setPassword("password1");
         u.setUsername("NR84");
+
         userService.createNewAccount(u);
         userDao.save(u);
         User val1 = userDao.findByEmail("niki@email.com");

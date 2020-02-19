@@ -3,11 +3,13 @@ package com.fdm.trading.service.userServiceImpl;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.security.UserRole;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {

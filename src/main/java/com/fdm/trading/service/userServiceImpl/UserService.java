@@ -2,8 +2,10 @@ package com.fdm.trading.service.userServiceImpl;
 
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.security.UserRole;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
