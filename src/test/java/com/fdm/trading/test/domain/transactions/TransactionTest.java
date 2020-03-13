@@ -22,6 +22,7 @@ public class TransactionTest {
 
     @Test
     public void PersistTrans(){
-       transService.createPurchaseTransaction(stocksService.findByStockId(3), accountService.findByAccountId(1), 10);
+       transService.createPurchaseTransaction(1, 1, 10);
     }
+
 }

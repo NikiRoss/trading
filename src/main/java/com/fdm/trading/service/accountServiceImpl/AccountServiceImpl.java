@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 
@@ -72,6 +73,11 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public void save(Account a) {
         accountDao.save(a);
+    }
+
+    public List<Stocks> retrieveStockFromList(long accountId){
+        Account a = accountDao.findAccountByAccountId(accountId);
+        return a.getStocksList();
     }
 
 

@@ -39,4 +39,14 @@ public class AccountTest {
         assertEquals(val1, 1);
     }
 
+
+    @Test
+    public void ReturnAStockFromList(){
+
+        
+        assertNotNull(accountService.retrieveStockFromList(1));
+        System.out.println(accountService.retrieveStockFromList(1).indexOf(0));
+
+    }
+
 }

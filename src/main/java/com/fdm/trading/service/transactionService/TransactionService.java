@@ -7,6 +7,6 @@ import com.fdm.trading.domain.Transaction;
 public interface TransactionService {
 
     Transaction findByTransactionId(long transactionId);
-    Transaction createPurchaseTransaction(Stocks s, Account a, long amount);
+    Transaction createPurchaseTransaction(int stockId, int accountId, long volume);
 
 }

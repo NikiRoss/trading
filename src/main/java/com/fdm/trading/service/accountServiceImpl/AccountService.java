@@ -4,6 +4,8 @@ import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.Transaction;
 
+import java.util.List;
+
 public interface AccountService {
 
     Account findByAccountId(long accountId);
@@ -19,5 +21,7 @@ public interface AccountService {
     void deleteAccountByAccountNumber(long accountNumber);
 
     void save(Account a);
+
+    public List<Stocks> retrieveStockFromList(long accountId);
 
 }

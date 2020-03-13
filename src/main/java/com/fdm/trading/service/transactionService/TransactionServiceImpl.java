@@ -31,33 +31,35 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public Transaction createPurchaseTransaction(Stocks s, Account a, long volume) {
-        Transaction t = new Transaction();
-        Date date = new Date();
-        double balance = a.getAccountBalance();
-        double totalCost = volume * s.getSharePrice();
+    public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) {
+        Stocks stocks = stockService.findByStockId(stockId);	// TODO check isEmpty() first
+        Account account = accountService.findByAccountId(accountId);
+
+        Transaction transaction = new Transaction();
+        double balance = account.getAccountBalance();
+        double totalCost = volume * stocks.getSharePrice();
         if (totalCost > balance){
             System.out.println("No Funds");
         } else{
-            t.setDate(date);
-            t.setPrice(totalCost);
-            t.setVolume(volume);
-            t.setAccount(a);
-            double balanceAfterDeduction = balance - totalCost;
-            long volumeAfterDeduction = s.getVolume() - volume;
-            a.setAccountBalance(balanceAfterDeduction);
-            s.setVolume(volumeAfterDeduction);
-            a.getStocksList().add(s);
-            List<Transaction> transactionList = a.getTransactionList();
-            transactionList.add(t);
-            a.setTransactionList(transactionList);
-            accountService.save(a);
-            transDao.save(t);
-            stockService.save(s);
-            accountService.save(a);
+            transaction.setPrice(totalCost);
+            transaction.setVolume(volume);
+            transaction.setAccount(account);
+            account.getTransactionList().add(transaction);
+            this.save(transaction);
 
+            double balanceAfterDeduction = balance - totalCost;
+            long volumeAfterDeduction = stocks.getVolume() - volume;
+            account.setAccountBalance(balanceAfterDeduction);
+            stocks.setVolume(volumeAfterDeduction);
+
+            account.getStocksList().add(stocks);
+            accountService.save(account);
         }
-        return t;
+        return transaction;
+    }
+
+    private void save(Transaction transaction) {
+        transDao.save(transaction);
     }
 
 

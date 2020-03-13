@@ -1,14 +1,17 @@
 package com.fdm.trading.domain;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="account_gen")
+    @SequenceGenerator(name="account_gen", sequenceName="ACCOUNT_SEQ", allocationSize=1)
     @Column(name = "account_id", nullable = false, updatable = false, unique = true)
     private long accountId;
 
@@ -18,11 +21,14 @@ public class Account {
     @Column(name = "account_balance")
     private double accountBalance;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Stocks> stocksList;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Transaction> transactionList;
+
 
 
     public Account() {
@@ -67,5 +73,16 @@ public class Account {
 
     public void setTransactionList(List<Transaction> transactionList) {
         this.transactionList = transactionList;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId=" + accountId +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", accountBalance=" + accountBalance +
+                ", stocksList=" + stocksList +
+                ", transactionList=" + transactionList +
+                '}';
     }
 }

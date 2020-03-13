@@ -6,9 +6,11 @@ import javax.persistence.*;
 public class Stocks {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "stock_id", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="stocks_gen")
+    @SequenceGenerator(name="stocks_gen", sequenceName="STOCKS_SEQ", allocationSize=1)
+    @Column(name = "stock_id", nullable = false, updatable = false, unique = true)
     private long stockId;
+
 
     @Column(name = "company", nullable = false, unique = true)
     private String company;
@@ -31,9 +33,10 @@ public class Stocks {
     @Column(name = "closing_value", nullable = false)
     private double closingValue;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_account")
     private Account account;
+
 
     public Account getAccount() {
         return account;

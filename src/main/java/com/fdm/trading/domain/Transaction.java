@@ -7,9 +7,11 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "trans_id", nullable = false, unique = true, updatable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="transaction_gen")
+    @SequenceGenerator(name="transaction_gen", sequenceName="TRANSACTION_SEQ", allocationSize=1)
+    @Column(name = "transaction_id", nullable = false, updatable = false, unique = true)
     private long transactionId;
+
 
     @Column(name = "volume", nullable = false)
     private long volume;
@@ -17,12 +19,18 @@ public class Transaction {
     @Column(name = "price", nullable = false)
     private double price;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
     @Column(name = "date")
     private Date date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_trans_account")
+    private Account account;
+
+
+    public Transaction() {
+        super();
+    }
+
 
     public long getTransactionId() {
         return transactionId;
