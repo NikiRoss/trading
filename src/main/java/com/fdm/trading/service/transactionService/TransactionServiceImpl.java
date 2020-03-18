@@ -34,16 +34,25 @@ public class TransactionServiceImpl implements TransactionService{
     public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) {
         Stocks stocks = stockService.findByStockId(stockId);	// TODO check isEmpty() first
         Account account = accountService.findByAccountId(accountId);
+        Date date = new Date();
 
         Transaction transaction = new Transaction();
         double balance = account.getAccountBalance();
         double totalCost = volume * stocks.getSharePrice();
         if (totalCost > balance){
             System.out.println("You do not have enough funds to complete this transaction");
-        } else{
+
+        }else if (volume > stocks.getVolume()){
+            {
+                System.out.println("There are only: " + stocks.getVolume() + "available, please amend your purchase and try again");
+            }
+        }
+
+        else{
             transaction.setPrice(totalCost);
             transaction.setVolume(volume);
             transaction.setAccount(account);
+            transaction.setDate(date);
             account.getTransactionList().add(transaction);
             this.save(transaction);
 
