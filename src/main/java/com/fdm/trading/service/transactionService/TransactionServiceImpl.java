@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService{
         double balance = account.getAccountBalance();
         double totalCost = volume * stocks.getSharePrice();
         if (totalCost > balance){
-            System.out.println("No Funds");
+            System.out.println("You do not have enough funds to complete this transaction");
         } else{
             transaction.setPrice(totalCost);
             transaction.setVolume(volume);
