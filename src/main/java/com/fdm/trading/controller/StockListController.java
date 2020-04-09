@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,36 +24,14 @@ public class StockListController {
         this.stocksDao = stocksDao;
     }
 
-    @RequestMapping("/")
-    public String home(){
-        return "redirect:/index";
-    }
 
-    /*RequestMapping("/index")
-    public String index(){
-        return "index";
-    }*/
-
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/stocks", method = RequestMethod.GET)
     public String getStocks(Model model){
         List<Stocks> stocksList = this.stockService.findAll();
         System.out.println(stocksList);
         model.addAttribute("stocks", stocksList);
-        return "index";
+        return "stocks";
     }
-    /*@Controller
-    @RequestMapping(value="/reservations")
-    public class ReservationController {
 
-        @Autowired
-        private ReservationService reservationService;
-
-        @RequestMapping(method= RequestMethod.GET)
-        public String getReservations(@RequestParam(value="date", required=false)String dateString, Model model){
-            List<RoomReservation> roomReservationList = this.reservationService.getRoomReservationsForDate(dateString);
-            model.addAttribute("roomReservations", roomReservationList);
-            return "reservations";
-        }
-    }*/
 
 }
