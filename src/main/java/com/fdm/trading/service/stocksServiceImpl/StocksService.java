@@ -14,5 +14,7 @@ public interface StocksService {
 
     void removeStock(long stockId);
 
+    void fluctuateStockPrice();
+
 
 }

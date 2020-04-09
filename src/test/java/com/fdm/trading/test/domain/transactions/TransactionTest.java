@@ -40,13 +40,13 @@ public class TransactionTest {
     }
 
     @Test
-    public void fail_A_Transaction_If_No_Funds(){
-        Account account = new Account();
-        account = accountService.findByAccountId(1);
-        double result1 = account.getAccountBalance();
-        transService.createPurchaseTransaction(1, 1, 900);
+    public void Create_A_Sell_Transaction(){
+        Stocks stocks = new Stocks();
+        stocks = stocksService.findByStockId(1);
+        double result1 = stocks.getVolume();
+        transService.createSaleTransaction(1, 1, 500);
 
-        assertEquals(result1, 150, 0);
+        assertEquals(result1, 510, 0);
     }
 
 }

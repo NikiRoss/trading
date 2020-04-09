@@ -26,6 +26,10 @@ public class Transaction {
     @JoinColumn(name = "fk_trans_account")
     private Account account;
 
+    @Column(name = "purchase", nullable = false)
+    private boolean purchase;
+
+
 
     public Transaction() {
         super();
@@ -70,5 +74,13 @@ public class Transaction {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isPurchase() {
+        return purchase;
+    }
+
+    public void setPurchase(boolean purchase) {
+        this.purchase = purchase;
     }
 }

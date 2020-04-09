@@ -8,5 +8,6 @@ public interface TransactionService {
 
     Transaction findByTransactionId(long transactionId);
     Transaction createPurchaseTransaction(int stockId, int accountId, long volume);
+    public Transaction createSaleTransaction(int stockId, int accountId, long volume);
 
 }

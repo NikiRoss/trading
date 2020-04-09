@@ -5,6 +5,9 @@ import com.fdm.trading.domain.Stocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class StockServiceImpl implements StocksService{
 
@@ -41,6 +44,22 @@ public class StockServiceImpl implements StocksService{
         Stocks stock = stocksDao.findByStockId(stockId);
         stocksDao.delete(stock);
     }
+
+    @Override
+    public void fluctuateStockPrice() {
+        
+    }
+
+    public List<Stocks> findAll(){
+        Iterable<Stocks> stocksIterable = stocksDao.findAll();
+        List<Stocks> stocks = new ArrayList<Stocks>();
+        for(Stocks stock:stocksIterable){
+            stocks.add(stock);
+        }
+        return stocks;
+    }
+
+
 
     public void save(Stocks stocks){
         stocksDao.save(stocks);

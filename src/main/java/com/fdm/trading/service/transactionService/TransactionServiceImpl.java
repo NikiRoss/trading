@@ -53,6 +53,7 @@ public class TransactionServiceImpl implements TransactionService{
             transaction.setVolume(volume);
             transaction.setAccount(account);
             transaction.setDate(date);
+            transaction.setPurchase(true);
             account.getTransactionList().add(transaction);
             this.save(transaction);
 
@@ -69,6 +70,33 @@ public class TransactionServiceImpl implements TransactionService{
 
     private void save(Transaction transaction) {
         transDao.save(transaction);
+    }
+
+    public Transaction createSaleTransaction(int stockId, int accountId, long volume){
+        Stocks stocks = stockService.findByStockId(stockId);	// TODO check isEmpty() first
+        Account account = accountService.findByAccountId(accountId);
+        Date date = new Date();
+
+        Transaction transaction = new Transaction();
+        double totalAmount = volume * stocks.getSharePrice();
+            transaction.setPrice(totalAmount);
+            transaction.setVolume(volume);
+            transaction.setAccount(account);
+            transaction.setDate(date);
+            transaction.setPurchase(false);
+            account.getTransactionList().add(transaction);
+            this.save(transaction);
+
+            double balanceAfterSale = account.getAccountBalance() + totalAmount;
+            long volumeAfterSale = stocks.getVolume() + volume;
+            account.setAccountBalance(balanceAfterSale);
+            stocks.setVolume(volumeAfterSale);
+
+            account.getStocksList().remove(stocks);
+            accountService.save(account);
+
+        return transaction;
+
     }
 
 
