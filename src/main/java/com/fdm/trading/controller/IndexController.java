@@ -1,5 +1,6 @@
 package com.fdm.trading.controller;
 
+import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,11 @@ public class IndexController {
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signup(Model model) {
         User user = new User();
-
         model.addAttribute("user", user);
-
         return "signup";
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+  /*  @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signupPost(@ModelAttribute("user") User user, Model model) {
 
         if (userService.checkUserExists(user.getUsername(), user.getEmail())) {
@@ -46,9 +45,29 @@ public class IndexController {
                 model.addAttribute("usernameExists", true);
             }
         }
-
         return "signup";
+    }*/
+
+    @RequestMapping(value = "/index", method = RequestMethod.POST)
+    public String signupPost(@ModelAttribute("user") User user, Model model) {
+
+        if (userService.checkUserExists(user.getUsername(), user.getEmail())) {
+            if (userService.checkEmailExists(user.getEmail())) {
+                model.addAttribute("emailExists", true);
+            }
+            if (userService.checkUsernameExists(user.getUsername())) {
+                model.addAttribute("usernameExists", true);
+            }
+        }
+        return "/userHome";
     }
 
+    @RequestMapping("/userHome")
+    public String userHome(Model model, User user) {
+        user = userService.findByUsername(user.getUsername());
+        Account account = user.getAccount();
+        model.addAttribute("account", account);
 
+        return "userHome";
+    }
 }
