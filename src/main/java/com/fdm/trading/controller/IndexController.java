@@ -23,7 +23,8 @@ public class IndexController {
     }
 
     @RequestMapping("/index")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("user", new User());
         return "index";
     }
 
@@ -50,16 +51,14 @@ public class IndexController {
 
     @RequestMapping(value = "/index", method = RequestMethod.POST)
     public String signupPost(@ModelAttribute("user") User user, Model model) {
+        User newUser = userService.findByUsername(user.getUsername());
+        model.addAttribute("newUser", newUser);
+        model.addAttribute("validated", userService.validateUser(newUser, user.getPassword()));
+       if (userService.validateUser(newUser, user.getPassword())){
 
-        if (userService.checkUserExists(user.getUsername(), user.getEmail())) {
-            if (userService.checkEmailExists(user.getEmail())) {
-                model.addAttribute("emailExists", true);
-            }
-            if (userService.checkUsernameExists(user.getUsername())) {
-                model.addAttribute("usernameExists", true);
-            }
-        }
-        return "/userHome";
+           return "userHome";
+       }
+        return "signup";
     }
 
     @RequestMapping("/userHome")

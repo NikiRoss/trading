@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-xs-6 text-right">
                             <h1><i class="fa fa-usd" aria-hidden="true"></i> <span
-                                    th:text="${account.}">...</span></h1>
+                                    th:text="${account.getAccountBalance()}">...</span></h1>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <a th:href="@{/account/withdraw}">
+                <a th:href="@{/account}">
                     <div class="panel-footer">
                         <span class="pull-left">Go to Withdrawal</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -85,6 +85,7 @@
 
 
 <div th:replace="common/header :: body-bottom-scripts"/>
+
 
 </body>
 </html>

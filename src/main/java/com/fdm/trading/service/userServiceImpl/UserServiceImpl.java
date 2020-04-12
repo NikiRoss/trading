@@ -97,6 +97,10 @@ public class UserServiceImpl implements UserService {
         return a;
     }
 
+    public boolean validatePassword(User user, String password){
+        return user.getPassword() == password;
+    }
+
     public Account findByAccountId(long accountId) {
         return accountService.findByAccountId(accountId);
     }
@@ -104,4 +108,12 @@ public class UserServiceImpl implements UserService {
     public Account findByAccountNumber(String accountNumber) {
         return accountService.findByAccountNumber(accountNumber);
     }
+
+    public boolean validateUser(User user, String password){
+        if (user.getPassword() == password){
+            return true;
+        }
+        return false;
+    }
+
 }
