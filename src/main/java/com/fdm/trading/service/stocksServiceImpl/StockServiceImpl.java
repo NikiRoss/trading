@@ -1,6 +1,8 @@
 package com.fdm.trading.service.stocksServiceImpl;
 
+import com.fdm.trading.dao.StockListEntityDao;
 import com.fdm.trading.dao.StocksDao;
+import com.fdm.trading.domain.StockListEntity;
 import com.fdm.trading.domain.Stocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ public class StockServiceImpl implements StocksService{
     @Autowired
     private StocksDao stocksDao;
 
+    @Autowired
+    private StockListEntityDao stockListEntityDao;
 
     @Override
     public Stocks findByStockId(long stockId) {
@@ -59,9 +63,17 @@ public class StockServiceImpl implements StocksService{
         return stocks;
     }
 
-
-
     public void save(Stocks stocks){
         stocksDao.save(stocks);
     }
+    public List<Stocks> returnStockList(long accountId){
+        List<StockListEntity> stockListEntities = stockListEntityDao.findByAccountId(accountId);
+        List<Stocks> stocksForAccount = new ArrayList<>();
+        for (StockListEntity sle:stockListEntities){
+            stocksForAccount.add(stocksDao.findByStockId(sle.getStockId()));
+        }
+        return stocksForAccount;
+
+    }
 }
+

@@ -2,15 +2,20 @@ package com.fdm.trading.test.domain.transactions;
 
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.Stocks;
+import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.accountServiceImpl.AccountService;
 import com.fdm.trading.service.stocksServiceImpl.StocksService;
-import com.fdm.trading.service.transactionService.TransactionService;
+import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 @SpringBootTest
@@ -22,7 +27,7 @@ public class TransactionTest {
     @Autowired
     StocksService stocksService;
     @Autowired
-    TransactionService transService;
+    TransactionServiceImpl transService;
 
     @Test
     public void PersistTrans(){
@@ -40,13 +45,30 @@ public class TransactionTest {
     }
 
     @Test
-    public void Create_A_Sell_Transaction(){
+    public void Create_A_Purchase_Transaction(){
         Stocks stocks = new Stocks();
-        stocks = stocksService.findByStockId(1);
+        stocks = stocksService.findByStockId(2);
+        transService.createPurchaseTransaction(2, 1, 100);
         double result1 = stocks.getVolume();
-        transService.createSaleTransaction(1, 1, 500);
 
-        assertEquals(result1, 510, 0);
+        assertEquals(result1, 49900, 0);
     }
+
+    @Test
+    public void ReturnListOfTransactions(){
+        List<Transaction> transactionList = transService.listOfAccountTransactions(2);
+        int result = transactionList.size();
+        System.out.println(transactionList.size());
+        assertTrue(result > 0);
+    }
+
+    @Test
+    public void ReturnListOfStocks(){
+        List<Transaction> transactionList = transService.listOfHeldStocks(2, 1);
+        int result = transactionList.size();
+        System.out.println(transactionList.size());
+        assertTrue(result > 0);
+    }
+
 
 }

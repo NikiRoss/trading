@@ -1,16 +1,16 @@
 package com.fdm.trading.service.accountServiceImpl;
 
 import com.fdm.trading.dao.AccountDao;
+import com.fdm.trading.dao.StockListEntityDao;
 import com.fdm.trading.dao.TransactionDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.StockListEntity;
 import com.fdm.trading.domain.Stocks;
-import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.transactionService.TransactionService;
 import com.fdm.trading.service.userServiceImpl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -29,6 +29,9 @@ public class AccountServiceImpl implements AccountService{
 
     @Autowired
     private TransactionDao transDao;
+
+    @Autowired
+    private StockListEntityDao stockListEntityDao;
 
 
 
@@ -79,6 +82,8 @@ public class AccountServiceImpl implements AccountService{
         Account a = accountDao.findAccountByAccountId(accountId);
         return a.getStocksList();
     }
+
+
 
 
 }

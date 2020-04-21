@@ -3,8 +3,7 @@ package com.fdm.trading.test.domain.user;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
-import com.fdm.trading.security.Role;
-import com.fdm.trading.security.UserRole;
+import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,10 @@ public class UserPersistenceTests {
     private UserDao userDao;
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private AccountServiceImpl accountService;
 
-    @Test
+/*    @Test
     public void find_A_User_By_Email(){
         User u = new User();
         u.setEnabled(true);
@@ -33,14 +34,14 @@ public class UserPersistenceTests {
         u.setPassword("password1");
         u.setUsername("NR84");
 
-        userService.createNewAccount(u);
+        userService.createUser();
         userDao.save(u);
         User val1 = userDao.findByEmail("niki@email.com");
         String val2 = val1.getFirstName();
 
         assertEquals("niki", val2);
         //userService.removeUser(u);
-    }
+    }*/
 
     @Test
     public void find_A_User_By_Username(){
@@ -90,7 +91,7 @@ public class UserPersistenceTests {
 
     @Test
     public void check_Account_Exists(){
-        Account a = userService.findByAccountId(21);
+        Account a = accountService.findByAccountId(21);
         String val1 = a.getAccountNumber();
         assertEquals(val1, "200129");
     }

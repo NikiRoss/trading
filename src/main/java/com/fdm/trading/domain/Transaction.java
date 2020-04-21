@@ -26,6 +26,10 @@ public class Transaction {
     @JoinColumn(name = "fk_trans_account")
     private Account account;
 
+    @OneToOne
+    @JoinColumn(name = "fk_stockId")
+    private Stocks stocks;
+
     @Column(name = "purchase", nullable = false)
     private boolean purchase;
 
@@ -82,5 +86,13 @@ public class Transaction {
 
     public void setPurchase(boolean purchase) {
         this.purchase = purchase;
+    }
+
+    public Stocks getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(Stocks stocks) {
+        this.stocks = stocks;
     }
 }

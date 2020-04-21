@@ -21,13 +21,14 @@ public class Account {
     @Column(name = "account_balance")
     private double accountBalance;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Stocks> stocksList;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+
+    /*@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Transaction> transactionList;
+    private List<Transaction> transactionList;*/
 
 
 
@@ -67,14 +68,14 @@ public class Account {
         this.stocksList = stocksList;
     }
 
-    public List<Transaction> getTransactionList() {
+   /* public List<Transaction> getTransactionList() {
         return transactionList;
     }
 
     public void setTransactionList(List<Transaction> transactionList) {
         this.transactionList = transactionList;
-    }
-
+    }*/
+/*
     @Override
     public String toString() {
         return "Account{" +
@@ -84,5 +85,5 @@ public class Account {
                 ", stocksList=" + stocksList +
                 ", transactionList=" + transactionList +
                 '}';
-    }
+    }*/
 }

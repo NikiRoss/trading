@@ -2,8 +2,6 @@ package com.fdm.trading.service.userServiceImpl;
 
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
-import com.fdm.trading.security.UserRole;
-
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +11,6 @@ public interface UserService {
 
     User findByEmail(String email);
 
-    User findByUserId(long userId);
-
     boolean checkUserExists(String username, String email);
 
     boolean checkUsernameExists(String username);
@@ -23,13 +19,11 @@ public interface UserService {
 
     void save(User user);
 
+    User saveUser(User user);
+
     List<User> findUserList();
 
     void enableUser(String username);
 
     void disableUser(String username);
-
-    void removeUser(User user);
-
-    Account createNewAccount(User user);
 }

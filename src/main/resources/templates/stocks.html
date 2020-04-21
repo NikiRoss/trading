@@ -1,24 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/header :: common-header"/>
+<html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>stocks</title>
 </head>
 <body>
-<h1>Stocks List</h1>
-
 <table>
-    <tr>
-        <th>ID</th>
-        <th>Stock</th>
-        <th>Company</th>
-    </tr>
-    <tr th:each="stock : ${stocks}">
-        <td th:text="${stock.stockId}">124</td>
-        <td th:text="${stock.ticker}">124</td>
-        <td th:text="${stock.company}">124</td>
-    </tr>
+<tr>
+    <th>Company</th>
+    <th>Value</th>
+</tr>
+<tr th:each="stock: ${stocksList}">
+    <td th:text="${stock.company}">Stock</td>
+    <td th:text="${stock.sharePrice}">Stock</td>
+    <td><button class="purchaseBtn">Purchase</button></td>
+</tr>
 </table>
-
 </body>
 </html>

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
+
 <body>
-<!-- Login Section -->
-<h1 th:text="${validated}"></h1>
-<img class="img-responsive" src="/images/banner.png" alt="banner"/>
+
 <div class="container">
     <div class="row ">
         <div class="main-center ">
@@ -18,13 +17,13 @@
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <div class="form-group">
                     <label for="username" class="sr-only">Username</label>
-                    <input type="text" th:field="${user.username}" roleId="username" class="form-control" placeholder="Username" name="username"
+                    <input type="text" th:field="*{username}" roleId="username" class="form-control" placeholder="Username" name="username"
                            id="username"
                            required="required" autofocus="autofocus"/>
                 </div>
                 <div class="form-group">
                     <label for="password" class="sr-only">Password</label>
-                    <input type="password" th:field="${user.password}" roleId="inputPassword" class="form-control" placeholder="Password"
+                    <input type="password" th:field="*{password}" roleId="inputPassword" class="form-control" placeholder="Password"
                            id="password"
                            name="password" required="required"/>
                 </div>
@@ -42,7 +41,6 @@
         </div>
     </div>
 </div>
-
 <div th:replace="common/header :: body-bottom-scripts"/>
 
 </body>

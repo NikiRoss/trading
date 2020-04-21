@@ -1,7 +1,9 @@
 package com.fdm.trading.service.transactionService;
 
+import com.fdm.trading.dao.StockListEntityDao;
 import com.fdm.trading.dao.TransactionDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.StockListEntity;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.accountServiceImpl.AccountService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class TransactionServiceImpl implements TransactionService{
     private AccountServiceImpl accountService;
     @Autowired
     private StockServiceImpl stockService;
+    @Autowired
+    private StockListEntityDao stockListEntityDao;
 
     @Override
     public Transaction findByTransactionId(long transactionId) {
@@ -44,26 +49,28 @@ public class TransactionServiceImpl implements TransactionService{
 
         }else if (volume > stocks.getVolume()){
             {
-                System.out.println("There are only: " + stocks.getVolume() + "available, please amend your purchase and try again");
+                System.out.println("There are only: " + stocks.getVolume() + " available, please amend your purchase and try again");
             }
         }
 
         else{
-            transaction.setPrice(totalCost);
-            transaction.setVolume(volume);
-            transaction.setAccount(account);
-            transaction.setDate(date);
-            transaction.setPurchase(true);
-            account.getTransactionList().add(transaction);
-            this.save(transaction);
-
             double balanceAfterDeduction = balance - totalCost;
             long volumeAfterDeduction = stocks.getVolume() - volume;
             account.setAccountBalance(balanceAfterDeduction);
             stocks.setVolume(volumeAfterDeduction);
 
             account.getStocksList().add(stocks);
+            stocks.setAccount(account);
             accountService.save(account);
+            stockService.save(stocks);
+
+            transaction.setPrice(totalCost);
+            transaction.setVolume(volume);
+            transaction.setAccount(account);
+            transaction.setDate(date);
+            transaction.setPurchase(true);
+            transaction.setStocks(stocks);
+            this.save(transaction);
         }
         return transaction;
     }
@@ -84,7 +91,6 @@ public class TransactionServiceImpl implements TransactionService{
             transaction.setAccount(account);
             transaction.setDate(date);
             transaction.setPurchase(false);
-            account.getTransactionList().add(transaction);
             this.save(transaction);
 
             double balanceAfterSale = account.getAccountBalance() + totalAmount;
@@ -94,10 +100,21 @@ public class TransactionServiceImpl implements TransactionService{
 
             account.getStocksList().remove(stocks);
             accountService.save(account);
+            StockListEntity stockListEntity = new StockListEntity();
+            stockListEntity.setAccountId(accountId);
+            stockListEntity.setStockId(stockId);
+            stockListEntityDao.save(stockListEntity);
 
         return transaction;
 
     }
 
+    public List<Transaction> listOfAccountTransactions(long accountId){
+        return transDao.findByAccount_AccountId(accountId);
+    }
+
+    public List<Transaction> listOfHeldStocks(long stockId, long accountId){
+        return transDao.findByStocks_StockIdAndAccount_AccountId(stockId, accountId);
+    }
 
 }
