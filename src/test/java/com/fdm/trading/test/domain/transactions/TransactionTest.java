@@ -46,12 +46,7 @@ public class TransactionTest {
 
     @Test
     public void Create_A_Purchase_Transaction(){
-        Stocks stocks = new Stocks();
-        stocks = stocksService.findByStockId(2);
-        transService.createPurchaseTransaction(2, 1, 100);
-        double result1 = stocks.getVolume();
-
-        assertEquals(result1, 49900, 0);
+        transService.createPurchaseTransaction(2, 1, 20);
     }
 
     @Test
@@ -68,6 +63,11 @@ public class TransactionTest {
         int result = transactionList.size();
         System.out.println(transactionList.size());
         assertTrue(result > 0);
+    }
+
+    @Test
+    public void sale_Transaction(){
+        transService.createSaleTransaction(2, 1,20);
     }
 
 

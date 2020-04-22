@@ -63,6 +63,19 @@ public class TransactionServiceImpl implements TransactionService{
             stocks.setAccount(account);
             accountService.save(account);
             stockService.save(stocks);
+            List<StockListEntity> dbStockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId, stockId);
+            if(dbStockListEntity.size()<1){
+                StockListEntity stockListEntity = new StockListEntity();
+                stockListEntity.setAccountId(accountId);
+                stockListEntity.setStockId(stockId);
+                stockListEntity.setVolume(volume);
+                stockListEntityDao.save(stockListEntity);
+            } else {
+                StockListEntity entity = dbStockListEntity.get(0);
+                entity.setVolume(entity.getVolume()+volume);
+                stockListEntityDao.save(entity);
+            }
+
 
             transaction.setPrice(totalCost);
             transaction.setVolume(volume);
@@ -83,6 +96,20 @@ public class TransactionServiceImpl implements TransactionService{
         Stocks stocks = stockService.findByStockId(stockId);	// TODO check isEmpty() first
         Account account = accountService.findByAccountId(accountId);
         Date date = new Date();
+        List<StockListEntity> stockListEntities = stockListEntityDao.findByAccountIdAndStockId(accountId,stockId);
+        for(StockListEntity stockListEntity:stockListEntities) {
+            if(volume == stockListEntity.getVolume()){
+                stockListEntityDao.delete(stockListEntity);
+            }else if(volume < stockListEntity.getVolume()){
+                stockListEntity.setVolume(stockListEntity.getVolume()-volume) ;
+                stockListEntityDao.save(stockListEntity);
+                break;
+            }else {
+                if (volume > stockListEntity.getVolume()){
+                    System.out.println("Get Fucked");
+                }
+            }
+        }
 
         Transaction transaction = new Transaction();
         double totalAmount = volume * stocks.getSharePrice();
@@ -100,10 +127,6 @@ public class TransactionServiceImpl implements TransactionService{
 
             account.getStocksList().remove(stocks);
             accountService.save(account);
-            StockListEntity stockListEntity = new StockListEntity();
-            stockListEntity.setAccountId(accountId);
-            stockListEntity.setStockId(stockId);
-            stockListEntityDao.save(stockListEntity);
 
         return transaction;
 

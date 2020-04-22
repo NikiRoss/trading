@@ -16,6 +16,9 @@ public class StockListEntity {
     @Column(name = "stockId")
     private long stockId;
 
+    @Column(name = "volume")
+    private long volume;
+
     public long getStockListId() {
         return stockListId;
     }
@@ -38,6 +41,14 @@ public class StockListEntity {
 
     public void setStockId(long stockId) {
         this.stockId = stockId;
+    }
+
+    public long getVolume() {
+        return volume;
+    }
+
+    public void setVolume(long volume) {
+        this.volume = volume;
     }
 
     @Override
