@@ -10,7 +10,7 @@ public interface StocksService {
 
     Stocks findByTicker(String ticker);
 
-    void createNewStock(String company, String ticker, double sharePrice);
+    void createNewStock(String company, String ticker, double sharePrice, long volume);
 
     void removeStock(long stockId);
 

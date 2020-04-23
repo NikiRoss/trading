@@ -95,4 +95,15 @@ public class Transaction {
     public void setStocks(Stocks stocks) {
         this.stocks = stocks;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionId=" + transactionId +
+                ", volume=" + volume +
+                ", price=" + price +
+                ", date=" + date +
+                ", purchase=" + purchase +
+                '}';
+    }
 }

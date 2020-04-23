@@ -30,23 +30,24 @@ public class TransactionTest {
     TransactionServiceImpl transService;
 
     @Test
-    public void PersistTrans(){
-       transService.createPurchaseTransaction(1, 1, 10);
-    }
-
-    @Test
     public void fail_A_Transaction_If_No_Stocks_Available(){
-        Stocks stocks = new Stocks();
-        stocks = stocksService.findByStockId(1);
+        Stocks stocks = stocksService.findByStockId(6);
+        transService.createPurchaseTransaction(6, 2, 90);
         double result1 = stocks.getVolume();
-        transService.createPurchaseTransaction(1, 1, 900);
-
         assertEquals(result1, 10, 0);
     }
 
     @Test
     public void Create_A_Purchase_Transaction(){
-        transService.createPurchaseTransaction(2, 1, 20);
+        transService.createPurchaseTransaction(6, 2, 7);
+    }
+
+    /**
+     * This method does not persist the associated stockId in the transaction table
+     */
+    @Test
+    public void sale_Transaction(){
+        transService.createSaleTransaction(6, 2,7);
     }
 
     @Test
@@ -66,9 +67,14 @@ public class TransactionTest {
     }
 
     @Test
-    public void sale_Transaction(){
-        transService.createSaleTransaction(2, 1,20);
+    public void ReturnListOfPurchases(){
+        List<Transaction> transactionList = transService.listOfAccountPurchases(1);
+        System.out.println(transactionList.size());
     }
 
-
+    @Test
+    public void ReturnListOfSales(){
+        List<Transaction> transactionList = transService.listOfAccountSales(2);
+        System.out.println(transactionList.size());
+    }
 }

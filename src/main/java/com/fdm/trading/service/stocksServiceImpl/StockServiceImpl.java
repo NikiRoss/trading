@@ -35,11 +35,12 @@ public class StockServiceImpl implements StocksService{
     }
 
     @Override
-    public void createNewStock(String company, String ticker, double sharePrice) {
+    public void createNewStock(String company, String ticker, double sharePrice, long volume) {
         Stocks stocks = new Stocks();
         stocks.setCompany(company);
         stocks.setTicker(ticker);
         stocks.setSharePrice(sharePrice);
+        stocks.setVolume(volume);
         stocksDao.save(stocks);
     }
 

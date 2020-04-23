@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
@@ -24,26 +26,28 @@ public class StocksTests {
     @Test
     public void create_A_New_Stock(){
         Stocks s = new Stocks();
-        s.setCompany("Netflix");
-        s.setTicker("NFLX");
-        s.setSharePrice(455.09);
-        s.setClosingValue(476.32);
-        s.setOpeningValue(454.03);
-        s.setLastTrade(130554);
-        s.setVolume(89970404);
-        stockService.save(s);
+        stockService.createNewStock("Disney", "DSNY", 300.21, 800000);
+        stockService.createNewStock("Tesla", "TSLA", 609.76, 800000);
+        stockService.createNewStock("Ford", "FRD", 59.83, 800000);
     }
 
     @Test
     public void find_A_Stock_By_Id(){
-        Stocks s = stockService.findByStockId(2);
+        Stocks s = stockService.findByStockId(6);
         String val1 = s.getCompany();
-        assertEquals(val1, "Netflix");
+        assertEquals(val1, "Disney");
     }
 
     @Test
     public void find_A_Stock_By_Company(){
-        Stocks s = stockService.findByCompany("Netflix");
-        assertEquals(s.getStockId(), 2);
+        Stocks s = stockService.findByCompany("Tesla");
+        assertEquals(s.getStockId(), 7);
+    }
+
+    @Test
+    public void find_All_Stocks(){
+        List<Stocks> stocksList = stockService.findAll();
+        int size = stocksList.size();
+        assertEquals(size, 3);
     }
 }

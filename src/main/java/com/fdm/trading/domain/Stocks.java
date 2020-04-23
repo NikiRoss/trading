@@ -21,16 +21,16 @@ public class Stocks {
     @Column(name = "share_price", nullable = false)
     private double sharePrice;
 
-    @Column(name = "last_trade", nullable = false)
-    private long lastTrade;
+    @Column(name = "last_trade")
+    private double lastTrade;
 
     @Column(name = "volume", nullable = false)
     private long volume;
 
-    @Column(name = "opening_value", nullable = false)
+    @Column(name = "opening_value")
     private double openingValue;
 
-    @Column(name = "closing_value", nullable = false)
+    @Column(name = "closing_value")
     private double closingValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -78,11 +78,11 @@ public class Stocks {
         this.sharePrice = sharePrice;
     }
 
-    public long getLastTrade() {
+    public double getLastTrade() {
         return lastTrade;
     }
 
-    public void setLastTrade(long lastTrade) {
+    public void setLastTrade(double lastTrade) {
         this.lastTrade = lastTrade;
     }
 
