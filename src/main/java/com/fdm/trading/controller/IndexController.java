@@ -1,5 +1,6 @@
 package com.fdm.trading.controller;
 
+import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -16,26 +19,41 @@ public class IndexController {
     UserServiceImpl userService;
 
     @RequestMapping("/")
-    public String index(){
+    public String index() {
         return "index";
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String showLogin(Model model){
+    @RequestMapping("/index")
+    public String index(Model model) {
         model.addAttribute("user", new User());
+        System.out.println("foof");
         return "index";
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.POST)
-    public String userHome(Model model, @ModelAttribute User user){
+    @RequestMapping(value = "/userHome", method = RequestMethod.POST)
+    public String signupPost(@ModelAttribute User user, Model model, HttpSession session) {
+        System.out.println(user.getUsername());
         User newUser = userService.findByUsername(user.getUsername());
-        model.addAttribute("newUser", newUser);
-        model.addAttribute("account", newUser.getAccount());
-        System.out.println(newUser.toString());
+        List<User> users = userService.findUserList();
 
-        if (userService.validateUser(newUser, user.getPassword())){
+        model.addAttribute("newUser", newUser);
+        model.addAttribute("validated", userService.validateUser(newUser, user.getPassword()));
+        session.setAttribute("account", newUser.getAccount());
+        model.addAttribute("account", newUser.getAccount());
+        System.out.println("newUser------>" + newUser);
+        System.out.println("user>>>>>>>>>>>>>>>>>>>>>>>" + user);
+        if (userService.validateUser(newUser, user.getPassword())) {
             return "userHome";
         }
-        return "error";
+        return "signup";
     }
+
+    @RequestMapping(value = "/userHome", method = RequestMethod.GET)
+    public String userHome(Model model, User user) {
+        user = userService.findByUsername(user.getUsername());
+        Account account = user.getAccount();
+        model.addAttribute("account", account);
+        return "userHome";
+    }
+
 }

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Congrats</title>
+</head>
+<body>
+<h1 th:text="'You have purchase ' + ${transaction.volume} + ' stocks for ' + ${stocks.company}"></h1>
+</body>
+</html>

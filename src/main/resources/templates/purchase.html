@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common-header"/>
+
+<meta charset="UTF-8">
+<title>Purchase Stock</title>
+</head>
+<body>
+<h1 th:text="'Purchase stock for '+ ${stocks.company}"></h1>
+<form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
+    <p>Select number of stocks: <input type="number" th:field="*{volume}" /></p>
+    <p><input type="submit" value="Submit" /></p>
+</form>
+</body>
+</html>

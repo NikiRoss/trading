@@ -39,15 +39,12 @@ public class TransactionTest {
 
     @Test
     public void Create_A_Purchase_Transaction(){
-        transService.createPurchaseTransaction(6, 2, 7);
+        transService.createPurchaseTransaction(6, 2, 9);
     }
 
-    /**
-     * This method does not persist the associated stockId in the transaction table
-     */
     @Test
     public void sale_Transaction(){
-        transService.createSaleTransaction(6, 2,7);
+        transService.createSaleTransaction(7, 2,47);
     }
 
     @Test
@@ -68,7 +65,7 @@ public class TransactionTest {
 
     @Test
     public void ReturnListOfPurchases(){
-        List<Transaction> transactionList = transService.listOfAccountPurchases(1);
+        List<Transaction> transactionList = transService.listOfAccountPurchases(2);
         System.out.println(transactionList.size());
     }
 

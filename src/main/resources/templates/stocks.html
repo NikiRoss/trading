@@ -1,20 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>stocks</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common-header"/>
+<meta charset="UTF-8">
+<title>Title</title>
 </head>
 <body>
-<table>
-<tr>
-    <th>Company</th>
-    <th>Value</th>
-</tr>
-<tr th:each="stock: ${stocksList}">
-    <td th:text="${stock.company}">Stock</td>
-    <td th:text="${stock.sharePrice}">Stock</td>
-    <td><button class="purchaseBtn">Purchase</button></td>
-</tr>
+<h1>Stocks List</h1>
+
+<table class="table table-bordered">
+    <tr>
+        <th>ID</th>
+        <th>Stock</th>
+        <th>Company</th>
+    </tr>
+    <div th:each="stock : ${stocks}">
+        <tr class="clickable-row">
+            <a th:href="@{'/stocks/purchase/' + ${stock.stockId}}">
+                <td th:text="${stock.stockId}" ></td>
+                <td th:text="${stock.ticker}" th:onclick="|loadContent(${stock.stockId})|"></td>
+                <td th:text="${stock.company}"></td>
+            </a>
+        </tr>
+    </div>
 </table>
+<script type="text/javascript">
+    function loadContent(id) {
+        location.href = '/stocks/purchase/'+id;
+    }
+</script>
+
 </body>
 </html>

@@ -11,6 +11,7 @@ import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,24 +45,24 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     public List<Transaction> listOfAccountPurchases(long accountId){
-        List<Transaction> purchaseFilter = transDao.findByAccount_AccountId(accountId);
-        for (Transaction trans:purchaseFilter){
-            if (trans.isPurchase() == true){
+        List<Transaction> purchases = transDao.findByAccount_AccountId(accountId);
+        List<Transaction> purchaseFilter = new ArrayList<>();
+        for (Transaction trans:purchases){
+            if (trans.isPurchase()){
                 purchaseFilter.add(trans);
                 System.out.println(purchaseFilter.toString());
-                break;
             }
         }
         return purchaseFilter;
     }
 
     public List<Transaction> listOfAccountSales(long accountId){
-        List<Transaction> purchaseFilter = transDao.findByAccount_AccountId(accountId);
-        for (Transaction trans:purchaseFilter){
-            if (trans.isPurchase() == false){
+        List<Transaction> sales = transDao.findByAccount_AccountId(accountId);
+        List<Transaction> purchaseFilter = new ArrayList<>();
+        for (Transaction trans:sales){
+            if (!trans.isPurchase()){
                 purchaseFilter.add(trans);
                 System.out.println(purchaseFilter.toString());
-                break;
             }
         }
         return purchaseFilter;
@@ -143,6 +144,7 @@ public class TransactionServiceImpl implements TransactionService{
             transaction.setAccount(account);
             transaction.setDate(date);
             transaction.setPurchase(false);
+            transaction.setStocks(stocks);
             this.save(transaction);
 
             double balanceAfterSale = account.getAccountBalance() + totalAmount;

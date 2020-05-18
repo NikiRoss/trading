@@ -21,20 +21,6 @@ public class AccountServiceImpl implements AccountService{
     @Autowired
     private AccountDao accountDao;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private TransactionService transService;
-
-    @Autowired
-    private TransactionDao transDao;
-
-    @Autowired
-    private StockListEntityDao stockListEntityDao;
-
-
-
 
     @Override
     public Account findByAccountId(long accountId) {

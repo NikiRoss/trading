@@ -1,7 +1,9 @@
 package com.fdm.trading.service.userServiceImpl;
 
 import com.fdm.trading.dao.UserDao;
+import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.domain.passwordUtil.PasswordUtil;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +16,31 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
+    String salt = PasswordUtil.getSalt(15);
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private AccountServiceImpl accountService;
 
+
+    public User createNewUser(String firstName, String surname, String email, String username, String password){
+        User user = new User();
+        Account account = accountService.createAnAccount();
+        user.setEnabled(false);
+        user.setAccount(account);
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setSurname(surname);
+        user.setUsername(username);
+        user.setPassword(password);
+        userDao.save(user);
+        return user;
+    }
+
     public void save(User user) {
         userDao.save(user);
     }
-
 
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
@@ -46,7 +63,6 @@ public class UserServiceImpl implements UserService {
         if (null != findByUsername(username)) {
             return true;
         }
-
         return false;
     }
 
@@ -54,7 +70,6 @@ public class UserServiceImpl implements UserService {
         if (null != findByEmail(email)) {
             return true;
         }
-
         return false;
     }
 
@@ -82,10 +97,13 @@ public class UserServiceImpl implements UserService {
 
 
     public boolean validateUser(User user, String password){
+        System.out.println(user.getPassword());
         if (user.getPassword().equals(password)){
             return true;
         }
         return false;
     }
+
+
 
 }

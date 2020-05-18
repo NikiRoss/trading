@@ -2,10 +2,13 @@ package com.fdm.trading.domain;
 
 
 
+import com.fdm.trading.domain.passwordUtil.PasswordUtil;
+import org.springframework.context.annotation.Scope;
+
 import javax.persistence.*;
 
 
-
+@Scope("session")
 @Entity
 public class User {
 
@@ -31,6 +34,7 @@ public class User {
 
     @OneToOne
     private Account account;
+
 
     private boolean enabled;
 
@@ -97,7 +101,5 @@ public class User {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-
 
 }

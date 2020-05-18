@@ -24,24 +24,14 @@ public class UserPersistenceTests {
     @Autowired
     private AccountServiceImpl accountService;
 
-/*    @Test
-    public void find_A_User_By_Email(){
-        User u = new User();
-        u.setEnabled(true);
-        u.setEmail("niki@email.com");
-        u.setFirstName("niki");
-        u.setSurname("ross");
-        u.setPassword("password1");
-        u.setUsername("NR84");
+    @Test
+    public void create_A_New_User(){
+        //userService.createNewUser("Ian", "Ross", "ian.ross@email.com", "ianR", "Password1");
+        User user = userService.findByUsername("ianR");
+        String pwd = user.getPassword();
 
-        userService.createUser();
-        userDao.save(u);
-        User val1 = userDao.findByEmail("niki@email.com");
-        String val2 = val1.getFirstName();
-
-        assertEquals("niki", val2);
-        //userService.removeUser(u);
-    }*/
+        assertEquals(pwd, "Password1");
+    }
 
     @Test
     public void find_A_User_By_Username(){
