@@ -3,25 +3,29 @@
 <head th:replace="common/header :: common-header"/>
 <body>
 <!-- Login Section -->
+
 <h1 th:text="${validated}"></h1>
-<img class="img-responsive" src="/images/banner.png" alt="banner"/>
-<div class="container">
+<div class="container form-inline justify-content-center align-items-center">
     <div class="row ">
         <div class="main-center ">
             <div class="bg-danger" th:if="${param.error}">
-                Invalid username and secret.
+                Invalid username and password.
             </div>
             <div class="bg-danger" th:if="${param.logout}">
                 You have been logged out.
             </div>
+            <div>
             <form class="form-signin" th:action="@{/userHome}" th:object="${user}" method="POST">
-                <h2 class="form-signin-heading">Please sign in</h2>
+                <div>
+                <h2 class="form-signin-heading text-secondary text-center">Sign In</h2>
+                </div>
                 <div class="form-group">
                     <label for="username" class="sr-only">Username</label>
                     <input type="text" th:field="${user.username}" roleId="username" class="form-control" placeholder="Username" name="username"
                            id="username"
                            required="required" autofocus="autofocus"/>
                 </div>
+                <br>
                 <div class="form-group">
                     <label for="password" class="sr-only">Password</label>
                     <input type="password" th:field="${user.password}" roleId="inputPassword" class="form-control" placeholder="Password"
@@ -31,9 +35,11 @@
                 <div class="form-group">
                     <input type="checkbox" name="remember-me" id="remember-me"/> &nbsp; Remember me
                 </div>
+                <br>
+                <br>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             </form>
-
+                <br>
             <div class="form-group ">
                 <a type="submit" class="btn btn-info btn-lg btn-block login-button" th:href="@{/signup}">Sign up!</a>
             </div>

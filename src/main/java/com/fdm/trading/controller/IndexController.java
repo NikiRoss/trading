@@ -26,7 +26,6 @@ public class IndexController {
     @RequestMapping("/index")
     public String index(Model model) {
         model.addAttribute("user", new User());
-        System.out.println("foof");
         return "index";
     }
 

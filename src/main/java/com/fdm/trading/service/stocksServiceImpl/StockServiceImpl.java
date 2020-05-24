@@ -17,6 +17,9 @@ public class StockServiceImpl implements StocksService{
     private StocksDao stocksDao;
 
     @Autowired
+    private StockListEntityDao sleDao;
+
+    @Autowired
     private StockListEntityDao stockListEntityDao;
 
     @Override
@@ -75,6 +78,10 @@ public class StockServiceImpl implements StocksService{
         }
         return stocksForAccount;
 
+    }
+
+    public List<StockListEntity> getStockList(long accountId){
+        return sleDao.findByAccountId(accountId);
     }
 }
 

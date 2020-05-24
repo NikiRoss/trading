@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
-
-<meta charset="UTF-8">
-<title>Purchase Stock</title>
+<head>
+    <meta charset="UTF-8">
+    <title>SaleSuccess</title>
 </head>
 <body>
-
 <!-- SIMPLE NAVBAR -->
 <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
     <div class="container">
@@ -17,9 +16,6 @@
                 <a class="nav-link" th:href="@{/stocks}">Stocks</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/transactions}">Transactions</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" th:href="@{/holdings}">Holdings</a>
             </li>
             <li class="nav-item">
@@ -28,14 +24,6 @@
         </ul>
     </div>
 </nav>
-
-<h4 th:text="'Purchase stock for '+ ${stocks.company}"></h4>
-<form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
-    <p>Select number of stocks: <input type="number" th:field="*{volume}" /></p>
-    <p><input type="submit" value="Submit" /></p>
-
-    <a class="navbar-brand page-scroll" th:href="@{/userHome}">Home</a>
-
-</form>
+<h1>YOUR SALE WAS SUCCESSFUL!!!!!!</h1>
 </body>
 </html>

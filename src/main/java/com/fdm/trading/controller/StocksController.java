@@ -62,5 +62,25 @@ public class StocksController {
         return "purchase-success";
     }
 
+    @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.GET)
+    public String getSale(@PathVariable int id, Model model){
+        Stocks stocks = stockService.findByStockId(id);
+        System.out.println(stocks.getCompany());
+        Transaction transaction = new Transaction();
+        model.addAttribute("transaction", transaction);
+        model.addAttribute("stocks", stocks);
+        return "sale";
+    }
+
+    @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.POST)
+    public String postSale(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, HttpSession session){
+        Account account = (Account) session.getAttribute("account");
+        transactionService.createSaleTransaction(id, (int) account.getAccountId(), transaction.getVolume());
+        Stocks stocks = stockService.findByStockId(id);
+        model.addAttribute("stocks", stocks);
+        model.addAttribute("transaction", transaction);
+        return "saleSuccess";
+    }
+
 
 }

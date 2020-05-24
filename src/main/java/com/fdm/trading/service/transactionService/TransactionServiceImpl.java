@@ -158,4 +158,8 @@ public class TransactionServiceImpl implements TransactionService{
         return transaction;
 
     }
+
+    public List<Transaction> findAllTransactions(long accountId){
+       return transDao.findByAccount_AccountId(accountId);
+    }
 }
