@@ -83,5 +83,9 @@ public class StockServiceImpl implements StocksService{
     public List<StockListEntity> getStockList(long accountId){
         return sleDao.findByAccountId(accountId);
     }
+
+    public StockListEntity getStockListByAccountAndStock(long accountId, long stockId){
+        return sleDao.findByAccountIdAndStockId(accountId, stockId);
+    }
 }
 

@@ -11,7 +11,7 @@ public interface StockListEntityDao extends CrudRepository<StockListEntity, Long
 
     List<StockListEntity> findByAccountId(long accountId);
 
-    List<StockListEntity> findByAccountIdAndStockId(long accountId, long stockId);
+    StockListEntity findByAccountIdAndStockId(long accountId, long stockId);
 
 
 

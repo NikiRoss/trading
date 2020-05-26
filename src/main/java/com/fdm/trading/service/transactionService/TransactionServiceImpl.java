@@ -80,7 +80,7 @@ public class TransactionServiceImpl implements TransactionService{
         double totalCost = volume * stocks.getSharePrice();
         if (totalCost > balance){
             System.out.println("You do not have enough funds to complete this transaction");
-        }else if (volume > stocks.getVolume()){
+        }else if (volume > stocks.getVolume() && volume > 0){
             {
                 System.out.println("There are only: " + stocks.getVolume() + " available, please amend your purchase and try again");
             }
@@ -95,19 +95,16 @@ public class TransactionServiceImpl implements TransactionService{
             stocks.setAccount(account);
             accountService.save(account);
             stockService.save(stocks);
-            List<StockListEntity> dbStockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId, stockId);
+            StockListEntity dbStockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId, stockId);
 
-            if(dbStockListEntity.size()<1){
-                StockListEntity stockListEntity = new StockListEntity();
-                stockListEntity.setAccountId(accountId);
-                stockListEntity.setStockId(stockId);
-                stockListEntity.setVolume(volume);
-                stockListEntityDao.save(stockListEntity);
-            } else {
-                StockListEntity entity = dbStockListEntity.get(0);
-                entity.setVolume(entity.getVolume()+volume);
-                stockListEntityDao.save(entity);
+            if(dbStockListEntity==null){
+                dbStockListEntity = new StockListEntity();
+                dbStockListEntity.setAccountId(accountId);
+                dbStockListEntity.setStockId(stockId);
+                dbStockListEntity.setVolume(volume);
             }
+            dbStockListEntity.setVolume(dbStockListEntity.getVolume()+volume);
+            stockListEntityDao.save(dbStockListEntity);
             transaction.setPrice(totalCost);
             transaction.setVolume(volume);
             transaction.setAccount(account);
@@ -123,20 +120,18 @@ public class TransactionServiceImpl implements TransactionService{
         Stocks stocks = stockService.findByStockId(stockId);
         Account account = accountService.findByAccountId(accountId);
         Date date = new Date();
-        List<StockListEntity> stockListEntities = stockListEntityDao.findByAccountIdAndStockId(accountId,stockId);
-        for(StockListEntity stockListEntity:stockListEntities) {
-            if(volume == stockListEntity.getVolume()){
-                stockListEntityDao.delete(stockListEntity);
-            }else if(volume < stockListEntity.getVolume()){
-                stockListEntity.setVolume(stockListEntity.getVolume()-volume) ;
-                stockListEntityDao.save(stockListEntity);
-                break;
-            }else {
-                if (volume > stockListEntity.getVolume()){
-                    System.out.println("You do not hold " + volume + " units of this stock, please revise your sale");
-                }
-            }
+        StockListEntity stockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId,stockId);
+
+        if(volume == stockListEntity.getVolume()){
+            stockListEntityDao.delete(stockListEntity);
+        }else if(volume < stockListEntity.getVolume() && volume > 0){
+            stockListEntity.setVolume(stockListEntity.getVolume()-volume) ;
+            stockListEntityDao.save(stockListEntity);
+        }else {
+            System.out.println("You do not hold " + volume + " units of this stock, please revise your sale");
+
         }
+
         Transaction transaction = new Transaction();
         double totalAmount = volume * stocks.getSharePrice();
             transaction.setPrice(totalAmount);

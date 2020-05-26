@@ -1,9 +1,6 @@
 package com.fdm.trading.controller;
 
-import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.Stocks;
-import com.fdm.trading.domain.Transaction;
-import com.fdm.trading.domain.User;
+import com.fdm.trading.domain.*;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
@@ -43,12 +40,21 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.GET)
-    public String getPurchase(@PathVariable int id, Model model){
+    public String getPurchase(@PathVariable int id, Model model, HttpSession session){
         Stocks stocks = stockService.findByStockId(id);
+        Account account = (Account) session.getAttribute("account");
         System.out.println(stocks.getCompany());
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
+        model.addAttribute("account", session.getAttribute("account"));
+        StockListEntity stockListEntity = stockService.getStockListByAccountAndStock(account.getAccountId(), stocks.getStockId());
+
+        if(stockListEntity==null){
+            stockListEntity = new StockListEntity();
+        }
+
+        model.addAttribute("stockListEntity", stockListEntity);
         return "purchase";
     }
 
@@ -59,7 +65,8 @@ public class StocksController {
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("stocks", stocks);
         model.addAttribute("transaction", transaction);
-        return "purchase-success";
+        model.addAttribute("account", session.getAttribute("account"));
+        return "purchaseSuccess";
     }
 
     @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.GET)

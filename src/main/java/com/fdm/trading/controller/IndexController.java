@@ -37,6 +37,7 @@ public class IndexController {
 
         model.addAttribute("newUser", newUser);
         model.addAttribute("validated", userService.validateUser(newUser, user.getPassword()));
+        session.setAttribute("newUser", newUser);
         session.setAttribute("account", newUser.getAccount());
         model.addAttribute("account", newUser.getAccount());
         System.out.println("newUser------>" + newUser);
@@ -48,9 +49,9 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/userHome", method = RequestMethod.GET)
-    public String userHome(Model model, User user) {
-        user = userService.findByUsername(user.getUsername());
-        Account account = user.getAccount();
+    public String userHome(Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        model.addAttribute("newUser", session.getAttribute("newUser"));
         model.addAttribute("account", account);
         return "userHome";
     }

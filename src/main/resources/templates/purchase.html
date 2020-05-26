@@ -29,13 +29,27 @@
     </div>
 </nav>
 
-<h4 th:text="'Purchase stock for '+ ${stocks.company}"></h4>
+
+
+<div class="container justify-content-center">
+
+
+<h4 class="text-center" th:text="'Purchase stock for '+ ${stocks.company}"></h4><br><br>
+
+    <!-- ACCOUNT BALANCE -->
+    <div class="row text-dark" style="height: 600px;">
+        <p th:text="'Balance: <i class=\'fa fa-usd\' aria-hidden=\'true\'></i>'+ ${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">
+
+        </p>
+    </div>
+
 <form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
-    <p>Select number of stocks: <input type="number" th:field="*{volume}" /></p>
+    <p th:text="'Current ' + ${stocks.company} + ' stocks held ' + ${stockListEntity.volume}"></p>
+    <p>Select number of stocks to purchase: <input type="number" min="1" th:field="*{volume}" /></p>
     <p><input type="submit" value="Submit" /></p>
-
-    <a class="navbar-brand page-scroll" th:href="@{/userHome}">Home</a>
-
 </form>
+
+
+</div>
 </body>
 </html>
