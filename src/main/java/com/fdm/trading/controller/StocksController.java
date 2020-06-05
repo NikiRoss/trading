@@ -1,6 +1,7 @@
 package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.*;
+import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
@@ -25,6 +26,9 @@ public class StocksController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    AccountServiceImpl accountService;
 
     @RequestMapping(value = "/stocks", method = RequestMethod.GET)
     public String getStocks(Model model, HttpSession session){
@@ -60,7 +64,9 @@ public class StocksController {
 
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.POST)
     public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, HttpSession session){
-        Account account = (Account) session.getAttribute("account");
+
+        Account sessionAccount = (Account) session.getAttribute("account");
+        Account account = accountService.findByAccountId(sessionAccount.getAccountId());
         transactionService.createPurchaseTransaction(id, (int) account.getAccountId(), transaction.getVolume());
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("stocks", stocks);
@@ -70,12 +76,14 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.GET)
-    public String getSale(@PathVariable int id, Model model){
+    public String getSale(@PathVariable int id, Model model, HttpSession session){
         Stocks stocks = stockService.findByStockId(id);
         System.out.println(stocks.getCompany());
+        Account account = (Account) session.getAttribute("account");
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
+        model.addAttribute("account", account);
         return "sale";
     }
 
@@ -84,9 +92,14 @@ public class StocksController {
         Account account = (Account) session.getAttribute("account");
         transactionService.createSaleTransaction(id, (int) account.getAccountId(), transaction.getVolume());
         Stocks stocks = stockService.findByStockId(id);
+        model.addAttribute("messageEnabled", true);
+        session.setAttribute("message", transactionService.getMessage());
+        model.addAttribute("message", transactionService.getMessage());
+        System.out.println(">>>>>>" + transactionService.getMessage());
         model.addAttribute("stocks", stocks);
+        model.addAttribute("account", account);
         model.addAttribute("transaction", transaction);
-        return "saleSuccess";
+        return "sale";
     }
 
 

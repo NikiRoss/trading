@@ -2,6 +2,7 @@ package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class IndexController {
 
     @Autowired
     UserServiceImpl userService;
+
+    @Autowired
+    AccountServiceImpl accountService;
 
     @RequestMapping("/")
     public String index() {
@@ -50,7 +54,8 @@ public class IndexController {
 
     @RequestMapping(value = "/userHome", method = RequestMethod.GET)
     public String userHome(Model model, HttpSession session) {
-        Account account = (Account) session.getAttribute("account");
+        Account sessionAccount = (Account) session.getAttribute("account");
+        Account account = accountService.findByAccountId(sessionAccount.getAccountId());
         model.addAttribute("newUser", session.getAttribute("newUser"));
         model.addAttribute("account", account);
         return "userHome";

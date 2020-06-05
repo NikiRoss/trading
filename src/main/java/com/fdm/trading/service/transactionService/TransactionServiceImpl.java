@@ -27,6 +27,8 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     private StockListEntityDao stockListEntityDao;
 
+    private String message;
+
     @Override
     public Transaction findByTransactionId(long transactionId) {
         return transDao.findByTransactionId(transactionId);
@@ -111,7 +113,7 @@ public class TransactionServiceImpl implements TransactionService{
             transaction.setDate(date);
             transaction.setPurchase(true);
             transaction.setStocks(stocks);
-            this.save(transaction);
+            transDao.save(transaction);
         }
         return transaction;
     }
@@ -121,19 +123,20 @@ public class TransactionServiceImpl implements TransactionService{
         Account account = accountService.findByAccountId(accountId);
         Date date = new Date();
         StockListEntity stockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId,stockId);
+        if(volume <= stockListEntity.getVolume()) {
+            if (volume == stockListEntity.getVolume()) {
+                stockListEntityDao.delete(stockListEntity);
+            } if (volume < stockListEntity.getVolume() && volume > 0) {
+                stockListEntity.setVolume(stockListEntity.getVolume() - volume);
+                stockListEntityDao.save(stockListEntity);
+            } if (volume > stockListEntity.getVolume()) {
+                System.out.println("You do not own this amount of stock to sell!!!");
+            } else {
+                System.out.println("You do not hold " + volume + " units of this stock, please revise your sale");
+            }
 
-        if(volume == stockListEntity.getVolume()){
-            stockListEntityDao.delete(stockListEntity);
-        }else if(volume < stockListEntity.getVolume() && volume > 0){
-            stockListEntity.setVolume(stockListEntity.getVolume()-volume) ;
-            stockListEntityDao.save(stockListEntity);
-        }else {
-            System.out.println("You do not hold " + volume + " units of this stock, please revise your sale");
-
-        }
-
-        Transaction transaction = new Transaction();
-        double totalAmount = volume * stocks.getSharePrice();
+            Transaction transaction = new Transaction();
+            double totalAmount = volume * stocks.getSharePrice();
             transaction.setPrice(totalAmount);
             transaction.setVolume(volume);
             transaction.setAccount(account);
@@ -149,12 +152,21 @@ public class TransactionServiceImpl implements TransactionService{
             account.getStocksList().remove(stocks);
             accountService.save(account);
             stockService.save(stocks);
-
-        return transaction;
-
+            message = "Sale successful!!";
+            return transaction;
+        } else {
+            message = "You do not own this amount of stock to sell!!!";
+            return new Transaction();
+        }
     }
 
     public List<Transaction> findAllTransactions(long accountId){
        return transDao.findByAccount_AccountId(accountId);
     }
+
+    public String getMessage(){
+        return message;
+    }
+
+
 }

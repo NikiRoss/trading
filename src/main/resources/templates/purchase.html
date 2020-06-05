@@ -34,22 +34,25 @@
 <div class="container justify-content-center">
 
 
-<h4 class="text-center" th:text="'Purchase stock for '+ ${stocks.company}"></h4><br><br>
+<h2 class="text-center" th:text="'Purchase stock for '+ ${stocks.company}"></h2><br><br>
 
     <!-- ACCOUNT BALANCE -->
-    <div class="row text-dark" style="height: 600px;">
-        <p th:text="'Balance: <i class=\'fa fa-usd\' aria-hidden=\'true\'></i>'+ ${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">
-
+    <div class="row text-dark" style="height: 150px;">
+        <p>Balance: <i class="fa fa-usd" aria-hidden="true"></i> <span
+                th:text="${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">...</span>
         </p>
     </div>
+</div>
 
-<form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
-    <p th:text="'Current ' + ${stocks.company} + ' stocks held ' + ${stockListEntity.volume}"></p>
-    <p>Select number of stocks to purchase: <input type="number" min="1" th:field="*{volume}" /></p>
-    <p><input type="submit" value="Submit" /></p>
-</form>
-
-
+<div class="container justify-content-center">
+    <div class="row">
+    <form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
+        <p th:text="'Current ' + ${stocks.company} + ' stocks held ' + ${stockListEntity.volume}"></p>
+        <br>
+        <p>Select number of stocks to purchase: <input type="number" min="1" th:field="*{volume}" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </div>
+    </form>
 </div>
 </body>
 </html>

@@ -1,16 +1,45 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
-
 <meta charset="UTF-8">
 <title>Sell Stock</title>
 </head>
-<body>
-<h4 th:text="'Sell '+ ${stocks.company} + ' holdings'"></h4>
-<form action="#" th:action="@{'/stocks/sale/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
-    <p>Select the number of stocks you wish to sell: <input type="number" th:field="*{volume}"/></p>
-    <p><input type="submit" value="Submit"/></p>
-</form>
+<body >
+<div class="container">
+    <h4 th:text="'Sell '+ ${stocks.company} + ' holdings'"></h4>
+
+    <!-- ACCOUNT BALANCE -->
+    <div class="row text-dark" style="height: 150px;">
+        <p>Balance: <i class="fa fa-usd" aria-hidden="true"></i> <span
+                th:text="${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">...</span>
+        </p>
+    </div>
+
+    <div th:text="${message}">
+    </div>
+<!-- -->
+
+        <form action="" th:action="@{'/stocks/sale/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
+         <p>Select the number of stocks you wish to sell: <input type="number" th:field="*{volume}"/></p>
+            <button type="submit" value="Submit" onclick="generateMessage()">Submit</button>
+        </form>
+    <div>
+        <label id="messageOut">...</label>
+    </div>
+
+
+</div>
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+
+    var message = /*[[${message}]]*/ 'message';
+
+    /*]]>*/
+</script>
+
+<script th:src="@{/js/message.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </body>
 </html>

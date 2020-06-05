@@ -5,13 +5,17 @@ import com.fdm.trading.dao.StocksDao;
 import com.fdm.trading.domain.StockListEntity;
 import com.fdm.trading.domain.Stocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+@EnableScheduling
 @Service
 public class StockServiceImpl implements StocksService{
+
+    private TimerTask timerTask;
 
     @Autowired
     private StocksDao stocksDao;
@@ -53,9 +57,27 @@ public class StockServiceImpl implements StocksService{
         stocksDao.delete(stock);
     }
 
+    @Scheduled(fixedRate = 60000)
     @Override
     public void fluctuateStockPrice() {
-        
+        Iterable<Stocks> list = stocksDao.findAll();
+        Random random1 = new Random();
+
+        for(Stocks stocks:list){
+            double sharePrice = stocks.getSharePrice();
+            double num = random1.nextDouble()*5;
+            if (random1.nextBoolean()) {
+                sharePrice += num;
+
+            }else{
+                sharePrice -= num;
+            }
+            stocks.setSharePrice(sharePrice);
+            save(stocks);
+        }
+
+        System.out.println("Running scheduled task");
+
     }
 
     public List<Stocks> findAll(){
@@ -87,5 +109,6 @@ public class StockServiceImpl implements StocksService{
     public StockListEntity getStockListByAccountAndStock(long accountId, long stockId){
         return sleDao.findByAccountIdAndStockId(accountId, stockId);
     }
+
 }
 
