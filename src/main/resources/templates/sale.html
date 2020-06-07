@@ -5,6 +5,29 @@
 <title>Sell Stock</title>
 </head>
 <body >
+
+<!-- SIMPLE NAVBAR -->
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+    <div class="container">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/stocks}">Stocks</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/transactions}">Transactions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/userHome}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Sell</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
     <h4 th:text="'Sell '+ ${stocks.company} + ' holdings'"></h4>
 
@@ -15,30 +38,26 @@
         </p>
     </div>
 
-    <div th:text="${message}">
-    </div>
+
 <!-- -->
 
         <form action="" th:action="@{'/stocks/sale/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
          <p>Select the number of stocks you wish to sell: <input type="number" th:field="*{volume}"/></p>
             <button type="submit" value="Submit" onclick="generateMessage()">Submit</button>
         </form>
-    <div>
-        <label id="messageOut">...</label>
-    </div>
 
-
+    <div id="alertBox" th:text="${message}"></div>
 </div>
+
+
 <script th:inline="javascript">
-
-    /*<![CDATA[*/
-
-    var message = /*[[${message}]]*/ 'message';
-
-    /*]]>*/
+        /*<![CDATA[*/
+        var message = /*[[${message}]]*/ 'message';
+        /*]]>*/
+        var p = document.createElement('p');
+        p.appendChild(message);
+        document.getElementById('alertBox').appendChild(p);
 </script>
-
-<script th:src="@{/js/message.js}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </body>

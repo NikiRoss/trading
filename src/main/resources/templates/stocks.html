@@ -36,6 +36,7 @@
         <th>ID</th>
         <th>Stock</th>
         <th>Company</th>
+        <th>Share Price</th>
     </tr>
     <div th:each="stock : ${stocks}">
         <tr class="clickable-row">
@@ -43,6 +44,7 @@
                 <td th:text="${stock.stockId}" ></td>
                 <td th:text="${stock.ticker}" th:onclick="|loadContent(${stock.stockId})|"></td>
                 <td th:text="${stock.company}"></td>
+                <td th:text="${#numbers.formatDecimal(stock.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
             </a>
         </tr>
     </div>

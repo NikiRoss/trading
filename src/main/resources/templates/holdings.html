@@ -48,7 +48,7 @@
                 <td th:text="${stocks.stockId}"></td>
                 <td th:text="${stocks.company}" th:onclick="|loadContent(${stocks.stockId})|"></td>
                 <td th:text="${stocks.volume}"></td>
-                <td th:text="${stocks.sharePrice}"></td>
+                <td th:text="${#numbers.formatDecimal(stocks.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
                 </a>
             </tr>
         </div>
