@@ -26,9 +26,18 @@ public class StocksTests {
     @Test
     public void create_A_New_Stock(){
         Stocks s = new Stocks();
-        stockService.createNewStock("Disney", "DSNY", 300.21, 800000);
-        stockService.createNewStock("Tesla", "TSLA", 609.76, 800000);
-        stockService.createNewStock("Ford", "FRD", 59.83, 800000);
+        stockService.createNewStock("RBS", "RBS", 33.21, 800000);
+        stockService.createNewStock("Calyon", "CL", 98.21, 800000);
+        stockService.createNewStock("Threadneedle", "TN", 12.91, 800000);
+        stockService.createNewStock("Aviva", "AVA", 120.38, 800000);
+        stockService.createNewStock("Morgan Stanley", "MS", 402, 800000);
+        stockService.createNewStock("Unicredit", "L", 211.22, 800000);
+        stockService.createNewStock("Caplin", "CAP", 187.21, 800000);
+
+
+
+
+
     }
 
     @Test

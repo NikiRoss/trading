@@ -3,6 +3,19 @@
 <head th:replace="common/header :: common-header"/>
 <meta charset="UTF-8">
 <title>Title</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style>
+    body {
+        background-image: url("images/stocks-img.jpeg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+<link rel="stylesheet" href="css/stocks.css">
 </head>
 <body>
 
@@ -19,19 +32,18 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/holdings}">Holdings</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Sell</a>
-            </li>
         </ul>
     </div>
 </nav>
 
 <div>
-    <h1 class="text-primary text-center">Stocks List</h1>
+    <h1>Stocks List</h1>
 </div>
 
 <div class="container h-100" style="padding-top: 50px;">
-<table class="table table-bordered table-striped">
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+<table class="table table-bordered table-striped" id="myTable">
+
     <tr>
         <th>ID</th>
         <th>Stock</th>
@@ -55,6 +67,15 @@
         location.href = '/stocks/purchase/'+id;
     }
 </script>
-
+<script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
 </body>
 </html>

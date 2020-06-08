@@ -1,0 +1,9 @@
+h1 {
+    color: #4e555b;
+    text-align: center;
+}
+
+#myInput {
+    width: 30%;
+    margin-bottom: 15px;
+}

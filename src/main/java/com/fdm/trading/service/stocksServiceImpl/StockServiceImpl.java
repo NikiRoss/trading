@@ -57,7 +57,7 @@ public class StockServiceImpl implements StocksService{
         stocksDao.delete(stock);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 300000)
     @Override
     public void fluctuateStockPrice() {
         Iterable<Stocks> list = stocksDao.findAll();

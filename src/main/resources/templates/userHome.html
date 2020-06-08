@@ -1,53 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="common/header :: common-header"/>
-<body class="bg-primary">
+<link rel="stylesheet" href="../static/css/user-home.scss">
+<style>
+    body {
+        background-image: url("images/user-home.jpeg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+</head>
+<body>
 
 <!-- SIMPLE NAVBAR -->
-<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
-    <div class="container">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/stocks}">Stocks</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/transactions}">Transactions</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/holdings}">Holdings</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Sell</a>
-            </li>
-        </ul>
+    <div id="navbar">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/stocks}">Stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/transactions}">Transactions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/holdings}">Holdings</a>
+                    </li>
+
+                </ul>
+        </nav>
     </div>
-</nav>
 
 
-<div class="container h-100 bg-white" style="padding-top: 50px;">
-
+<div class="container">
     <!-- USERNAME WELCOME -->
-    <div class="row justify-content-center align-items-center text-primary">
-        <h1 th:text="'Hi, ' + ${newUser.getFirstName()}"/>
+    <div class="row">
+        <h1 th:text="'Hi ' + ${newUser.getFirstName()}"/>
             <br>
     </div>
-
-
+    <br>
+    <br>
+    <br>
+    <br>
     <!-- ACCOUNT BALANCE -->
-    <div class="row align-items-center justify-content-center text-primary" style="height: 600px;">
-            <h2>Balance: <i class="fa fa-usd" aria-hidden="true"></i> <span
+    <div class="row">
+            <h4>Your balance is: <i class="fa fa-usd" aria-hidden="true"></i> <span
                 th:text="${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">...</span>
-            </h2>
+            </h4>
     </div>
-
-
 </div>
-
-
-
-
 
 
 
