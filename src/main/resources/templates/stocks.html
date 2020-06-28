@@ -7,6 +7,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="js/stocks.js"></script>
 
 <style>
     body {
@@ -42,14 +43,24 @@
 
 <div class="container h-100" style="padding-top: 50px;">
     <input class="form-control" id="myInput" type="text" placeholder="Search..">
-<table class="table table-bordered table-striped" id="myTable">
 
+    <select id="selectionOrder">
+        <option value="CompanyAsc">Company asc</option>
+        <option value="CompanyDesc">Company desc</option>
+        <option value="SharePriceAsc">Share Price asc</option>
+        <option value="SharePriceDesc">Share Price desc</option>
+    </select>
+
+<table class="table table-bordered table-striped" id="myTable">
+<thead>
     <tr>
         <th>ID</th>
-        <th>Stock</th>
+        <th>Ticker</th>
         <th>Company</th>
         <th>Share Price</th>
     </tr>
+</thead>
+    <tbody>
     <div th:each="stock : ${stocks}">
         <tr class="clickable-row">
             <a th:href="@{'/stocks/purchase/' + ${stock.stockId}}">
@@ -57,9 +68,10 @@
                 <td th:text="${stock.ticker}" th:onclick="|loadContent(${stock.stockId})|"></td>
                 <td th:text="${stock.company}"></td>
                 <td th:text="${#numbers.formatDecimal(stock.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
-            </a>
-        </tr>
-    </div>
+
+
+
+    </tbody>
 </table>
 </div>
 <script type="text/javascript">
@@ -67,14 +79,60 @@
         location.href = '/stocks/purchase/'+id;
     }
 </script>
+
+<!-- The share price sorting has a bug where SP of 75.41 was higher than 603.11. All other sorting is fine, NEEDS REVISED -->
 <script>
-    $(document).ready(function(){
-        $("#myInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
+    const jsonFromHtml = (tbody, thead) => {
+        let tableJson = {rows:[]};
+        [...tbody.children].forEach(tableRow => {
+            let rowEntry = {};
+            [...tableRow.children].forEach((cell, column) => rowEntry[thead.children[0].children[column].textContent] = cell.textContent);
+            tableJson.rows.push(rowEntry);
         });
+        console.log(tableJson);
+        return tableJson;
+    };
+
+    const arrayToTable = (arr, tbody, thead) => {
+        let rows = [];
+        arr.forEach((row, rowNum) => {
+            row = [...thead.children[0].children].map(th => row[th.textContent] ? row[th.textContent] : '');
+            row = row.map(td => `<td>${td}</td>`);
+            row = `<tr>${row.join('')}</tr>`;
+            rows.push(row);
+        });
+        console.log("--->"+rows)
+        tbody.innerHTML = rows.join('');
+    };
+
+    const myTableTbody = document.querySelector('#myTable tbody');
+    const myTableThead = document.querySelector('#myTable thead');
+
+    const customSort = (arr, key, order) => {
+        let sortCompare = order == 'Desc' ? -1 : 1;
+        return arr.sort((first, second) => first[key]>second[key] ?  sortCompare : first[key]<second[key] ?  -sortCompare : 0);
+    };
+
+
+    document.querySelector('#selectionOrder').addEventListener('change', function(){
+        let sortKey = this.value.match(/[A-Za-z]+/)[0];
+
+        if(sortKey.includes("Asc")){
+            sortKey = sortKey.slice(0, -3);
+        }
+        if(sortKey.includes("Desc")){
+            sortKey = sortKey.slice(0, -4);
+        }
+        if(sortKey == "SharePrice"){
+            sortKey = "Share Price";
+        }
+        console.log(sortKey);
+        let sortOrder = this.value.match(/(A|De)sc/) ? this.value.match(/(A|De)sc/)[0] : 'Asc';
+        console.log(sortOrder);
+        let myTableJson = jsonFromHtml(myTableTbody, myTableThead);
+        console.log(myTableJson);
+        myTableJson.rows = customSort(myTableJson.rows, sortKey, sortOrder);
+        arrayToTable(myTableJson.rows, myTableTbody, myTableThead);
     });
 </script>
 </body>

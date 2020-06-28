@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="common/header :: common-header"/>
-<link rel="stylesheet" href="../static/css/user-home.scss">
+<link rel="stylesheet" href="css/user-home.css">
 <style>
     body {
         background-image: url("images/user-home.jpeg");
@@ -51,6 +51,16 @@
     </div>
 </div>
 
+
+<!--<div class="tcontainer" >
+    <div class="ticker-wrap">
+        <div class="ticker-move" >
+            <div th:each="stock : ${stocks}">
+            <div class="ticker-item" th:text="'' + ${stock.company} + ' ' + ${stock.sharePrice}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+            </div>
+        </div>
+    </div>
+</div>-->
 
 
 </body>

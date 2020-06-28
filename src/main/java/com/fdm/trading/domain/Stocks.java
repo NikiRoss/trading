@@ -1,6 +1,7 @@
 package com.fdm.trading.domain;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 @Entity
 public class Stocks {
@@ -109,4 +110,6 @@ public class Stocks {
     public void setClosingValue(double closingValue) {
         this.closingValue = closingValue;
     }
+
+
 }

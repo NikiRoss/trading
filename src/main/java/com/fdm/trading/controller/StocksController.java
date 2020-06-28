@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -40,6 +41,9 @@ public class StocksController {
         System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
         model.addAttribute("account", account);
         model.addAttribute("stocks", stocksList);
+        model.addAttribute("bySharePrice", Comparator.comparing(Stocks::getSharePrice));
+        model.addAttribute("byCompany", Comparator.comparing(Stocks::getCompany));
+
         return "stocks";
     }
 

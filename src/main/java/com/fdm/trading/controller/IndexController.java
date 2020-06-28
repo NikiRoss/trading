@@ -1,8 +1,10 @@
 package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
+import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,9 @@ public class IndexController {
 
     @Autowired
     AccountServiceImpl accountService;
+
+    @Autowired
+    StockServiceImpl stockService;
 
     @RequestMapping("/")
     public String index() {
@@ -42,6 +47,7 @@ public class IndexController {
         model.addAttribute("newUser", newUser);
         model.addAttribute("validated", userService.validateUser(newUser, user.getPassword()));
         session.setAttribute("newUser", newUser);
+        model.addAttribute("stocks", stocksTicker());
         session.setAttribute("account", newUser.getAccount());
         model.addAttribute("account", newUser.getAccount());
         System.out.println("newUser------>" + newUser);
@@ -57,8 +63,13 @@ public class IndexController {
         Account sessionAccount = (Account) session.getAttribute("account");
         Account account = accountService.findByAccountId(sessionAccount.getAccountId());
         model.addAttribute("newUser", session.getAttribute("newUser"));
+        model.addAttribute("stocks", stocksTicker());
         model.addAttribute("account", account);
         return "userHome";
+    }
+
+    private List<Stocks> stocksTicker(){
+        return stockService.findAll();
     }
 
 }

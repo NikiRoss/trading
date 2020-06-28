@@ -86,6 +86,12 @@ public class StockServiceImpl implements StocksService{
         for(Stocks stock:stocksIterable){
             stocks.add(stock);
         }
+        /*Collections.sort(stocks, new Comparator<Stocks>() {
+            @Override
+            public int compare(Stocks o1, Stocks o2) {
+                return o1.getCompany().compareTo(o2.getCompany());
+            }
+        });*/
         return stocks;
     }
 
