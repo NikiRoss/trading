@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
+<title>Log In</title>
 <link rel="stylesheet" href="css/index.css">
 <style>
     body {
@@ -14,7 +15,7 @@
 
 <body>
 <!-- Login Section -->
-<h1 th:text="${validated}"></h1>
+<!--<h1 th:text="${validated}"></h1>
 <div class="container form-inline justify-content-center">
         <div class="row ">
             <div class="main-center ">
@@ -62,7 +63,19 @@
         </div>
     </div>
 </div>
-</div>
+</div>-->
+
+<h1>Login page</h1>
+<p th:if="${loginError}" class="error">Wrong user or password</p>
+<form th:action="@{/userHome}" th:object="${user}" method="POST">
+    <label for="username">Username</label>:
+    <input type="text" id="username" autofocus="autofocus" th:field="${user.username}" roleId="username" class="form-control" placeholder="Username" name="username"
+           required="required"/> <br />
+    <label for="password">Password</label>:
+    <input type="password" id="password" name="password" th:field="${user.password}" roleId="inputPassword" class="form-control" placeholder="Password"
+           required="required"/> <br />
+    <input type="submit" value="Log in" />
+</form>
 
 <div th:replace="common/header :: body-bottom-scripts"/>
 

@@ -1,8 +1,11 @@
 package com.fdm.trading.test.domain.user;
 
+import com.fdm.trading.dao.RoleDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.security.Role;
+import com.fdm.trading.security.UserRole;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.junit.Test;
@@ -10,6 +13,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -23,6 +29,8 @@ public class UserPersistenceTests {
     private UserServiceImpl userService;
     @Autowired
     private AccountServiceImpl accountService;
+    @Autowired
+    private RoleDao roleDao;
 
     @Test
     public void create_A_New_User(){
@@ -84,6 +92,42 @@ public class UserPersistenceTests {
         Account a = accountService.findByAccountId(21);
         String val1 = a.getAccountNumber();
         assertEquals(val1, "200129");
+    }
+
+    @Test
+    public void create_New_User_With_Spring_Security(){
+        User u = new User();
+        u.setFirstName("Martyn");
+        u.setSurname("Hunter");
+        u.setUsername("Marty90");
+        u.setPassword("password1");
+        u.setEmail("m.hunter@email.com");
+        u.setEnabled(true);
+        Role role1 = new Role();
+        role1.setName("ADMIN");
+        Role role2 = new Role();
+        role2.setName("BASIC");
+        roleDao.save(role1);
+        roleDao.save(role2);
+        UserRole ur = new UserRole();
+        ur.setRole(role1);
+        UserRole ur1 = new UserRole();
+        ur1.setRole(role2);
+        Set<UserRole> roleSet = new HashSet<>();
+        roleSet.add(ur1);
+        roleSet.add(ur);
+        u.setUserRoles(roleSet);
+        userService.createUser(u, roleSet);
+    }
+
+    @Test
+    public void createRoles(){
+        Role role1 = new Role();
+        role1.setName("ADMIN");
+        Role role2 = new Role();
+        role2.setName("BASIC");
+        roleDao.save(role1);
+        roleDao.save(role2);
     }
 
 }
