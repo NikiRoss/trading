@@ -7,8 +7,10 @@ import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,17 +30,31 @@ public class IndexController {
     @Autowired
     StockServiceImpl stockService;
 
+
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
         return "index";
     }
 
     @RequestMapping("/index")
-    public String index(Model model) {
-        model.addAttribute("user", new User());
-        System.out.println(model.asMap());
+    public String index(Model model, HttpSession session, Principal principal, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            System.err.println("WE HAVE ERRORS");
+        }
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        System.out.println(user.toString());
+
         System.out.println("GOT INDEX");
-        return "index";
+        Account sessionAccount = user.getAccount();
+        Account account = accountService.findByAccountId(sessionAccount.getAccountId());
+        model.addAttribute("newUser", user);
+        model.addAttribute("stocks", stocksTicker());
+        model.addAttribute("account", account);
+        model.addAttribute("principal", principal);
+        return "userHome";
     }
 
  /*   @RequestMapping("/userHome")
@@ -51,24 +67,19 @@ public class IndexController {
     }*/
 
     @RequestMapping(value = "/userHome", method = RequestMethod.POST)
-    public String loginPost(@ModelAttribute Principal principal, @ModelAttribute User user, Model model, HttpSession session) {
-        System.out.println(user.getUsername());
+    public String loginPost(@ModelAttribute Principal principal, Model model, HttpSession session) {
         User newUser = userService.findByUsername(principal.getName());
         List<User> users = userService.findUserList();
 
         model.addAttribute("newUser", newUser);
-        model.addAttribute("validated", userService.validateUser(newUser, user.getPassword()));
 
         session.setAttribute("newUser", newUser);
         model.addAttribute("stocks", stocksTicker());
         session.setAttribute("account", newUser.getAccount());
         model.addAttribute("account", newUser.getAccount());
         System.out.println("newUser------>" + newUser);
-        System.out.println("user>>>>>>>>>>>>>>>>>>>>>>>" + user);
-        if (userService.validateUser(newUser, user.getPassword())) {
-            return "userHome";
-        }
-        return "signup";
+
+        return "userHome";
     }
 
     @RequestMapping(value = "/userHome", method = RequestMethod.GET)

@@ -1,23 +1,14 @@
 package com.fdm.trading.domain;
 
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fdm.trading.security.Authority;
-import com.fdm.trading.security.UserRole;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 
 @Scope("session")
 @Entity
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,19 +33,14 @@ public class User implements UserDetails {
     @OneToOne
     private Account account;
 
+    @Column(name = "enabled")
     private boolean enabled;
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
-    }
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
-    }
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnore
-    private Set<UserRole> userRoles = new HashSet<>();
+    public User(){}
 
     public long getUserId() {
         return userId;
@@ -92,30 +78,8 @@ public class User implements UserDetails {
         return username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
-        return authorities;
     }
 
     public String getPassword() {
@@ -142,4 +106,25 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", account=" + account +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

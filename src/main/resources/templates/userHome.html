@@ -38,6 +38,7 @@
     <!-- USERNAME WELCOME -->
     <div class="row">
         <h1 th:text="'Hi ' + ${newUser.getFirstName()}"/>
+        <h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
             <br>
     </div>
     <br>

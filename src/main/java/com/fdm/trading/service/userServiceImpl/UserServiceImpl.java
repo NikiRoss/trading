@@ -1,71 +1,42 @@
 package com.fdm.trading.service.userServiceImpl;
 
-import com.fdm.trading.dao.RoleDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.Role;
 import com.fdm.trading.domain.User;
-import com.fdm.trading.security.UserRole;
+import com.fdm.trading.security.PasswordEncryption;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
 
     @Autowired
     private UserDao userDao;
 
     @Autowired
-    private RoleDao roleDao;
-
-    @Autowired
     private AccountServiceImpl accountService;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
-
-/*    public User createNewUser(String firstName, String surname, String email, String username, String password){
+    public User createNewUser(String firstName, String surname, String email, String username, String password, Role role){
         User user = new User();
         Account account = accountService.createAnAccount();
+        user.setRole(role);
         user.setEnabled(false);
         user.setAccount(account);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setSurname(surname);
         user.setUsername(username);
-        user.setPassword(password);
+        String encrypted = PasswordEncryption.hashPassword(password).get();
+        user.setPassword(encrypted);
         userDao.save(user);
         return user;
-    }*/
-
-    public User createUser(User user, Set<UserRole> userRoles) {
-        User localUser = userDao.findByUsername(user.getUsername());
-
-        if (localUser != null) {
-            System.out.println("User with username "+user.getUsername()+" already exist. Nothing will be done. ");
-        } else {
-            String encryptedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encryptedPassword);
-
-            for (UserRole ur : userRoles) {
-                roleDao.save(ur.getRole());
-            }
-
-            user.getUserRoles().addAll(userRoles);
-
-            user.setAccount(accountService.createAnAccount());
-
-            localUser = userDao.save(user);
-        }
-
-        return localUser;
     }
+
 
     public void save(User user) {
         userDao.save(user);
@@ -77,29 +48,6 @@ public class UserServiceImpl implements UserService {
 
     public User findByEmail(String email) {
         return userDao.findByEmail(email);
-    }
-
-
-    public boolean checkUserExists(String username, String email) {
-        if (checkUsernameExists(username) || checkEmailExists(username)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean checkUsernameExists(String username) {
-        if (null != findByUsername(username)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean checkEmailExists(String email) {
-        if (null != findByEmail(email)) {
-            return true;
-        }
-        return false;
     }
 
     public User saveUser(User user) {
@@ -124,13 +72,9 @@ public class UserServiceImpl implements UserService {
         System.out.println(username + " is disabled.");
     }
 
-
-    public boolean validateUser(User user, String password){
-        System.out.println(user.getPassword());
-        if (user.getPassword().equals(password)){
-            return true;
-        }
-        return false;
+    public boolean validateUser(User user, String password) {
+        String key = user.getPassword();
+        return PasswordEncryption.verifyPassword(password, key);
     }
 
 }
