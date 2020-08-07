@@ -1,9 +1,6 @@
 package com.fdm.trading.domain;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 
 @Scope("session")
@@ -35,10 +32,6 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled;
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     public User(){}
 
@@ -106,13 +99,6 @@ public class User {
         this.enabled = enabled;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Role getRole() {
-        return role;
-    }
 
     @Override
     public String toString() {

@@ -2,7 +2,6 @@ package com.fdm.trading.test.domain.user;
 
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.Role;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.security.PasswordEncryption;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
@@ -11,8 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -31,8 +28,8 @@ public class UserPersistenceTests {
 
     @Test
     public void create_A_New_User(){
-      userService.createNewUser("N", "R", "E", "New UN",
-              "password1", Role.ADMIN);
+      userService.createNewUser("M", "H", "E", "MH",
+              "password1", true);
     }
 
     @Test

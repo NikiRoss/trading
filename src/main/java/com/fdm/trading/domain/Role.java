@@ -1,16 +1,17 @@
 package com.fdm.trading.domain;
 
-public enum Role {
-    ADMIN("ADMIN"), USER("USER");
+import javax.persistence.*;
 
-    private String role;
+@Entity
+public class Role {
 
-    private Role(String role){
-        this.role = role;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long roleId;
 
-    public String getRole(){
-        return name();
-    }
+    @Column(name="role_name")
+    private String roleName;
 
+    @Column(name="username")
+    private String username;
 }

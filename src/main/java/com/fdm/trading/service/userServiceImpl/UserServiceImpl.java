@@ -2,12 +2,10 @@ package com.fdm.trading.service.userServiceImpl;
 
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.Role;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.security.PasswordEncryption;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -21,18 +19,18 @@ public class UserServiceImpl {
     private AccountServiceImpl accountService;
 
 
-    public User createNewUser(String firstName, String surname, String email, String username, String password, Role role){
+    public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled){
         User user = new User();
         Account account = accountService.createAnAccount();
-        user.setRole(role);
-        user.setEnabled(false);
+        //user.setRole(role);
+        user.setEnabled(enabled);
         user.setAccount(account);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setSurname(surname);
         user.setUsername(username);
-        String encrypted = PasswordEncryption.hashPassword(password).get();
-        user.setPassword(encrypted);
+        //String encrypted = PasswordEncryption.hashPassword(password).get();
+        user.setPassword(password);
         userDao.save(user);
         return user;
     }

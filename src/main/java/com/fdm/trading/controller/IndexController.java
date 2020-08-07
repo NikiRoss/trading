@@ -7,6 +7,7 @@ import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +37,11 @@ public class IndexController {
         User user = userService.findByUsername(principal.getName());
         model.addAttribute("user", user);
         return "index";
+    }
+    @RequestMapping("/test")
+    @Secured("ADMIN")
+    public String test(){
+        return "test";
     }
 
     @RequestMapping("/index")
