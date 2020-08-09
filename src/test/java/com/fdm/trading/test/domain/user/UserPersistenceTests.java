@@ -28,8 +28,8 @@ public class UserPersistenceTests {
 
     @Test
     public void create_A_New_User(){
-      userService.createNewUser("M", "H", "E", "MH",
-              "password1", true);
+      userService.createNewUser("M", "H", "E", "user",
+              "userpass", true);
     }
 
     @Test

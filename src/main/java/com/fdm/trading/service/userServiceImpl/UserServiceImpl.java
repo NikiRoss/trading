@@ -6,6 +6,7 @@ import com.fdm.trading.domain.User;
 import com.fdm.trading.security.PasswordEncryption;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,6 +19,9 @@ public class UserServiceImpl {
     @Autowired
     private AccountServiceImpl accountService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled){
         User user = new User();
@@ -29,8 +33,8 @@ public class UserServiceImpl {
         user.setFirstName(firstName);
         user.setSurname(surname);
         user.setUsername(username);
-        //String encrypted = PasswordEncryption.hashPassword(password).get();
-        user.setPassword(password);
+        String encrypted = passwordEncoder.encode((CharSequence) password);
+        user.setPassword(encrypted);
         userDao.save(user);
         return user;
     }
@@ -72,7 +76,7 @@ public class UserServiceImpl {
 
     public boolean validateUser(User user, String password) {
         String key = user.getPassword();
-        return PasswordEncryption.verifyPassword(password, key);
+        return passwordEncoder.matches((CharSequence) password, key);
     }
 
 }

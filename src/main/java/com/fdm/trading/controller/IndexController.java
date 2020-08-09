@@ -33,7 +33,7 @@ public class IndexController {
 
 
     @RequestMapping("/")
-    public String index(Model model, Principal principal) {
+    public String root(Model model, Principal principal) {
         User user = userService.findByUsername(principal.getName());
         model.addAttribute("user", user);
         return "index";
@@ -45,10 +45,9 @@ public class IndexController {
     }
 
     @RequestMapping("/index")
-    public String index(Model model, HttpSession session, Principal principal, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            System.err.println("WE HAVE ERRORS");
-        }
+    @Secured("USER_HOME")
+    public String index(Model model, Principal principal) {
+
         User user = userService.findByUsername(principal.getName());
         model.addAttribute("user", user);
         System.out.println(user.toString());
