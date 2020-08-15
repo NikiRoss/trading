@@ -3,13 +3,13 @@ package com.fdm.trading.test.domain.user;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
-import com.fdm.trading.security.PasswordEncryption;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
@@ -27,10 +27,10 @@ public class UserPersistenceTests {
 
 
     @Test
-    public void create_A_New_User(){
-      userService.createNewUser("M", "H", "E", "user",
-              "userpass", true);
+    public void create_User(){
+        userService.createNewUser("niki", "ross", "e", "niki84", "password238", true, "ROLE_USER");
     }
+
 
     @Test
     public void find_A_User_By_Username(){
@@ -85,14 +85,5 @@ public class UserPersistenceTests {
         assertEquals(val1, "200129");
     }
 
-    @Test
-    public void validate_Encrypted_Password(){
-        User u = userService.findByUsername("UN");
-        boolean ver = userService.validateUser(u, "NEWpassword238");
-        System.out.println("user is verified " + ver);
-        System.out.println("DB password >>> " + u.getPassword());
-        System.out.println("Hashed pwd >>>> " + PasswordEncryption.hashPassword("NEWpassword238").get());
-
-    }
 
 }

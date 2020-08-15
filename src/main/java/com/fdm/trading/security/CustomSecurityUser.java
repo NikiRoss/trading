@@ -1,0 +1,40 @@
+package com.fdm.trading.security;
+
+import com.fdm.trading.domain.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+public class CustomSecurityUser extends User implements UserDetails {
+
+    public CustomSecurityUser() {
+    }
+
+    public CustomSecurityUser(User user) {
+        this.setUserAuthorities(user.getUserAuthorities());
+        this.setUserId(user.getUserId());
+        this.setPassword(user.getPassword());
+        this.setUsername(user.getUsername());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getUserAuthorities();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+}

@@ -1,17 +1,22 @@
 package com.fdm.trading.service.userServiceImpl;
 
+import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
-import com.fdm.trading.security.PasswordEncryption;
+import com.fdm.trading.security.Authorities;
+import com.fdm.trading.security.CustomSecurityUser;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserDao userDao;
@@ -20,22 +25,27 @@ public class UserServiceImpl {
     private AccountServiceImpl accountService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private AuthoritiesDao authoritiesDao;
 
 
-    public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled){
+    public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled, String role){
         User user = new User();
         Account account = accountService.createAnAccount();
-        //user.setRole(role);
         user.setEnabled(enabled);
         user.setAccount(account);
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setSurname(surname);
         user.setUsername(username);
-        String encrypted = passwordEncoder.encode((CharSequence) password);
-        user.setPassword(encrypted);
+        user.setPassword(encoder.encode(password));
+        Authorities a = new Authorities();
+        a.setAuthority(role);
+        a.setUser(user);
         userDao.save(user);
+        authoritiesDao.save(a);
         return user;
     }
 
@@ -46,14 +56,6 @@ public class UserServiceImpl {
 
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
-    }
-
-    public User findByEmail(String email) {
-        return userDao.findByEmail(email);
-    }
-
-    public User saveUser(User user) {
-        return userDao.save(user);
     }
 
     public List<User> findUserList() {
@@ -74,9 +76,14 @@ public class UserServiceImpl {
         System.out.println(username + " is disabled.");
     }
 
-    public boolean validateUser(User user, String password) {
-        String key = user.getPassword();
-        return passwordEncoder.matches((CharSequence) password, key);
-    }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userDao.findByUsername(username);
+        if (user == null)
+            throw new UsernameNotFoundException("Username and or password was incorrect.");
+
+        return new CustomSecurityUser(user);
+    }
 }

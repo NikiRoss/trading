@@ -1,7 +1,10 @@
 package com.fdm.trading.domain;
 
+import com.fdm.trading.security.Authorities;
 import org.springframework.context.annotation.Scope;
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Scope("session")
 @Entity
@@ -32,6 +35,9 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
+    private Set<Authorities> userAuthorities = new HashSet<>();
 
     public User(){}
 
@@ -99,6 +105,13 @@ public class User {
         this.enabled = enabled;
     }
 
+    public Set<Authorities> getUserAuthorities() {
+        return userAuthorities;
+    }
+
+    public void setUserAuthorities(Set<Authorities> userAuthorities) {
+        this.userAuthorities = userAuthorities;
+    }
 
     @Override
     public String toString() {
