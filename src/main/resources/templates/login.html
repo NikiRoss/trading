@@ -1,83 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/header :: common-header"/>
-<title>Log In</title>
-<link rel="stylesheet" href="css/index.css">
-<style>
-    body {
-        background-image: url("images/wall-st.jpeg");
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
 </head>
-
-
 <body>
-<!-- Login Section -->
-<div class="container form-inline justify-content-center">
-        <div class="row ">
-            <div class="main-center ">
-                <div class="bg-danger" th:if="${param.error}">
-                Invalid username and password.
-                </div>
-
-            <div class="bg-danger" th:if="${param.logout}">
-                You have been logged out.
-            </div>
-
-            <div>
-            <form class="form-signin" th:action="@{/userHome}" th:object="${user}" method="POST">
-                <div>
-                    <h2 class="form-signin-heading">Sign In</h2>
-                </div>
-
-                <div class="form-group">
-                    <label for="username" class="sr-only">Username</label>
-                        <input type="text" th:field="${user.username}" roleId="username" class="form-control" placeholder="Username" name="username"
-                           id="username"
-                           required="required" autofocus="autofocus"/>
-                </div>
-                <br>
-
-                <div class="form-group">
-                    <label for="password" class="sr-only">Password</label>
-                        <input type="password" th:field="${user.password}" roleId="inputPassword" class="form-control" placeholder="Password"
-                           id="password"
-                           name="password" required="required"/>
-                </div>
-
-                <div class="form-group">
-                    <input type="checkbox" name="remember-me" id="remember-me"/> &nbsp; Remember me
-                </div>
-                <br>
-                <br>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            </form>-->
-                <br>
-
-            <div class="form-group ">
-                <a type="submit" class="btn btn-info btn-lg btn-block login-button" th:href="@{/signup}">Sign up!</a>
-            </div>
-        </div>
+<h2>Welcome</h2>
+<form class="form-signin" th:action="@{/login}" method="POST">
+    <div>
+        <h2 class="form-signin-heading">Sign In</h2>
     </div>
-</div>
-</div>
 
-<!--<h1>Login page</h1>
+    <div class="form-group">
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" roleId="username" class="form-control" placeholder="Username" name="username"
+               id="username"
+               required="required" autofocus="autofocus"/>
+    </div>
+    <br>
 
-<p th:if="${loginError}" class="error">Wrong user or password</p>
-<form th:action="@{/userHome}" th:object="${user}" method="POST">
-    <label for="username">Username</label>:
-    <input type="text" id="username" autofocus="autofocus" th:field="${user.username}" roleId="username" class="form-control" placeholder="Username" name="username"
-           required="required"/> <br />
-    <label for="password">Password</label>:
-    <input type="password" id="password" name="password" th:field="${user.password}" roleId="inputPassword" class="form-control" placeholder="Password"
-           required="required"/> <br />
-    <input type="submit" value="Log in" />
-</form>&ndash;&gt;-->
+    <div class="form-group">
+        <label for="password" class="sr-only">Password</label>
+        <input type="password"  roleId="inputPassword" class="form-control" placeholder="Password"
+               id="password"
+               name="password" required="required"/>
+    </div>
 
-<div th:replace="common/header :: body-bottom-scripts"/>
+    <div class="form-group">
+        <input type="checkbox" name="remember-me" id="remember-me"/> &nbsp; Remember me
+    </div>
+    <br>
+    <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
 
 </body>
 </html>

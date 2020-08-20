@@ -33,7 +33,10 @@ public class UserServiceImpl implements UserDetailsService {
 
     public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled, String role){
         User user = new User();
-        Account account = accountService.createAnAccount();
+        Account account = null;
+        if(!role.equals("ROLE_ADMIN")){
+            account = accountService.createAnAccount();
+        }
         user.setEnabled(enabled);
         user.setAccount(account);
         user.setEmail(email);
@@ -57,6 +60,9 @@ public class UserServiceImpl implements UserDetailsService {
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
     }
+    public User findByUserId(long userId){
+        return userDao.findByUserId(userId);
+    }
 
     public List<User> findUserList() {
         return userDao.findAll();
@@ -76,14 +82,23 @@ public class UserServiceImpl implements UserDetailsService {
         System.out.println(username + " is disabled.");
     }
 
+    public List<User> findAllUsers(){
+        return userDao.findAll();
+    }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userDao.findByUsername(username);
+        System.out.println();
+        System.out.println("user >>> " + user.toString());
+        System.out.println();
         if (user == null)
             throw new UsernameNotFoundException("Username and or password was incorrect.");
 
         return new CustomSecurityUser(user);
     }
+
 }

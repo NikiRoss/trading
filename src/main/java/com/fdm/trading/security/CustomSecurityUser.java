@@ -8,33 +8,44 @@ import java.util.Collection;
 
 public class CustomSecurityUser extends User implements UserDetails {
 
-    public CustomSecurityUser() {
-    }
+    private static final long serialVersionUID = -4381938875186527688L;
+
+    public CustomSecurityUser () {}
 
     public CustomSecurityUser(User user) {
         this.setUserAuthorities(user.getUserAuthorities());
         this.setUserId(user.getUserId());
         this.setPassword(user.getPassword());
         this.setUsername(user.getUsername());
+        this.setAccount(user.getAccount());
+        this.setFirstName(user.getFirstName());
+        this.setEnabled(user.isEnabled());
+        this.setEmail(user.getEmail());
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getUserAuthorities();
+        return super.getUserAuthorities();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

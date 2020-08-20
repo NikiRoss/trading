@@ -1,15 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
 <link rel="stylesheet" href="css/user-home.css">
 <title>User Home</title>
-<style>
-    body {
-        background-image: url("images/user-home.jpeg");
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
+
 </head>
 <body>
 
@@ -31,26 +25,33 @@
                         <a class="nav-link" th:href="@{/holdings}">Holdings</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/admin/users}">Admin</a>
+                    </li>
+
                 </ul>
         </nav>
     </div>
 
+<a sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</a>
+Authenticated username:
+<div sec:authentication="name"></div>
+Authenticated user roles:
+<div sec:authentication="principal.authorities"></div>
+
 
 <div class="container">
-    &lt;!&ndash; USERNAME WELCOME &ndash;&gt;
     <div class="row">
-        <h1 th:text="'Hi ' + ${newUser.getFirstName()}"/>
-        <h3 th:inline="text">Welcome [[${#httpServletRequest.remoteUser}]]</h3>
+        <h1 th:text="'Hi ' + ${user.username}"/>
             <br>
     </div>
     <br>
     <br>
     <br>
     <br>
-    &lt;!&ndash; ACCOUNT BALANCE &ndash;&gt;
     <div class="row">
             <h4>Your balance is: <i class="fa fa-usd" aria-hidden="true"></i> <span
-                th:text="${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}">...</span>
+                th:text="${account.accountBalance}">...</span>
             </h4>
     </div>
 </div>

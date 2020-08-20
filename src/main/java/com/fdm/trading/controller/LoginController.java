@@ -10,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 
-//@Controller
+@Controller
+//@Secured({"USER", "ADMIN"})
 public class LoginController {
 
     @Autowired
@@ -29,22 +32,45 @@ public class LoginController {
     @Autowired
     StockServiceImpl stockService;
 
-    @RequestMapping("/login")
-    public String login(Model model){
-        User user = new User();
-        model.addAttribute("user", user);
+
+    @GetMapping("/index")
+    public String home() {
+        return "index";
+    }
+
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String login() {
         return "login";
     }
 
-    @RequestMapping("userHome")
-    public String userHome(Model model, HttpSession){
-        User u = new User();
-
-        model.addAttribute("newUser", )
-
+    @GetMapping("/logout")
+    public String logout() {
+        return "login";
     }
 
+    @GetMapping("/userHome")
+    public String success(Model model, Principal principal) {
+        System.out.println("success");
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        Account account = user.getAccount();
+        System.out.println(user.toString());
+        model.addAttribute("user", user);
+        model.addAttribute("account", account);
+        return "userHome";
+    }
 
+    @GetMapping("/newtemp")
+    public String newTemp(Model model, @ModelAttribute User user, Principal principal) {
+        user = (User) userService.loadUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        System.out.println(user.toString());
+        return "newtemp";
+    }
 
 
     private List<Stocks> stocksTicker(){

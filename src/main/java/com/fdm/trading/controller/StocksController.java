@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,10 +32,15 @@ public class StocksController {
     @Autowired
     AccountServiceImpl accountService;
 
+    private Account getAccountFromPrincipal(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return user.getAccount();
+    }
+
     @RequestMapping(value = "/stocks", method = RequestMethod.GET)
-    public String getStocks(Model model, HttpSession session){
+    public String getStocks(Model model, Principal principal){
         List<Stocks> stocksList = this.stockService.findAll();
-        Account account = (Account) session.getAttribute("account");
+        Account account = getAccountFromPrincipal(principal);
         System.out.println(stocksList);
         System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
         System.out.println(";;;;;;;;"+account+";;;;;;");
@@ -48,17 +54,17 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.GET)
-    public String getPurchase(@PathVariable int id, Model model, HttpSession session){
+    public String getPurchase(@PathVariable int id, Model model, Principal principal){
+        Account account = getAccountFromPrincipal(principal);
         Stocks stocks = stockService.findByStockId(id);
-        Account account = (Account) session.getAttribute("account");
         System.out.println(stocks.getCompany());
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
-        model.addAttribute("account", session.getAttribute("account"));
+        model.addAttribute("account", account);
         StockListEntity stockListEntity = stockService.getStockListByAccountAndStock(account.getAccountId(), stocks.getStockId());
 
-        if(stockListEntity==null){
+        if(stockListEntity == null){
             stockListEntity = new StockListEntity();
         }
 
@@ -67,23 +73,23 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.POST)
-    public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, HttpSession session){
-
-        Account sessionAccount = (Account) session.getAttribute("account");
-        Account account = accountService.findByAccountId(sessionAccount.getAccountId());
+    public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal){
+        Account account = getAccountFromPrincipal(principal);
         transactionService.createPurchaseTransaction(id, (int) account.getAccountId(), transaction.getVolume());
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("stocks", stocks);
         model.addAttribute("transaction", transaction);
-        model.addAttribute("account", session.getAttribute("account"));
+        model.addAttribute("account", account);
         return "purchaseSuccess";
     }
 
+
+
     @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.GET)
-    public String getSale(@PathVariable int id, Model model, HttpSession session){
+    public String getSale(@PathVariable int id, Model model, Principal principal){
+        Account account = getAccountFromPrincipal(principal);
         Stocks stocks = stockService.findByStockId(id);
         System.out.println(stocks.getCompany());
-        Account account = (Account) session.getAttribute("account");
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
@@ -92,12 +98,11 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.POST)
-    public String postSale(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, HttpSession session){
-        Account account = (Account) session.getAttribute("account");
+    public String postSale(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal){
+        Account account = getAccountFromPrincipal(principal);
         transactionService.createSaleTransaction(id, (int) account.getAccountId(), transaction.getVolume());
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("messageEnabled", true);
-        session.setAttribute("message", transactionService.getMessage());
         model.addAttribute("message", transactionService.getMessage());
         System.out.println(">>>>>>" + transactionService.getMessage());
         model.addAttribute("stocks", stocks);
@@ -105,6 +110,7 @@ public class StocksController {
         model.addAttribute("transaction", transaction);
         return "sale";
     }
+
 
 
 }

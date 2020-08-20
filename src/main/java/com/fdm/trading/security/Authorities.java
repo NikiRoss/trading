@@ -20,9 +20,6 @@ public class Authorities implements GrantedAuthority {
         return id;
     }
 
-    public Authorities() {
-        super();
-    }
 
     public void setId(Long id) {
         this.id = id;

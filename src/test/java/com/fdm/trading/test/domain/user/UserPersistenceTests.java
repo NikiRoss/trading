@@ -31,6 +31,11 @@ public class UserPersistenceTests {
         userService.createNewUser("niki", "ross", "e", "niki84", "password238", true, "ROLE_USER");
     }
 
+    @Test
+    public void create_Admin(){
+        userService.createNewUser("M", "H", "e", "MH90", "password", true, "ROLE_ADMIN");
+    }
+
 
     @Test
     public void find_A_User_By_Username(){

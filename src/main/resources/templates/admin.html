@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+</head>
+<body>
+<h1 th:text="'Hi, Admin!' + ${admin.username}"></h1>
+
+<table class="table table-bordered table-striped" id="myTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Surname</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Account ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <div th:each="user : ${userlist}">
+        <tr class="clickable-row">
+                <td th:text="${user.userId}" ></td>
+                <td th:text="${user.firstName}" ></td>
+                <td th:text="${user.surname}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.account.accountId}"></td>
+            <td><a th:href="@{'/stocks/purchase/' + ${user.userId}} ">Enable/Disable</a></td>
+        </tr>
+    </div>
+    </tbody>
+</table>
+
+</body>
+</html>
