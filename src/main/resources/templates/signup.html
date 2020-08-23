@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Sign Up </title>
@@ -8,38 +8,18 @@
 <div class="container">
     <h2>Sign Up</h2>
 
-    <form>
-
-        <fieldset class="form-group">
-            <legend>User Details</legend>
-            <div class="form-group">
-                <label class="form-check-label" for="firstName">First Name</label>
-                <input class="form-control" type="text" id="firstName" placeholder="First Name">
-            </div>
-
-            <div class="form-group">
-                <label class="form-check-label" for="surname">Surname</label>
-                <input class="form-control" type="text" id="surname" placeholder="Surname">
-            </div>
-
-            <div class="form-group">
-                <label class="form-check-label" for="email">Email</label>
-                <input class="form-control" type="text" id="email" placeholder="Email">
-            </div>
-
-            <div class="form-group">
-                <label class="form-check-label" for="username">Username</label>
-                <input class="form-control" type="text" id="username" placeholder="Username">
-            </div>
-
-            <div class="form-group">
-                <label class="form-check-label" for="password">Password</label>
-                <input class="form-control" type="password" id="password" placeholder="Password">
-                <br>
-                <p>Please choose a secure password</p>
-            </div>
-        </fieldset>
-        <button class="btn btn-primary" type="submit">Submit</button>
+    <form action="#" th:action="@{/signup/adduser}" th:object="${user}" method="post">
+        <label for="name">First Name</label>
+        <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
+        <label for="name">Surname</label>
+        <input type="text" th:field="*{surname}" id="surname" placeholder="surname"><br/>
+        <label for="email">Email</label>
+        <input type="text" th:field="*{email}" id="email" placeholder="email"><br/>
+        <label for="name">Password</label>
+        <input type="text" th:field="*{password}" id="password" placeholder="password"><br/>
+        <label for="name">Username</label>
+        <input type="text" th:field="*{username}" id="username" placeholder="create a username"><br/>
+        <input type="submit" value="Add User">
     </form>
 </div>
 

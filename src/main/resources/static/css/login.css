@@ -10,3 +10,9 @@
     text-align: center;
     color: dimgrey;
 }
+
+body {
+    background-image: url("static/images/login-img.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}

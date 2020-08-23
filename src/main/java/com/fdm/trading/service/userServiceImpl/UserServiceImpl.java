@@ -52,6 +52,22 @@ public class UserServiceImpl implements UserDetailsService {
         return user;
     }
 
+    public User createNewUserAlt(User user, String role){
+        Account account = null;
+        System.out.println("Creating new user");
+        if(!role.equals("ROLE_ADMIN")){
+            account = accountService.createAnAccount();
+        }
+        user.setAccount(account);
+        user.setPassword(encoder.encode(user.getPassword()));
+        Authorities a = new Authorities();
+        a.setAuthority(role);
+        a.setUser(user);
+        userDao.save(user);
+        authoritiesDao.save(a);
+        return user;
+    }
+
 
     public void save(User user) {
         userDao.save(user);
@@ -70,6 +86,7 @@ public class UserServiceImpl implements UserDetailsService {
 
     public void enableUser(String username) {
         User user = findByUsername(username);
+        System.out.println(">>>>>>>>>>>>enableUser"+user.isEnabled());
         user.setEnabled(true);
         userDao.save(user);
     }
@@ -77,7 +94,7 @@ public class UserServiceImpl implements UserDetailsService {
     public void disableUser(String username) {
         User user = findByUsername(username);
         user.setEnabled(false);
-        System.out.println(user.isEnabled());
+        System.out.println(">>>>>>>>>>>>disableUser"+user.isEnabled());
         userDao.save(user);
         System.out.println(username + " is disabled.");
     }
@@ -92,9 +109,6 @@ public class UserServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userDao.findByUsername(username);
-        System.out.println();
-        System.out.println("user >>> " + user.toString());
-        System.out.println();
         if (user == null)
             throw new UsernameNotFoundException("Username and or password was incorrect.");
 

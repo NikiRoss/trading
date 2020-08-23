@@ -25,12 +25,27 @@
                 <td th:text="${user.firstName}" ></td>
                 <td th:text="${user.surname}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.account.accountId}"></td>
-            <td><a th:href="@{'/stocks/purchase/' + ${user.userId}} ">Enable/Disable</a></td>
+            <td><a th:href="@{'/admin/disable/' + ${user.userId}} ">Enable/Disable</a></td>
         </tr>
     </div>
     </tbody>
 </table>
+
+<h2>Register a new admin</h2>
+
+<form action="#" th:action="@{/admin/newadmin}" th:object="${newAdmin}" method="post">
+    <label for="name">First Name</label>
+    <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
+    <label for="name">Surname</label>
+    <input type="text" th:field="*{surname}" id="surname" placeholder="surname"><br/>
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="email"><br/>
+    <label for="name">Password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password"><br/>
+    <label for="name">Username</label>
+    <input type="text" th:field="*{username}" id="username" placeholder="create a username"><br/>
+    <input type="submit" value="Add Admin">
+</form>
 
 </body>
 </html>

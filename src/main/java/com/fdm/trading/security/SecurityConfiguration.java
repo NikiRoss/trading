@@ -34,11 +34,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/login", "/signup/**").permitAll()
+                .antMatchers("/admin/**", "admin/disable/**").hasAnyRole("ADMIN")
                 .anyRequest().hasAnyRole("USER", "ADMIN").and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/userHome")
-                .permitAll();
+                .defaultSuccessUrl("/userHome");
     }
 }

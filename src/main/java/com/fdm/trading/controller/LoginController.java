@@ -7,20 +7,14 @@ import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 
 @Controller
-//@Secured({"USER", "ADMIN"})
 public class LoginController {
 
     @Autowired
@@ -33,14 +27,14 @@ public class LoginController {
     StockServiceImpl stockService;
 
 
-    @GetMapping("/index")
+    /*@GetMapping("/index")
     public String home() {
         return "index";
-    }
+    }*/
 
     @GetMapping("/")
     public String root() {
-        return "redirect:/login";
+        return "redirect:/userHome";
     }
 
     @GetMapping("/login")
@@ -52,6 +46,7 @@ public class LoginController {
     public String logout() {
         return "login";
     }
+
 
     @GetMapping("/userHome")
     public String success(Model model, Principal principal) {

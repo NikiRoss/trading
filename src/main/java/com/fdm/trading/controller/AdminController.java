@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Comparator;
@@ -24,21 +22,43 @@ public class AdminController {
     private UserServiceImpl userService;
 
 
-    @RequestMapping(value = "disable/{userId}", method = RequestMethod.POST)
+    @GetMapping(value = "disable/{userId}")
     public String disableUser(Model model, @PathVariable String userId, Principal p){
+        System.out.println("toggling user");
+        List<User> userList = userService.findAllUsers();
+        model.addAttribute("userlist", userList);
+        User admin = userService.findByUsername(p.getName());
+        model.addAttribute("admin", admin);
         User user = userService.findByUserId(Long.valueOf(userId));
         if(user.isEnabled()){
+            System.out.println("user is enabled");
             userService.disableUser(user.getUsername());
+        } else {
+            System.out.println("user is NOT enabled");
+            userService.enableUser(user.getUsername());
         }
         return "admin";
+    }
 
+
+    @PostMapping(value = "/newadmin")
+    public String addUser(Model model, @ModelAttribute("newAdmin") User user, Principal p){
+        System.out.println("Adding ADMIN...");
+        User admin = userService.findByUsername(p.getName());
+        model.addAttribute("admin", admin);
+        model.addAttribute("user", user);
+        userService.createNewUserAlt(user, "ROLE_ADMIN");
+        System.out.println(user.toString());
+        return "admin";
 
     }
+
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String disableUser2(Model model, Principal p){
         User user = userService.findByUsername(p.getName());
-
+        User newAdmin = new User();
+        model.addAttribute("newAdmin", newAdmin);
         List<User> userList = userService.findAllUsers();
         model.addAttribute("userlist", userList);
         model.addAttribute("admin", user);
