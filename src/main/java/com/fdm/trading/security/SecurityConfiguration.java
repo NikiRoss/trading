@@ -16,9 +16,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserServiceImpl userServiceImpl;
 
+    private static final String[] PUBLIC_MATCHERS = {
+            "/login",
+            "/webjars/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/",
+            "/about/**",
+            "/contact/**",
+            "/error/**/*",
+            "/console/**",
+            "/signup**"
+    };
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        System.out.println("getting password encoder");
         return new BCryptPasswordEncoder();
     }
 
@@ -34,7 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login", "/signup/**").permitAll()
+                .antMatchers(PUBLIC_MATCHERS).permitAll()
                 .antMatchers("/admin/**", "admin/disable/**").hasAnyRole("ADMIN")
                 .anyRequest().hasAnyRole("USER", "ADMIN").and()
                 .formLogin()
