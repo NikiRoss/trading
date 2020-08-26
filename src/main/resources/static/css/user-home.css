@@ -1,7 +1,14 @@
+
+
+.welcome{
+    color: yellow;
+}
+
+
 .container {
     width: 50%;
     background-color: whitesmoke;
-    opacity: 0.9;
+    opacity: 0.7;
     padding-bottom: 20px;
     height: 500px;
 }

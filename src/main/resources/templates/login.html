@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="common/header :: common-header"/><head>
+    <link th:href="@{css/login.css}" rel="stylesheet" />
 <style>
     body {
         background-image: url("images/wall-st.jpeg");
@@ -8,10 +9,12 @@
         background-size: cover;
     }
 </style>
+
     <title>Login</title>
 </head>
 <body>
 
+<div class="container text-center">
 <h2>Welcome</h2>
     <form class="form-signin" th:action="@{/login}" method="POST">
         <div>
@@ -40,11 +43,14 @@
 
         <br>
         <br>
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 100px">Sign in</button>
     </form>
+    <br>
+    <br>
+    <br>
+    <a th:href="@{/signup}">Dont have an account? Click here to sign up</a>
 
-<a th:href="@{/signup}">Dont have an account? Click here to sign up</a>
+</div>
 
 </body>
 </html>

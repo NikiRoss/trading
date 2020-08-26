@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/header :: common-header"/>
 <meta charset="UTF-8">
 <title>Title</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" th:href="@{css/stocks.css}">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/stocks.js"></script>
 
 <style>
@@ -16,26 +16,36 @@
         background-size: cover;
     }
 </style>
-<link rel="stylesheet" href="css/stocks.css">
 </head>
 <body>
 
 <!-- SIMPLE NAVBAR -->
-<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
-    <div class="container">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/userHome}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/transactions}">Transactions</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/holdings}">Holdings</a>
-            </li>
-        </ul>
+<div class="container-fluid">
+    <div id="navbar">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/userHome}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/transactions}">Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/holdings}">Holdings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
+                </li>
+
+                <li class="nav-item">
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/admin/users}">Admin</a>
+                </li>
+            </ul>
+        </nav>
     </div>
-</nav>
+</div>
 
 <div>
     <h1>Stocks List</h1>
