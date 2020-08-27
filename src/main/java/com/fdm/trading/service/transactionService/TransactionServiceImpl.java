@@ -168,5 +168,13 @@ public class TransactionServiceImpl implements TransactionService{
         return message;
     }
 
+    public List<Transaction> findAll(){
+        List<Transaction> transList = new ArrayList<>();
+        for(Transaction transaction:transDao.findAll()){
+            transList.add(transaction);
+        }
+        return transList;
+    }
+
 
 }

@@ -66,11 +66,17 @@ public class StockServiceImpl implements StocksService{
         for(Stocks stocks:list){
             double sharePrice = stocks.getSharePrice();
             double num = random1.nextDouble()*5;
+            if(sharePrice < 5){
+                sharePrice += num;
+            }
             if (random1.nextBoolean()) {
                 sharePrice += num;
 
             }else{
                 sharePrice -= num;
+            }
+            if(sharePrice < 0){
+                sharePrice = -sharePrice;
             }
             stocks.setSharePrice(sharePrice);
             save(stocks);
