@@ -99,7 +99,7 @@ public class TransactionServiceImpl implements TransactionService{
             stockService.save(stocks);
             StockListEntity dbStockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId, stockId);
 
-            if(dbStockListEntity==null){
+            if (dbStockListEntity==null){
                 dbStockListEntity = new StockListEntity();
                 dbStockListEntity.setAccountId(accountId);
                 dbStockListEntity.setStockId(stockId);
@@ -123,7 +123,7 @@ public class TransactionServiceImpl implements TransactionService{
         Account account = accountService.findByAccountId(accountId);
         Date date = new Date();
         StockListEntity stockListEntity = stockListEntityDao.findByAccountIdAndStockId(accountId,stockId);
-        if(volume <= stockListEntity.getVolume()) {
+        if (volume <= stockListEntity.getVolume()) {
             if (volume == stockListEntity.getVolume()) {
                 stockListEntityDao.delete(stockListEntity);
             } if (volume < stockListEntity.getVolume() && volume > 0) {
