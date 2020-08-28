@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th=xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{css/user-home.css}">
@@ -37,7 +37,7 @@
         </nav>
     </div>
 </div>
-<h3 th:text="'You have purchased ' + ${transaction.volume} + ${stocks.company} +' stocks'"></h3>
+<h3 th:text="'You have purchased ' + ${transaction.volume} + ' ' + ${stocks.company} +' stocks'"></h3>
 <a th:href="@{'/stocks/purchase/' + ${stocks.stockId}}">Purchase more stocks?</a>
 
 
