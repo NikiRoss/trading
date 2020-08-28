@@ -51,6 +51,10 @@ public class StockServiceImpl implements StocksService{
         stocksDao.save(stocks);
     }
 
+    public Stocks createNewStock2(Stocks stocks) {
+        return stocksDao.save(stocks);
+    }
+
     @Override
     public void removeStock(long stockId) {
         Stocks stock = stocksDao.findByStockId(stockId);
@@ -104,6 +108,7 @@ public class StockServiceImpl implements StocksService{
     public void save(Stocks stocks){
         stocksDao.save(stocks);
     }
+
     public List<Stocks> returnStockList(long accountId){
         List<StockListEntity> stockListEntities = stockListEntityDao.findByAccountId(accountId);
         List<Stocks> stocksForAccount = new ArrayList<>();

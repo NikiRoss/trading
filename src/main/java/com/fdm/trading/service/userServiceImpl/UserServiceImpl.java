@@ -103,8 +103,6 @@ public class UserServiceImpl implements UserDetailsService {
         return userDao.findAll();
     }
 
-
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
