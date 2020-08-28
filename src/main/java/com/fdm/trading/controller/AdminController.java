@@ -58,15 +58,12 @@ public class AdminController {
     }
 
     @PostMapping(value = "/addstock")
-    public String addStock(Model model, Principal p){
-        Stocks stocks = new Stocks();
-
-        System.out.println("Adding Stock...");
-        User admin = userService.findByUsername(p.getName());
-        model.addAttribute("admin", admin);
-        model.addAttribute("stocks", stocks);
+    public String addStock(@ModelAttribute("stocks") Stocks stocks, Model model){
+        model.addAttribute("company", stocks.getCompany());
+        model.addAttribute("ticker", stocks.getTicker());
+        model.addAttribute("sharePrice", stocks.getSharePrice());
+        model.addAttribute("volume", stocks.getVolume());
         stockService.createNewStock2(stocks);
-        System.out.println(stocks.toString());
         return "admin";
     }
 

@@ -13,19 +13,19 @@ public class Stocks {
     private long stockId;
 
 
-    @Column(name = "company", nullable = false, unique = true)
+    @Column(name = "company", unique = true)
     private String company;
 
-    @Column(name = "ticker", nullable = false, unique = true)
+    @Column(name = "ticker", unique = true)
     private String ticker;
 
-    @Column(name = "share_price", nullable = false)
+    @Column(name = "share_price")
     private double sharePrice;
 
     @Column(name = "last_trade")
     private double lastTrade;
 
-    @Column(name = "volume", nullable = false)
+    @Column(name = "volume")
     private long volume;
 
     @Column(name = "opening_value")
