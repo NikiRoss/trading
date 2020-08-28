@@ -41,18 +41,12 @@
 </div>
 </div>
 
-<div class="welcome">
-<h1 th:text="'Welcome back ' + ${user.username} + '!'"></h1>
+<div class="admin-visible">
+    <a sec:authorize="hasRole('ROLE_ADMIN')">Authorized Admin</a>
 </div>
 
-<a sec:authorize="hasRole('ROLE_ADMIN')">Text visible to admin.</a>
-Authenticated username:
-<div class="sec" sec:authentication="name"></div>
-Authenticated user roles:
-<div class="sec" sec:authentication="principal.authorities"></div>
 
-
-<div class="container">
+<div class="container container-style">
     <div class="row">
         <h1 th:text="'Hi ' + ${user.username}"/>
             <br>
@@ -62,22 +56,12 @@ Authenticated user roles:
     <br>
     <br>
     <div class="row">
-            <h4>Your balance is: <i class="fa fa-usd" aria-hidden="true"></i> <span
-                th:text="${account.accountBalance}">...</span>
+            <h4>Your balance is £ <i class="fa fa-usd" aria-hidden="true"></i> <span
+                    th:inline="text">$ [[${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}]]</span>
             </h4>
     </div>
 </div>
 
-
-<!--<div class="tcontainer" >
-    <div class="ticker-wrap">
-        <div class="ticker-move" >
-            <div th:each="stock : ${stocks}">
-            <div class="ticker-item" th:text="'' + ${stock.company} + ' ' + ${stock.sharePrice}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-            </div>
-        </div>
-    </div>
-</div>-->
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
