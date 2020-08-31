@@ -1,4 +1,4 @@
-package com.fdm.trading.utils;
+package com.fdm.trading.utils.json;
 
 public interface DataWriter<T> {
 

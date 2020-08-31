@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -24,18 +26,6 @@ public class UserPersistenceTests {
     private UserServiceImpl userService;
     @Autowired
     private AccountServiceImpl accountService;
-
-
-    @Test
-    public void create_User(){
-        userService.createNewUser("niki", "ross", "e", "niki84", "password238", true, "ROLE_USER");
-    }
-
-    @Test
-    public void create_Admin(){
-        userService.createNewUser("M", "H", "e", "MH90", "password", true, "ROLE_ADMIN");
-    }
-
 
     @Test
     public void find_A_User_By_Username(){
@@ -88,6 +78,14 @@ public class UserPersistenceTests {
         Account a = accountService.findByAccountId(21);
         String val1 = a.getAccountNumber();
         assertEquals(val1, "200129");
+    }
+
+    @Test
+    public void testUsername_Validator(){
+        List<User> usersList = userService.findAllUsers();
+        User user = usersList.get(4);
+        boolean validate = userService.inputValidator(user.getUsername());
+        System.out.println(validate + " " + user.getUsername());
     }
 
 

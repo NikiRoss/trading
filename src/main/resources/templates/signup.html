@@ -10,7 +10,7 @@
 <div class="container">
 
     <h2>Sign Up</h2>
-
+    <p th:text="${message}"></p>
     <form action="#" th:action="@{/signup/adduser}" th:object="${user}" method="post">
         <label for="name">First Name</label>
         <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
@@ -19,7 +19,7 @@
         <label for="email">Email</label>
         <input type="text" th:field="*{email}" id="email" placeholder="email"><br/>
         <label for="name">Password</label>
-        <input type="text" th:field="*{password}" id="password" placeholder="password"><br/>
+        <input type="password" th:field="*{password}" id="password" placeholder="password"><br/>
         <label for="name">Username</label>
         <input type="text" th:field="*{username}" id="username" placeholder="create a username"><br/>
         <input type="submit" value="Add User">

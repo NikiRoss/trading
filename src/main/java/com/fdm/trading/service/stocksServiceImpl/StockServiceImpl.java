@@ -90,6 +90,12 @@ public class StockServiceImpl implements StocksService{
 
     }
 
+    /**
+     * Revist idea of providing information RE db connection time
+     * for a list to be returned with requested info by providing logging
+     */
+
+
     public List<Stocks> findAll(){
         Iterable<Stocks> stocksIterable = stocksDao.findAll();
         List<Stocks> stocks = new ArrayList<Stocks>();

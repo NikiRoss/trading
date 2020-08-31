@@ -2,10 +2,9 @@ package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
-import com.fdm.trading.utils.DataConverter;
-import com.fdm.trading.utils.DataWriter;
-import com.fdm.trading.utils.JsonConverter;
-import com.fdm.trading.utils.JsonWriter;
+import com.fdm.trading.utils.json.DataConverter;
+import com.fdm.trading.utils.json.JsonConverter;
+import com.fdm.trading.utils.json.JsonWriter;
 import com.google.gson.JsonElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;

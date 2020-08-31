@@ -7,16 +7,23 @@ import com.fdm.trading.domain.User;
 import com.fdm.trading.security.Authorities;
 import com.fdm.trading.security.CustomSecurityUser;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -31,30 +38,9 @@ public class UserServiceImpl implements UserDetailsService {
     private AuthoritiesDao authoritiesDao;
 
 
-    public User createNewUser(String firstName, String surname, String email, String username, String password, boolean enabled, String role){
-        User user = new User();
-        Account account = null;
-        if(!role.equals("ROLE_ADMIN")){
-            account = accountService.createAnAccount();
-        }
-        user.setEnabled(enabled);
-        user.setAccount(account);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setSurname(surname);
-        user.setUsername(username);
-        user.setPassword(encoder.encode(password));
-        Authorities a = new Authorities();
-        a.setAuthority(role);
-        a.setUser(user);
-        userDao.save(user);
-        authoritiesDao.save(a);
-        return user;
-    }
 
     public User createNewUserAlt(User user, String role){
         Account account = null;
-        System.out.println("Creating new user");
         if(!role.equals("ROLE_ADMIN")){
             account = accountService.createAnAccount();
         }
@@ -94,7 +80,7 @@ public class UserServiceImpl implements UserDetailsService {
     public void disableUser(String username) {
         User user = findByUsername(username);
         user.setEnabled(false);
-        System.out.println(">>>>>>>>>>>>disableUser"+user.isEnabled());
+        logger.debug("{} enabled: {}",user.getUsername(), user.isEnabled());
         userDao.save(user);
         System.out.println(username + " is disabled.");
     }
@@ -111,6 +97,25 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Username and or password was incorrect.");
 
         return new CustomSecurityUser(user);
+    }
+
+    public boolean inputValidator(String input){
+        Pattern digit = Pattern.compile("[0-9]");
+        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+        Matcher checkForDigit = digit.matcher(input);
+        Matcher checkForSpecial = special.matcher(input);
+        boolean hasDigit = checkForDigit.find();
+        boolean hasSpecial = checkForSpecial.find();;
+
+        if (hasDigit){
+            logger.info("Username {} contains digits ", input);
+            return false;
+
+        }else if (hasSpecial){
+            logger.info("Username {} contains special characters ", input);
+            return false;
+        }
+        return true;
     }
 
 }

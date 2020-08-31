@@ -1,4 +1,4 @@
-package com.fdm.trading.utils;
+package com.fdm.trading.utils.json;
 
 import com.fdm.trading.domain.Transaction;
 import com.google.gson.JsonArray;

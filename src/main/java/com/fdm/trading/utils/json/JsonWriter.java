@@ -1,4 +1,4 @@
-package com.fdm.trading.utils;
+package com.fdm.trading.utils.json;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

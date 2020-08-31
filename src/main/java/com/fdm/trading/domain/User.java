@@ -3,6 +3,7 @@ package com.fdm.trading.domain;
 import com.fdm.trading.security.Authorities;
 import org.springframework.context.annotation.Scope;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class User {
     @Column(name = "surname", nullable = false)
     private String surname;
 
+    @Email
     @Column(name = "email")
     private String email;
 
