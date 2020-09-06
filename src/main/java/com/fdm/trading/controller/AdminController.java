@@ -2,6 +2,8 @@ package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.exceptions.NameFormatException;
+import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +49,18 @@ public class AdminController {
 
 
     @PostMapping(value = "/newadmin")
-    public String addUser(@ModelAttribute("newAdmin") User user, Model model, Principal p){
+    public String addUser(@ModelAttribute("newAdmin") User user, BindingResult result, Model model, Principal p){
         System.out.println("Adding ADMIN...");
         User admin = userService.findByUsername(p.getName());
         model.addAttribute("admin", admin);
         model.addAttribute("user", user);
-        userService.createNewUserAlt(user, "ROLE_ADMIN");
+        try {
+            userService.createNewUserAlt(result, user, "ROLE_ADMIN");
+        }catch (NameFormatException nfe){
+            //TODO
+        } catch (UnsecurePasswordException upe){
+            //TODO
+        }
         System.out.println(user.toString());
         return "admin";
     }

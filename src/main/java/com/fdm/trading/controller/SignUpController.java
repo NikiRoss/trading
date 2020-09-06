@@ -2,6 +2,7 @@ package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.User;
 import com.fdm.trading.exceptions.NameFormatException;
+import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import com.fdm.trading.utils.mail.EmailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +35,24 @@ public class SignUpController {
     }
 
     @PostMapping(value = "/signup/adduser")
-    public String addUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) throws NameFormatException {
+    public String addUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) throws NameFormatException, UnsecurePasswordException {
         System.out.println("Adding user...");
         model.addAttribute("user", user);
-        if(userService.inputValidator(user.getFirstName()) == false || userService.inputValidator(user.getSurname()) == false){
-            System.out.println("Please do not use numeric or special character");
-            throw new NameFormatException("user "+user.getFirstName()+" "+ user.getSurname() +" has numeric or special character");
-
-        }
-        if(result.hasErrors()){
-            model.addAttribute("message", result.getFieldError().getDefaultMessage());
+       
+        String exceptionMessage;
+        try {
+            userService.createNewUserAlt(result, user, "ROLE_USER");
+        }catch (NameFormatException nfe){
+            exceptionMessage = "user "+user.getFirstName()+" "+ user.getSurname() +" has numeric or special character";
+            model.addAttribute("message", exceptionMessage);
+            model.addAttribute("user", new User());
+            return "signup";
+        } catch (UnsecurePasswordException upe) {
+            exceptionMessage = "user " + user.getFirstName() + " " + user.getSurname() + " password contains either 'password' or reference to first or surname";
+            model.addAttribute("message", exceptionMessage);
             model.addAttribute("user", new User());
             return "signup";
         }
-        userService.createNewUserAlt(user, "ROLE_USER");
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(this.emailConfig.getHost());
         mailSender.setPort(this.emailConfig.getPort());
@@ -64,5 +68,7 @@ public class SignUpController {
         return "login";
 
     }
+
+
 
 }

@@ -4,6 +4,8 @@ import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.exceptions.NameFormatException;
+import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.security.Authorities;
 import com.fdm.trading.security.CustomSecurityUser;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,7 +42,8 @@ public class UserServiceImpl implements UserDetailsService {
 
 
 
-    public User createNewUserAlt(User user, String role){
+    public User createNewUserAlt(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException{
+        hasErrors(result, user);
         Account account = null;
         if(!role.equals("ROLE_ADMIN")){
             account = accountService.createAnAccount();
@@ -99,7 +103,7 @@ public class UserServiceImpl implements UserDetailsService {
         return new CustomSecurityUser(user);
     }
 
-    public boolean inputValidator(String input){
+    public boolean inputValidator(String input) throws NameFormatException{
         Pattern digit = Pattern.compile("[0-9]");
         Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
         Matcher checkForDigit = digit.matcher(input);
@@ -109,13 +113,34 @@ public class UserServiceImpl implements UserDetailsService {
 
         if (hasDigit){
             logger.info("Username {} contains digits ", input);
-            return false;
+            throw new NameFormatException("username contains digits");
 
         }else if (hasSpecial){
             logger.info("Username {} contains special characters ", input);
-            return false;
+            throw new NameFormatException("username contains special characters");
         }
         return true;
+    }
+
+    public boolean isUserPasswordSecure(User user) throws UnsecurePasswordException {
+
+        if (user.getPassword().toLowerCase().contains("password")){
+            System.out.println(">>>>> " + user.getUsername() + " has a password which contains 'password'");
+            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains 'password'");
+        }
+        if (user.getPassword().toLowerCase().contains(user.getFirstName())){
+            System.out.println(">>>>> " + user.getUsername() + " has a password which contains their first name");
+            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their first name");
+        }
+        if (user.getPassword().toLowerCase().contains(user.getSurname())){
+            System.out.println(">>>>> " + user.getUsername() + " has a password which contains their surname");
+            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their surname");
+        }
+            return true;
+    }
+
+    public boolean hasErrors(BindingResult result, User user) throws NameFormatException, UnsecurePasswordException{
+        return result.hasErrors() || !isUserPasswordSecure(user) || !inputValidator(user.getFirstName()) || !inputValidator(user.getSurname());
     }
 
 }

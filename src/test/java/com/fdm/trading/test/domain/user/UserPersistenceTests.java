@@ -5,10 +5,13 @@ import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
+import com.fdm.trading.utils.mail.EmailConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,6 +29,8 @@ public class UserPersistenceTests {
     private UserServiceImpl userService;
     @Autowired
     private AccountServiceImpl accountService;
+    @Autowired
+    private EmailConfig emailConfig;
 
     @Test
     public void find_A_User_By_Username(){
@@ -80,12 +85,41 @@ public class UserPersistenceTests {
         assertEquals(val1, "200129");
     }
 
-    @Test
+/*    @Test
     public void testUsername_Validator(){
         List<User> usersList = userService.findAllUsers();
         User user = usersList.get(4);
         boolean validate = userService.inputValidator(user.getUsername());
         System.out.println(validate + " " + user.getUsername());
+    }
+
+    @Test
+    public void testPasswordSecurity(){
+        User user = new User();
+        user.setSurname("ross");
+        user.setFirstName("niki");
+        user.setPassword("ross83995030");
+        boolean res = userService.isUserPasswordSecure(user);
+        System.out.println(">>>>> is password secure? " + res);
+    }*/
+
+    @Test
+    public void sendMail(){
+        List<User> usersList = userService.findAllUsers();
+        User user = usersList.get(4);
+        System.out.println(user.toString());
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(this.emailConfig.getHost());
+        mailSender.setPort(this.emailConfig.getPort());
+        mailSender.setUsername(this.emailConfig.getUsername());
+        mailSender.setPassword(this.emailConfig.getPassword());
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("niki.ross49@gmail.com");
+        message.setTo("niki.ross49@gmail.com");
+        message.setSubject("Activate Account");
+        message.setText("Hi " + user.getFirstName() + " please click below to activate your email");
+        mailSender.send(message);
     }
 
 
