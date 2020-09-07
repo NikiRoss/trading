@@ -4,6 +4,7 @@ import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
+import com.fdm.trading.exceptions.UserAlreadyExistException;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,8 @@ public class AdminController {
         }catch (NameFormatException nfe){
             //TODO
         } catch (UnsecurePasswordException upe){
+            //TODO
+        } catch (UserAlreadyExistException ue){
             //TODO
         }
         System.out.println(user.toString());

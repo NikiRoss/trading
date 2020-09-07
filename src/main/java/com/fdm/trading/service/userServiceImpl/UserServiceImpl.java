@@ -2,10 +2,13 @@ package com.fdm.trading.service.userServiceImpl;
 
 import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
+import com.fdm.trading.dao.VerificationTokenDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
+import com.fdm.trading.exceptions.UserAlreadyExistException;
 import com.fdm.trading.security.Authorities;
 import com.fdm.trading.security.CustomSecurityUser;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
@@ -40,10 +43,15 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private AuthoritiesDao authoritiesDao;
 
+    @Autowired
+    private VerificationTokenDao tokenDao;
 
 
-    public User createNewUserAlt(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException{
+    public User createNewUserAlt(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
         hasErrors(result, user);
+        if(userDao.findByUsername(user.getUsername())!=null){
+            throw new UserAlreadyExistException("User " + user.getUsername() + " already exists");
+        }
         Account account = null;
         if(!role.equals("ROLE_ADMIN")){
             account = accountService.createAnAccount();
@@ -93,7 +101,7 @@ public class UserServiceImpl implements UserDetailsService {
         return userDao.findAll();
     }
 
-    @Override
+/*    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userDao.findByUsername(username);
@@ -101,7 +109,36 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Username and or password was incorrect.");
 
         return new CustomSecurityUser(user);
+
+    }*/
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+            boolean enabled = true;
+            boolean accountNonExpired = true;
+            boolean credentialsNonExpired = true;
+            boolean accountNonLocked = true;
+            try {
+                User user = userDao.findByEmail(username);
+                if (user == null) {
+                    throw new UsernameNotFoundException(
+                            "No user found with username: " + username);
+                }
+
+                return new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword().toLowerCase(),
+                        user.isEnabled(),
+                        accountNonExpired,
+                        credentialsNonExpired,
+                        accountNonLocked,
+                        user.getUserAuthorities());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
     }
+
 
     public boolean inputValidator(String input) throws NameFormatException{
         Pattern digit = Pattern.compile("[0-9]");
@@ -141,6 +178,16 @@ public class UserServiceImpl implements UserDetailsService {
 
     public boolean hasErrors(BindingResult result, User user) throws NameFormatException, UnsecurePasswordException{
         return result.hasErrors() || !isUserPasswordSecure(user) || !inputValidator(user.getFirstName()) || !inputValidator(user.getSurname());
+    }
+
+    public VerificationToken getVerificationToken(String VerificationToken) {
+        return tokenDao.findByToken(VerificationToken);
+    }
+
+
+    public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(token, user);
+        tokenDao.save(myToken);
     }
 
 }
