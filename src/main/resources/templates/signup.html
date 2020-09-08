@@ -11,7 +11,7 @@
 
     <h2>Sign Up</h2>
     <p th:text="${message}"></p>
-    <form action="#" th:action="@{/signup/adduser}" th:object="${user}" method="post">
+    <form action="signup/user/registration" th:action="@{signup/user/registration}" th:object="${user}" method="post">
         <label for="name">First Name</label>
         <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
         <label for="name">Surname</label>

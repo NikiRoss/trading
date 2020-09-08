@@ -56,7 +56,7 @@ public class SignUpController {
         return "signup";
     }
 
-    @PostMapping(value = "/signup/adduser")
+/*    @PostMapping(value = "/signup/adduser")
     public String addUser(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) throws NameFormatException, UnsecurePasswordException {
         System.out.println("Adding user...");
         model.addAttribute("user", user);
@@ -96,11 +96,11 @@ public class SignUpController {
         mailSender.send(message);
         return "login";
 
-    }
+    }*/
 
-    @PostMapping("/user/registration")
+    @PostMapping("signup/user/registration")
     public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid User user, BindingResult result, HttpServletRequest request) {
-
+            System.out.println("IN HERE!");
         try {
             User registered = userService.createNewUserAlt(result, user, "ROLE_ADMIN");
 
@@ -116,7 +116,7 @@ public class SignUpController {
             mav.addObject("message", "An account for that username/email already exists.");
             return mav;
         } catch (RuntimeException ex) {
-            return new ModelAndView("emailError", "user", user);
+            return new ModelAndView("error", "user", user);
         }
         return new ModelAndView("successRegister", "user", user);
     }

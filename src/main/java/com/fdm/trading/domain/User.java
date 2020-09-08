@@ -30,7 +30,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Min(8)
+    //@Min(8)
     @Column(name = "password")
     private String password;
 

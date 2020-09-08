@@ -3,6 +3,10 @@ package com.fdm.trading.test.domain.user;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.exceptions.NameFormatException;
+import com.fdm.trading.exceptions.UnsecurePasswordException;
+import com.fdm.trading.exceptions.UserAlreadyExistException;
+import com.fdm.trading.security.Authorities;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import com.fdm.trading.utils.mail.EmailConfig;
@@ -14,8 +18,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -120,6 +129,23 @@ public class UserPersistenceTests {
         message.setSubject("Activate Account");
         message.setText("Hi " + user.getFirstName() + " please click below to activate your email");
         mailSender.send(message);
+    }
+
+    @Test
+    public void createAdmin() throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+        User admin = new User();
+        admin.setUsername("MH20");
+        admin.setPassword("password");
+        admin.setFirstName("Martyn");
+        admin.setSurname("Hunter");
+        Authorities authorities = new Authorities();
+        authorities.setAuthority("ROLE_ADMIN");
+        authorities.setUser(admin);
+        Set<Authorities> authoritiesSet = new HashSet<>();
+        authoritiesSet.add(authorities);
+        admin.setUserAuthorities(authoritiesSet);
+        admin.setEmail("email@emial.com");
+        userService.createNewUserAlt(null, admin, "ROLE_ADMIN");
     }
 
 

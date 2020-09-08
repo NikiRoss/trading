@@ -48,7 +48,9 @@ public class UserServiceImpl implements UserDetailsService {
 
 
     public User createNewUserAlt(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
-        hasErrors(result, user);
+        if(result!=null) {
+            hasErrors(result, user);
+        }
         if(userDao.findByUsername(user.getUsername())!=null){
             throw new UserAlreadyExistException("User " + user.getUsername() + " already exists");
         }
@@ -121,6 +123,7 @@ public class UserServiceImpl implements UserDetailsService {
             boolean accountNonLocked = true;
             try {
                 User user = userDao.findByEmail(username);
+
                 if (user == null) {
                     throw new UsernameNotFoundException(
                             "No user found with username: " + username);

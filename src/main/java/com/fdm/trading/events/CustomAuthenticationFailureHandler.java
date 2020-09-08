@@ -22,9 +22,25 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messages;
- 
+
     @Autowired
     private LocaleResolver localeResolver;
+
+    @Bean
+    public LocaleResolver localeResolver(){
+        return new LocaleResolver() {
+
+            @Override
+            public Locale resolveLocale(HttpServletRequest httpServletRequest) {
+                return new Locale("UK");
+            }
+
+            @Override
+            public void setLocale(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Locale locale) {
+
+            }
+        };
+    }
 
  
     @Override
