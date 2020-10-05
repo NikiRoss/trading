@@ -94,6 +94,13 @@ public class UserPersistenceTests {
         assertEquals(val1, "200129");
     }
 
+    @Test
+    public void findUserDetails(){
+        User u = new User();
+        u = userService.findByUserId(95);
+        System.out.println(u.toString());
+    }
+
 /*    @Test
     public void testUsername_Validator(){
         List<User> usersList = userService.findAllUsers();
@@ -134,18 +141,18 @@ public class UserPersistenceTests {
     @Test
     public void createAdmin() throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
         User admin = new User();
-        admin.setUsername("MH20");
-        admin.setPassword("password");
-        admin.setFirstName("Martyn");
-        admin.setSurname("Hunter");
+        admin.setUsername("username");
+        admin.setPassword("ruby");
+        admin.setFirstName("Niki");
+        admin.setSurname("Ross");
         Authorities authorities = new Authorities();
-        authorities.setAuthority("ROLE_ADMIN");
+        authorities.setAuthority("ROLE_USER");
         authorities.setUser(admin);
         Set<Authorities> authoritiesSet = new HashSet<>();
         authoritiesSet.add(authorities);
         admin.setUserAuthorities(authoritiesSet);
         admin.setEmail("email@emial.com");
-        userService.createNewUserAlt(null, admin, "ROLE_ADMIN");
+        userService.createNewUserAlt(null, admin, "ROLE_USER");
     }
 
 

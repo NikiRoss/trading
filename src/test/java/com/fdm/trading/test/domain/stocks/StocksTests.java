@@ -34,10 +34,6 @@ public class StocksTests {
         stockService.createNewStock("Unicredit", "L", 211.22, 800000);
         stockService.createNewStock("Caplin", "CAP", 187.21, 800000);
 
-
-
-
-
     }
 
     @Test
@@ -59,4 +55,6 @@ public class StocksTests {
         int size = stocksList.size();
         assertEquals(size, 3);
     }
+
+
 }

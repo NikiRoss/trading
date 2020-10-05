@@ -1,11 +1,13 @@
 package com.fdm.trading.controller;
 
+import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.events.OnRegistrationCompleteEvent;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.exceptions.UserAlreadyExistException;
+import com.fdm.trading.security.Authorities;
 import com.fdm.trading.service.tokenService.VerificationTokenServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import com.fdm.trading.utils.mail.EmailConfig;
@@ -13,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 
 @Controller
@@ -43,6 +46,12 @@ public class SignUpController {
 
     @Autowired
     VerificationTokenServiceImpl tokenService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthoritiesDao authoritiesDao;
 
     @Qualifier("messageSource")
     @Autowired
@@ -99,31 +108,46 @@ public class SignUpController {
     }*/
 
     @PostMapping("signup/user/registration")
-    public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid User user, BindingResult result, HttpServletRequest request) {
-            System.out.println("IN HERE!");
-        try {
-            User registered = userService.createNewUserAlt(result, user, "ROLE_ADMIN");
+    public ModelAndView registerUserAccount(@ModelAttribute("user") User user, BindingResult result, HttpServletRequest request) {
+        System.out.println("IN HERE!");
 
-            String appUrl = request.getContextPath();
+        try {
+            User registered = new User();
+            registered.setUsername(user.getUsername());
+            registered.setFirstName(user.getFirstName());
+            registered.setSurname(user.getSurname());
+            registered.setEmail(user.getEmail());
+            registered.setPassword(passwordEncoder.encode(user.getPassword()));
+            registered.setEnabled(false);
+            System.out.println("User details set");
+
+            Set<Authorities> authoritiesSet = new HashSet<>();
+            Authorities authority = new Authorities();
+            authority.setUser(registered);
+            authority.setAuthority(authority.getAuthority());
+            authoritiesSet.add(authority);
+            System.out.println("Authorities set");
+
+            registered.setUserAuthorities(authoritiesSet);
+            System.out.println("User authorities set");
+
+            userService.save(registered);
+            System.out.println("New user saved");
+
+            authoritiesDao.save(authority);
+            String appUrl = request.getRequestURL().toString();
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
                     request.getLocale(), appUrl));
-        } catch (NameFormatException | UnsecurePasswordException userInputException){
-            ModelAndView modelAndView = new ModelAndView("signup", "user", user);
-            modelAndView.addObject("message", userInputException.getMessage());
-            return modelAndView;
-        } catch (UserAlreadyExistException uaeEx) {
-            ModelAndView mav = new ModelAndView("signup", "user", user);
-            mav.addObject("message", "An account for that username/email already exists.");
-            return mav;
+            System.out.println("Event publisher being called");
+
         } catch (RuntimeException ex) {
             return new ModelAndView("error", "user", user);
         }
         return new ModelAndView("successRegister", "user", user);
     }
 
-    @GetMapping("/regitrationConfirm")
-    public String confirmRegistration
-            (WebRequest request, Model model, @RequestParam("token") String token) {
+    @GetMapping("/registrationConfirm")
+    public String confirmRegistration(WebRequest request, Model model, @RequestParam("token") String token) {
 
         Locale locale = request.getLocale();
 
@@ -131,7 +155,7 @@ public class SignUpController {
         if (verificationToken == null) {
             String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
-            return "redirect:/badUser.html?lang=" + locale.getLanguage();
+            return "redirect:/badUser?lang=" + locale.getLanguage();
         }
 
         User user = verificationToken.getUser();
@@ -139,14 +163,24 @@ public class SignUpController {
         if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
             String messageValue = messages.getMessage("auth.message.expired", null, locale);
             model.addAttribute("message", messageValue);
-            return "redirect:/badUser.html?lang=" + locale.getLanguage();
+            return "redirect:/badUser?lang=" + locale.getLanguage();
         }
-//html pages still need to be created (badUser)
-        //revisit requirement for locale
 
         user.setEnabled(true);
         userService.save(user);
-        return "redirect:/login?lang=" + request.getLocale().getLanguage();
+        return "redirect:/login";
+    }
+
+    @GetMapping("/signup/user/registration/registrationConfirm/{token}")
+    public String verificationSuccess(@PathVariable String token){
+        VerificationToken dbToken = tokenService.findByToken(token);
+        User user = dbToken.getUser();
+        //Remove if doesn't work
+        user.setEnabled(true);
+        //User dbUser = userService.findByUsername(user.getUsername());
+        //dbUser.setEnabled(true);
+        userService.save(user);
+        return "successRegister";
     }
 
 }

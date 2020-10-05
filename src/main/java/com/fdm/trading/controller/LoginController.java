@@ -52,8 +52,9 @@ public class LoginController {
     public String success(Model model, Principal principal) {
         System.out.println("success");
         User user = (User) userService.loadUserByUsername(principal.getName());
+        System.out.println("User surname = " + user.getSurname());
         Account account = user.getAccount();
-        System.out.println(user.toString());
+        System.out.println("User >>>>> " + user.toString());
         model.addAttribute("user", user);
         model.addAttribute("account", account);
         return "userHome";

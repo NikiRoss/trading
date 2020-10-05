@@ -17,6 +17,7 @@ public class CustomSecurityUser extends User implements UserDetails {
         this.setUserId(user.getUserId());
         this.setPassword(user.getPassword());
         this.setUsername(user.getUsername());
+        this.setSurname(user.getSurname());
         this.setAccount(user.getAccount());
         this.setFirstName(user.getFirstName());
         this.setEnabled(user.isEnabled());

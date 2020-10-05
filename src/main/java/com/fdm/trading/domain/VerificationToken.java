@@ -1,8 +1,7 @@
 package com.fdm.trading.domain;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Calendar;
+
 import java.util.Date;
 
 @Entity
@@ -21,6 +20,9 @@ public class VerificationToken {
     private User user;
 
     private Date expiry;
+
+    public VerificationToken() {
+    }
 
     public VerificationToken(String token, User user) {
         this.token = token;
@@ -62,6 +64,4 @@ public class VerificationToken {
     public void setExpiry(Date expiry) {
         this.expiry = expiry;
     }
-
-
 }

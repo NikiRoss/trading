@@ -26,4 +26,8 @@ public class VerificationTokenServiceImpl {
         return new Date(cal.getTime().getTime());
     }
 
+    public VerificationToken findByToken(String token){
+        return tokenDao.findByToken(token);
+    }
+
 }

@@ -116,18 +116,16 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+        System.out.println(">>> inside loadByUsername");
             boolean enabled = true;
             boolean accountNonExpired = true;
             boolean credentialsNonExpired = true;
             boolean accountNonLocked = true;
-            try {
-                User user = userDao.findByEmail(username);
 
-                if (user == null) {
-                    throw new UsernameNotFoundException(
-                            "No user found with username: " + username);
-                }
+            User user = userDao.findByUsername(username);
+
+        try {
+            if (user == null)
 
                 return new org.springframework.security.core.userdetails.User(
                         user.getEmail(),
@@ -137,9 +135,12 @@ public class UserServiceImpl implements UserDetailsService {
                         credentialsNonExpired,
                         accountNonLocked,
                         user.getUserAuthorities());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(">>> user log in OK");
+        System.out.println(">>> userDetails:  " + user.getUsername() + user.getPassword() + " " + user.getSurname());
+        return new CustomSecurityUser(user);
     }
 
 
