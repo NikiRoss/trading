@@ -92,7 +92,7 @@ public class TransactionServiceImpl implements TransactionService{
             long volumeAfterDeduction = stocks.getVolume() - volume;
             account.setAccountBalance(balanceAfterDeduction);
             stocks.setVolume(volumeAfterDeduction);
-            stocks.setLastTrade(totalCost);
+            stocks.setLastTrade(stockService.round(totalCost));
             account.getStocksList().add(stocks);
             stocks.setAccount(account);
             accountService.save(account);

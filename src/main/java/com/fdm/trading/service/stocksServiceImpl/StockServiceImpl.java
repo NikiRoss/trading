@@ -17,7 +17,6 @@ import java.util.*;
 @Service
 public class StockServiceImpl implements StocksService, Runnable{
 
-    private TimerTask timerTask;
 
     @Autowired
     private StocksDao stocksDao;
@@ -25,9 +24,6 @@ public class StockServiceImpl implements StocksService, Runnable{
     @Autowired
     private StockListEntityDao sleDao;
 
-    private LocalDateTime openingTime;
-
-    private LocalDateTime closingTime;
 
     public void save(Stocks stocks){
         stocksDao.save(stocks);
@@ -46,14 +42,6 @@ public class StockServiceImpl implements StocksService, Runnable{
     @Override
     public Stocks findByTicker(String ticker) {
         return stocksDao.findByTicker(ticker);
-    }
-
-    public void setClosingTime(LocalDateTime closingTime) {
-        this.closingTime = closingTime;
-    }
-
-    public void setOpeningTime(LocalDateTime openingTime){
-        this.openingTime = openingTime;
     }
 
     @Override
@@ -99,10 +87,34 @@ public class StockServiceImpl implements StocksService, Runnable{
                 sharePrice = -sharePrice;
             }
             stocks.setSharePrice(round(sharePrice));
+            profitAndLoss(stocks);
             save(stocks);
             System.out.println(stocks.getSharePrice());
         }
         System.out.println("Running scheduled task");
+    }
+
+    public Stocks profitAndLoss(Stocks stock){
+        double opening = stock.getOpeningValue();
+        double closing = stock.getClosingValue();
+        String minus = "-";
+        String plus = "+";
+        double gains;
+
+        if(closing > opening){
+            gains = closing - opening;
+            String y = String.valueOf(round(gains));
+            String z = plus.concat(y);
+            stock.setPnl(z);
+
+        }else {
+            gains = opening - closing;
+            round(gains);
+            String b = String.valueOf(round(gains));
+            String x = minus.concat(b);
+            stock.setPnl(x);
+        }
+        return stock;
     }
 
     /**
@@ -137,21 +149,6 @@ public class StockServiceImpl implements StocksService, Runnable{
 
     public StockListEntity getStockListByAccountAndStock(long accountId, long stockId){
         return sleDao.findByAccountIdAndStockId(accountId, stockId);
-    }
-
-
-    public double stocksProfitAndLoss(long stockId){
-        Stocks s = stocksDao.findByStockId(stockId);
-        double pl = 0;
-
-        if(s.getClosingValue() > s.getSharePrice()){
-            pl = s.getClosingValue() - s.getSharePrice();
-            System.out.println(s.getCompany() + " is up by £" + pl + " for the day");
-        }else if(s.getClosingValue() < s.getSharePrice()){
-            pl = s.getSharePrice() - s.getClosingValue();
-            System.out.println(s.getCompany() + " is down by £" + pl + " for the day");
-        }
-        return pl;
     }
 
     @Scheduled(cron = "0 52 21 * * *")

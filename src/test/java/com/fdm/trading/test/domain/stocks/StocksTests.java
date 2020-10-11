@@ -56,5 +56,11 @@ public class StocksTests {
         assertEquals(size, 3);
     }
 
+    @Test
+    public void test_PNL(){
+        Stocks s = stockService.findByCompany("Disney");
+        stockService.profitAndLoss(s);
+
+    }
 
 }

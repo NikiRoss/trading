@@ -1,7 +1,6 @@
 package com.fdm.trading.domain;
 
 import javax.persistence.*;
-import java.util.Comparator;
 
 @Entity
 public class Stocks {
@@ -33,6 +32,9 @@ public class Stocks {
 
     @Column(name = "closing_value")
     private double closingValue;
+
+    @Column(name = "profit_loss")
+    private String pnl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_account")
@@ -111,5 +113,11 @@ public class Stocks {
         this.closingValue = closingValue;
     }
 
+    public String getPnl() {
+        return pnl;
+    }
 
+    public void setPnl(String pnl) {
+        this.pnl = pnl;
+    }
 }
