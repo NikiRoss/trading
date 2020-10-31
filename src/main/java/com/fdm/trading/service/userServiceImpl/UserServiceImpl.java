@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -192,6 +193,11 @@ public class UserServiceImpl implements UserDetailsService {
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenDao.save(myToken);
+    }
+
+    public String dateFormating(String dob){
+        SimpleDateFormat format = new SimpleDateFormat(dob);
+        return format.toString();
     }
 
 }

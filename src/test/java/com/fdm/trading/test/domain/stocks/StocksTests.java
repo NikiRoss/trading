@@ -63,4 +63,13 @@ public class StocksTests {
 
     }
 
+    @Test
+    public void remove_Null(){
+        List<Stocks> stocksList = stockService.findAll();
+        for (Stocks stocks : stocksList){
+            stocks.setOpeningValue(100);
+            stocks.setClosingValue(100);
+        }
+    }
+
 }

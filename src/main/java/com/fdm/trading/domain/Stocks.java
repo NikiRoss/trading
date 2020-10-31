@@ -1,6 +1,7 @@
 package com.fdm.trading.domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Stocks {
@@ -22,7 +23,7 @@ public class Stocks {
     private double sharePrice;
 
     @Column(name = "last_trade")
-    private double lastTrade;
+    private Date lastTrade;
 
     @Column(name = "volume")
     private long volume;
@@ -81,11 +82,11 @@ public class Stocks {
         this.sharePrice = sharePrice;
     }
 
-    public double getLastTrade() {
+    public Date getLastTrade() {
         return lastTrade;
     }
 
-    public void setLastTrade(double lastTrade) {
+    public void setLastTrade(Date lastTrade) {
         this.lastTrade = lastTrade;
     }
 

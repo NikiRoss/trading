@@ -155,5 +155,12 @@ public class UserPersistenceTests {
         userService.createNewUserAlt(null, admin, "ROLE_USER");
     }
 
+    @Test
+    public void create_User_with_DOB(){
+        String dob = userService.dateFormating("14/02/1984");
+
+        System.out.println(dob.toString());
+    }
+
 
 }

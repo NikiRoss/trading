@@ -64,7 +64,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         stocksDao.delete(stock);
     }
 
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = 30000)
     @Override
     public void fluctuateStockPrice() {
         Iterable<Stocks> list = stocksDao.findAll();
@@ -151,7 +151,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         return sleDao.findByAccountIdAndStockId(accountId, stockId);
     }
 
-    @Scheduled(cron = "0 52 21 * * *")
+    @Scheduled(cron = "0 47 20 * * *")
     private void setOpeningValues() {
         System.out.println(">>> Setting the opening stock prices!!!");
         List<Stocks>  stocks = this.findAll();
@@ -162,7 +162,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         }
     }
 
-    @Scheduled(cron = "0 53 21 * * *")
+    @Scheduled(cron = "0 55 20 * * *")
     public void setClosingValues() {
         System.out.println(">>> Setting the closing stock prices!!!");
         List<Stocks>  stocks = this.findAll();
@@ -172,6 +172,12 @@ public class StockServiceImpl implements StocksService, Runnable{
             this.save(stock);
         }
     }
+    public void setLastTrade(Stocks stocks, Date lastTrade){
+        stocks.setLastTrade(lastTrade);
+        stocksDao.save(stocks);
+    }
+
+
 
     @Override
     public void run() {

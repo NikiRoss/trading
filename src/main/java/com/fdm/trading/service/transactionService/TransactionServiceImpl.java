@@ -9,6 +9,7 @@ import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class TransactionServiceImpl implements TransactionService{
             long volumeAfterDeduction = stocks.getVolume() - volume;
             account.setAccountBalance(balanceAfterDeduction);
             stocks.setVolume(volumeAfterDeduction);
-            stocks.setLastTrade(stockService.round(totalCost));
+            stocks.setLastTrade(date);
             account.getStocksList().add(stocks);
             stocks.setAccount(account);
             accountService.save(account);
@@ -175,6 +176,23 @@ public class TransactionServiceImpl implements TransactionService{
         }
         return transList;
     }
+
+    public List<Transaction> getLatestTransaction(){
+        List<Stocks> stocksList = stockService.findAll();
+        List<Transaction> latestTransactions = new ArrayList<>();
+        List<String> props = new ArrayList<>();
+        props.add("date");
+        for (Stocks stock:stocksList){
+            List<Transaction> transactions = transDao.findAll( Sort.by(Sort.Direction.DESC, "date"));
+            Transaction transaction = transactions.get(0);
+            System.out.println(transaction.getDate());
+            stockService.setLastTrade(stock, transaction.getDate());
+            latestTransactions.add(transaction);
+        }
+        return latestTransactions;
+    }
+
+
 
 
 }

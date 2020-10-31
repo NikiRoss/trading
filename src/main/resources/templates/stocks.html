@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
+<meta charset="UTF-8" http-equiv="refresh" content="30">
 <title>Title</title>
 <link rel="stylesheet" th:href="@{css/stocks.css}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -75,6 +75,7 @@
                 <td th:text="${stock.stockId}" ></td>
                 <td th:text="${stock.ticker}" th:onclick="|loadContent(${stock.stockId})|"></td>
                 <td th:text="${stock.company}"></td>
+                <td th:text="${stock.lastTrade}"></td>
                 <td th:text="${#numbers.formatDecimal(stock.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
 
 

@@ -39,6 +39,7 @@ public class StocksController {
 
     @RequestMapping(value = "/stocks", method = RequestMethod.GET)
     public String getStocks(Model model, Principal principal){
+        List<Transaction> latestTransactions = transactionService.getLatestTransaction();
         List<Stocks> stocksList = this.stockService.findAll();
         Account account = getAccountFromPrincipal(principal);
         System.out.println(stocksList);

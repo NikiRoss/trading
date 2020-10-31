@@ -4,7 +4,6 @@ import com.fdm.trading.security.Authorities;
 import org.springframework.context.annotation.Scope;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,15 +29,20 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    //@Min(8)
     @Column(name = "password")
     private String password;
+
+    @Column(name = "DOB")
+    private String dob;
 
     @OneToOne
     private Account account;
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @OneToOne
+    private CreditCard creditCard;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
     private Set<Authorities> userAuthorities = new HashSet<>();
@@ -93,6 +97,14 @@ public class User {
         this.password = password;
     }
 
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
     public Account getAccount() {
         return account;
     }
@@ -117,6 +129,14 @@ public class User {
         this.userAuthorities = userAuthorities;
     }
 
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -126,8 +146,10 @@ public class User {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", dob=" + dob +
                 ", account=" + account +
                 ", enabled=" + enabled +
+                ", userAuthorities=" + userAuthorities +
                 '}';
     }
 }
