@@ -9,5 +9,5 @@ public interface CreditCardDao extends CrudRepository<CreditCard, Long> {
 
     CreditCard findCreditCardByNameOnCard(String name);
 
-    CreditCard findCreditCardByCardNo(String cardNo);
+    CreditCard findByCardNo(String number);
 }

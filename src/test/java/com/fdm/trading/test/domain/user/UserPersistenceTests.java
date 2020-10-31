@@ -55,24 +55,6 @@ public class UserPersistenceTests {
         assertEquals(12, val2);
     }
 
-/*    @Test
-    public void check_A_Username_Exists(){
-        boolean check = userService.checkUsernameExists("NR84");
-        assertTrue(check);
-    }
-
-    @Test
-    public void check_A_User_Exists(){
-        boolean check = userService.checkUserExists("NR84", "niki@email.com");
-        assertTrue(check);
-    }
-
-    @Test
-    public void check_A_User_Exists_Method_Returns_False(){
-        boolean check = userService.checkUserExists("wrong", "credentials");
-        assertFalse(check);
-    }*/
-
     @Test
     public void enable_A_User(){
         userService.enableUser("NR84");
@@ -101,26 +83,8 @@ public class UserPersistenceTests {
         System.out.println(u.toString());
     }
 
-/*    @Test
-    public void testUsername_Validator(){
-        List<User> usersList = userService.findAllUsers();
-        User user = usersList.get(4);
-        boolean validate = userService.inputValidator(user.getUsername());
-        System.out.println(validate + " " + user.getUsername());
-    }
-
     @Test
-    public void testPasswordSecurity(){
-        User user = new User();
-        user.setSurname("ross");
-        user.setFirstName("niki");
-        user.setPassword("ross83995030");
-        boolean res = userService.isUserPasswordSecure(user);
-        System.out.println(">>>>> is password secure? " + res);
-    }*/
-
-    @Test
-    public void sendMail(){
+    public void send_Mail_On_Register(){
         List<User> usersList = userService.findAllUsers();
         User user = usersList.get(4);
         System.out.println(user.toString());

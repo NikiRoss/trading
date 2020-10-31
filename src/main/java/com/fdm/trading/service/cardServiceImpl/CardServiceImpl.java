@@ -17,11 +17,18 @@ public class CardServiceImpl {
 
     public void registerCreditCard(String cardNo, String expiry, int cvv, String name){
         CreditCard creditCard = new CreditCard();
-
         creditCard.setCardNo(encoder.encode(cardNo));
         creditCard.setExpiry(encoder.encode(expiry));
         creditCard.setCvv(cvv);
         creditCard.setNameOnCard(name);
         cardDao.save(creditCard);
+    }
+
+    public CreditCard findCardByNameOnCard(String name){
+        return cardDao.findCreditCardByNameOnCard(name);
+    }
+
+    public CreditCard findCardByLongNumber(String number){
+        return cardDao.findByCardNo(number);
     }
 }
