@@ -56,7 +56,7 @@ public class AdminController {
         model.addAttribute("admin", admin);
         model.addAttribute("user", user);
         try {
-            userService.createNewUserAlt(result, user, "ROLE_ADMIN");
+            userService.createNewUser(result, user, "ROLE_ADMIN");
         }catch (NameFormatException nfe){
             //TODO
         } catch (UnsecurePasswordException upe){

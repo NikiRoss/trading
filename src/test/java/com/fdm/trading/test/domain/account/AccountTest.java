@@ -70,6 +70,4 @@ public class AccountTest {
         assertNotEquals(val1, val2);
     }
 
-
-
 }

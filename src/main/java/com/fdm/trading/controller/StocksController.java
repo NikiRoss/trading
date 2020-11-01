@@ -1,6 +1,8 @@
 package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.*;
+import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
@@ -74,7 +76,7 @@ public class StocksController {
     }
 
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.POST)
-    public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal){
+    public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal) throws LimitedStockException, InsufficientFundsException {
         Account account = getAccountFromPrincipal(principal);
         transactionService.createPurchaseTransaction(id, (int) account.getAccountId(), transaction.getVolume());
         Stocks stocks = stockService.findByStockId(id);

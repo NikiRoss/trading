@@ -116,15 +116,20 @@ public class UserPersistenceTests {
         authoritiesSet.add(authorities);
         admin.setUserAuthorities(authoritiesSet);
         admin.setEmail("email@emial.com");
-        userService.createNewUserAlt(null, admin, "ROLE_USER");
+        userService.createNewUser(null, admin, "ROLE_USER");
     }
 
     @Test
-    public void create_User_with_DOB(){
-        String dob = userService.dateFormating("14/02/1984");
+    public void create_A_User(){
 
-        System.out.println(dob.toString());
     }
 
-
+    @Test
+    public void password_Security_Validation(){
+        /**
+         * catch any security issues that method 'is user password secure'
+         * is designed to catch ie use of the word "password" or
+         * inclusion of the users name in their password
+         */
+    }
 }

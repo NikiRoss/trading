@@ -4,6 +4,7 @@ import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.dao.VerificationTokenDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.CreditCard;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.exceptions.NameFormatException;
@@ -12,6 +13,7 @@ import com.fdm.trading.exceptions.UserAlreadyExistException;
 import com.fdm.trading.security.Authorities;
 import com.fdm.trading.security.CustomSecurityUser;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
+import com.fdm.trading.service.cardServiceImpl.CardServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +49,11 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private VerificationTokenDao tokenDao;
 
+    @Autowired
+    private CardServiceImpl cardService;
 
-    public User createNewUserAlt(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+
+    public User createNewUser(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
         if(result!=null) {
             hasErrors(result, user);
         }
@@ -104,17 +109,6 @@ public class UserServiceImpl implements UserDetailsService {
         return userDao.findAll();
     }
 
-/*    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userDao.findByUsername(username);
-        if (user == null)
-            throw new UsernameNotFoundException("Username and or password was incorrect.");
-
-        return new CustomSecurityUser(user);
-
-    }*/
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println(">>> inside loadByUsername");
@@ -151,35 +145,44 @@ public class UserServiceImpl implements UserDetailsService {
         Matcher checkForDigit = digit.matcher(input);
         Matcher checkForSpecial = special.matcher(input);
         boolean hasDigit = checkForDigit.find();
-        boolean hasSpecial = checkForSpecial.find();;
+        boolean hasSpecial = checkForSpecial.find();
 
-        if (hasDigit){
-            logger.info("Username {} contains digits ", input);
-            throw new NameFormatException("username contains digits");
+        try{
+            if (hasDigit){
+                logger.info("Username {} contains digits ", input);
+                throw new NameFormatException("username contains digits");
 
-        }else if (hasSpecial){
-            logger.info("Username {} contains special characters ", input);
-            throw new NameFormatException("username contains special characters");
+            }else if (hasSpecial){
+                logger.info("Username {} contains special characters ", input);
+                throw new NameFormatException("username contains special characters");
+            }
+        } catch(NameFormatException e){
+            System.out.println(e);
         }
         return true;
     }
 
     public boolean isUserPasswordSecure(User user) throws UnsecurePasswordException {
 
-        if (user.getPassword().toLowerCase().contains("password")){
-            System.out.println(">>>>> " + user.getUsername() + " has a password which contains 'password'");
-            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains 'password'");
-        }
-        if (user.getPassword().toLowerCase().contains(user.getFirstName())){
-            System.out.println(">>>>> " + user.getUsername() + " has a password which contains their first name");
-            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their first name");
-        }
-        if (user.getPassword().toLowerCase().contains(user.getSurname())){
-            System.out.println(">>>>> " + user.getUsername() + " has a password which contains their surname");
-            throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their surname");
+        try{
+            if (user.getPassword().toLowerCase().contains("password")){
+                System.out.println(">>>>> " + user.getUsername() + " has a password which contains 'password'");
+                throw new UnsecurePasswordException(user.getUsername() + " has a password which contains 'password'");
+            }
+            if (user.getPassword().toLowerCase().contains(user.getFirstName())){
+                System.out.println(">>>>> " + user.getUsername() + " has a password which contains their first name");
+                throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their first name");
+            }
+            if (user.getPassword().toLowerCase().contains(user.getSurname())){
+                System.out.println(">>>>> " + user.getUsername() + " has a password which contains their surname");
+                throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their surname");
+            }
+        } catch(UnsecurePasswordException e){
+            System.out.println(e);
         }
             return true;
     }
+
 
     public boolean hasErrors(BindingResult result, User user) throws NameFormatException, UnsecurePasswordException{
         return result.hasErrors() || !isUserPasswordSecure(user) || !inputValidator(user.getFirstName()) || !inputValidator(user.getSurname());
@@ -196,8 +199,10 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public String dateFormating(String dob){
-        SimpleDateFormat format = new SimpleDateFormat(dob);
-        return format.toString();
+        //validate a dob string in the format dd/mm/yy
+        return null;
     }
+
+
 
 }

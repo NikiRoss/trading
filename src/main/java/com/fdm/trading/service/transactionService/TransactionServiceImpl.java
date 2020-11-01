@@ -6,6 +6,8 @@ import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.StockListEntity;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.Transaction;
+import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) {
+    public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) throws InsufficientFundsException, LimitedStockException {
         Stocks stocks = stockService.findByStockId(stockId);
         Account account = accountService.findByAccountId(accountId);
         Transaction transaction = new Transaction();
@@ -81,11 +83,12 @@ public class TransactionServiceImpl implements TransactionService{
 
         double balance = account.getAccountBalance();
         double totalCost = volume * stocks.getSharePrice();
+
         if (totalCost > balance){
-            System.out.println("You do not have enough funds to complete this transaction");
+            throw new InsufficientFundsException("You do not have enough funds to complete this transaction, please review your purchase");
         }else if (volume > stocks.getVolume() && volume > 0){
             {
-                System.out.println("There are only: " + stocks.getVolume() + " available, please amend your purchase and try again");
+                throw new LimitedStockException("There are only: " + stocks.getVolume() + " available, please amend your purchase and try again");
             }
         }
         else{

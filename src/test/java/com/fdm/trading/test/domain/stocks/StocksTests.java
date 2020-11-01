@@ -26,14 +26,6 @@ public class StocksTests {
     @Test
     public void create_A_New_Stock(){
         Stocks s = new Stocks();
-        stockService.createNewStock("RBS", "RBS", 33.21, 800000);
-        stockService.createNewStock("Calyon", "CL", 98.21, 800000);
-        stockService.createNewStock("Threadneedle", "TN", 12.91, 800000);
-        stockService.createNewStock("Aviva", "AVA", 120.38, 800000);
-        stockService.createNewStock("Morgan Stanley", "MS", 402, 800000);
-        stockService.createNewStock("Unicredit", "L", 211.22, 800000);
-        stockService.createNewStock("Caplin", "CAP", 187.21, 800000);
-
     }
 
     @Test
@@ -50,10 +42,17 @@ public class StocksTests {
     }
 
     @Test
+    public void find_A_Stock_By_Ticker(){
+        Stocks s = stockService.findByTicker("RBS");
+        assertEquals(s.getStockId(), 10);
+        System.out.println(s.toString());
+    }
+
+    @Test
     public void find_All_Stocks(){
         List<Stocks> stocksList = stockService.findAll();
         int size = stocksList.size();
-        assertEquals(size, 3);
+        assertEquals(size, 49);
     }
 
     @Test
@@ -63,13 +62,5 @@ public class StocksTests {
 
     }
 
-    @Test
-    public void remove_Null(){
-        List<Stocks> stocksList = stockService.findAll();
-        for (Stocks stocks : stocksList){
-            stocks.setOpeningValue(100);
-            stocks.setClosingValue(100);
-        }
-    }
 
 }

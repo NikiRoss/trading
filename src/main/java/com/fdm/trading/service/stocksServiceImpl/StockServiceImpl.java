@@ -89,7 +89,6 @@ public class StockServiceImpl implements StocksService, Runnable{
             stocks.setSharePrice(round(sharePrice));
             profitAndLoss(stocks);
             save(stocks);
-            System.out.println(stocks.getSharePrice());
         }
         System.out.println("Running scheduled task");
     }

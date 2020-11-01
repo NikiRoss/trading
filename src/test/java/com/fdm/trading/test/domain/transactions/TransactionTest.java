@@ -3,6 +3,8 @@ package com.fdm.trading.test.domain.transactions;
 import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.Transaction;
+import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountService;
 import com.fdm.trading.service.stocksServiceImpl.StocksService;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
@@ -30,20 +32,27 @@ public class TransactionTest {
     TransactionServiceImpl transService;
 
     @Test
-    public void fail_A_Transaction_If_No_Stocks_Available(){
+    public void fail_A_Transaction_If_No_Stocks_Available() throws LimitedStockException, InsufficientFundsException {
         Stocks stocks = stocksService.findByStockId(6);
+        stocks.setVolume(10);
         transService.createPurchaseTransaction(6, 2, 90);
-        double result1 = stocks.getVolume();
-        assertEquals(result1, 10, 0);
     }
 
     @Test
-    public void Create_A_Purchase_Transaction(){
+    public void fail_A_Transaction_If_Not_Enough_Funds_Available() throws LimitedStockException, InsufficientFundsException {
+        Account account = accountService.findByAccountId(3);
+        account.setAccountBalance(0);
+        transService.createPurchaseTransaction(8, 41, 3);
+        assertEquals(account.getAccountBalance(), 0, 0);
+    }
+
+    @Test
+    public void create_A_Purchase_Transaction() throws LimitedStockException, InsufficientFundsException {
         transService.createPurchaseTransaction(6, 2, 9);
     }
 
     @Test
-    public void sale_Transaction(){
+    public void create_A_sale_Transaction(){
         transService.createSaleTransaction(7, 2,47);
     }
 
