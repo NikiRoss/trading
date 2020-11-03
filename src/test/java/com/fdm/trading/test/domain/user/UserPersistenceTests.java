@@ -1,13 +1,17 @@
 package com.fdm.trading.test.domain.user;
 
+import com.fdm.trading.dao.AccountDao;
+import com.fdm.trading.dao.CreditCardDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.CreditCard;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.exceptions.UserAlreadyExistException;
 import com.fdm.trading.security.Authorities;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
+import com.fdm.trading.service.cardServiceImpl.CardServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import com.fdm.trading.utils.mail.EmailConfig;
 import org.junit.Test;
@@ -40,6 +44,10 @@ public class UserPersistenceTests {
     private AccountServiceImpl accountService;
     @Autowired
     private EmailConfig emailConfig;
+    @Autowired
+    private CardServiceImpl cardService;
+
+
 
     @Test
     public void find_A_User_By_Username(){
@@ -104,24 +112,39 @@ public class UserPersistenceTests {
 
     @Test
     public void createAdmin() throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
-        User admin = new User();
-        admin.setUsername("username");
-        admin.setPassword("ruby");
-        admin.setFirstName("Niki");
-        admin.setSurname("Ross");
+        User user = new User();
+        user.setUsername("nikiross84");
+        user.setPassword("testpass");
+        user.setFirstName("Niki");
+        user.setSurname("Ross");
         Authorities authorities = new Authorities();
         authorities.setAuthority("ROLE_USER");
-        authorities.setUser(admin);
+        authorities.setUser(user);
         Set<Authorities> authoritiesSet = new HashSet<>();
         authoritiesSet.add(authorities);
-        admin.setUserAuthorities(authoritiesSet);
-        admin.setEmail("email@emial.com");
-        userService.createNewUser(null, admin, "ROLE_USER");
+        user.setUserAuthorities(authoritiesSet);
+        user.setEmail("email@emial.com");
+        userService.createNewUser(null, user, "ROLE_USER");
     }
 
     @Test
-    public void create_A_User(){
-
+    public void create_A_User() throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+        User user = new User();
+        Authorities auth = new Authorities();
+        auth.setAuthority("ROLE_USER");
+        auth.setUser(user);
+        Set<Authorities> authSet = new HashSet<>();
+        authSet.add(auth);
+        user.setEmail("niki.ross49@gmail.com");
+        user.setFirstName("Niki");
+        user.setSurname("Ross");
+        user.setPassword("testpass");
+        user.setEnabled(false);
+        user.setUsername("nikiross84");
+        CreditCard card = cardService.registerCreditCard("1234567890009876", "01/22", 890, "Mr N Ross");
+        user.setCreditCard(card);
+        user.setUserAuthorities(authSet);
+        userService.createNewUser(null, user, "ROLE_USER");
     }
 
     @Test
@@ -131,5 +154,12 @@ public class UserPersistenceTests {
          * is designed to catch ie use of the word "password" or
          * inclusion of the users name in their password
          */
+    }
+
+    @Test
+    public void test_Exception_Handling_On_SignUp() throws NameFormatException {
+        String username = "5050";
+        boolean validate = userService.inputValidator(username);
+        assertFalse(validate);
     }
 }

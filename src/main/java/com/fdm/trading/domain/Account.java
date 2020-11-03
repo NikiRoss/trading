@@ -26,12 +26,6 @@ public class Account {
     private List<Stocks> stocksList;
 
 
-    /*@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Transaction> transactionList;*/
-
-
-
     public Account() {
         this.accountBalance = 1000000.00;
     }

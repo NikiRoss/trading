@@ -15,13 +15,15 @@ public class CardServiceImpl {
     @Autowired
     private CreditCardDao cardDao;
 
-    public void registerCreditCard(String cardNo, String expiry, int cvv, String name){
+    public CreditCard registerCreditCard(String cardNo, String expiry, int cvv, String name){
         CreditCard creditCard = new CreditCard();
         creditCard.setCardNo(encoder.encode(cardNo));
         creditCard.setExpiry(encoder.encode(expiry));
         creditCard.setCvv(cvv);
         creditCard.setNameOnCard(name);
         cardDao.save(creditCard);
+
+        return creditCard;
     }
 
     public CreditCard findCardByNameOnCard(String name){

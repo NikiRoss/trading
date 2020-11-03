@@ -4,9 +4,9 @@ import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.dao.VerificationTokenDao;
 import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.CreditCard;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
+import com.fdm.trading.events.RegistrationListener;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.exceptions.UserAlreadyExistException;
@@ -24,7 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,8 +52,12 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private CardServiceImpl cardService;
 
+    @Autowired
+    private RegistrationListener listner;
+
 
     public User createNewUser(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+
         if(result!=null) {
             hasErrors(result, user);
         }
@@ -133,6 +137,7 @@ public class UserServiceImpl implements UserDetailsService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         System.out.println(">>> user log in OK");
         System.out.println(">>> userDetails:  " + user.getUsername() + user.getPassword() + " " + user.getSurname());
         return new CustomSecurityUser(user);
@@ -158,6 +163,8 @@ public class UserServiceImpl implements UserDetailsService {
             }
         } catch(NameFormatException e){
             System.out.println(e);
+            listner.sendExceptionEmail(e, LocalDateTime.now());
+            return false;
         }
         return true;
     }
@@ -197,12 +204,6 @@ public class UserServiceImpl implements UserDetailsService {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenDao.save(myToken);
     }
-
-    public String dateFormating(String dob){
-        //validate a dob string in the format dd/mm/yy
-        return null;
-    }
-
 
 
 }

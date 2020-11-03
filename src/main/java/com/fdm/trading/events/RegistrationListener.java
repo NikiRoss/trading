@@ -4,6 +4,7 @@ import com.fdm.trading.domain.User;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
@@ -11,10 +12,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+
+    private static final String ADMIN_EMAIL = "admin@tradingapp.com";
  
     @Autowired
     private UserServiceImpl userService;
@@ -28,6 +36,9 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     @Autowired
     private Environment env;
+
+    @Value("${support.email}")
+    private String supportEmail;
  
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent event) {
@@ -35,6 +46,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         this.confirmRegistration(event);
         System.out.println("confirm registration done");
     }
+
  
     private void confirmRegistration(final OnRegistrationCompleteEvent event) {
         final User user = event.getUser();
@@ -53,9 +65,34 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final String message = messages.getMessage("message.regSuccLink", null, "You registered successfully. To confirm your registration, please click on the below link.", event.getLocale());
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
+        email.setFrom("admin@trading.com");
         email.setSubject(subject);
         email.setText(message + " \r\n" + confirmationUrl);
-        email.setFrom(env.getProperty("support.email"));
+        email.setFrom(supportEmail);
         return email;
+    }
+
+    private SimpleMailMessage errorExceptionAlertEmail(Exception exception, LocalDateTime timestamp){
+        //StringWriter writer = new StringWriter();
+        //writer = exception.getStackTrace();
+        StackTraceElement[] st = exception.getStackTrace();
+        final String message = exception.getMessage();
+        final SimpleMailMessage email = new SimpleMailMessage();
+        String exceptionClass = exception.getClass().getSimpleName();
+        email.setFrom("app@tradingapp.com");
+        email.setTo(ADMIN_EMAIL);
+        email.setSubject(exceptionClass);
+        List<String> stringList = new ArrayList<>();
+        for (int i=0; i<st.length;i++){
+            stringList.add(st[i].toString());
+        }
+        email.setText(exceptionClass +" thrown at "+ timestamp+" with message: "+ message +"\r\n\nStacktrace:\n"+ stringList.toString());
+        return email;
+
+    }
+
+    public void sendExceptionEmail(Exception exception, LocalDateTime timestamp){
+        SimpleMailMessage mail = errorExceptionAlertEmail(exception, timestamp);
+        mailSender.send(mail);
     }
 }

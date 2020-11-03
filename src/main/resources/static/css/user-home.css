@@ -29,6 +29,7 @@
 .navbar {
     font-size: 20px;
     opacity: 0.9;
+    position: fixed;
 }
 
 
