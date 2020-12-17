@@ -2,7 +2,9 @@ package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
-import com.fdm.trading.utils.json.*;
+import com.fdm.trading.utils.json.DataConverter;
+import com.fdm.trading.utils.json.JsonConverter;
+import com.fdm.trading.utils.json.JsonWriter;
 import com.google.gson.JsonElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -12,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +31,11 @@ public class ExportController {
     @GetMapping("/transData")
     public ResponseEntity<Resource> downloadTransData(){
 
-        DataConverter<Transaction, Document> tdc = new XmlConverter();
-
-        String filename = "transaction_" + String.valueOf(System.currentTimeMillis()) + ".xml";
+        String filename = "transaction_" + String.valueOf(System.currentTimeMillis()) + ".json";
+        DataConverter<Transaction, JsonElement> tdc = new JsonConverter();
         List<Transaction> transactions = transService.findAll();
-        Document doc = tdc.convert(transactions);
-        new XmlWriter().writeData(doc, filename);
+        JsonElement transJson = tdc.convert(transactions);
+        new JsonWriter().writeData(transJson.toString(), filename);
         File file = new File(filename);
         Path path = Paths.get(file.getAbsolutePath());
         ByteArrayResource resource = null;
