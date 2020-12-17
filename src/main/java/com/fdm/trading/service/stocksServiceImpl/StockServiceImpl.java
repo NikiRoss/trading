@@ -25,27 +25,27 @@ public class StockServiceImpl implements StocksService, Runnable{
     private StockListEntityDao sleDao;
 
 
-    public void save(Stocks stocks){
+    public synchronized void save(Stocks stocks){
         stocksDao.save(stocks);
     }
 
     @Override
-    public Stocks findByStockId(long stockId) {
+    public synchronized Stocks findByStockId(long stockId) {
         return stocksDao.findByStockId(stockId);
     }
 
     @Override
-    public Stocks findByCompany(String company) {
+    public synchronized Stocks findByCompany(String company) {
         return stocksDao.findByCompany(company);
     }
 
     @Override
-    public Stocks findByTicker(String ticker) {
+    public synchronized Stocks findByTicker(String ticker) {
         return stocksDao.findByTicker(ticker);
     }
 
     @Override
-    public void createNewStock(String company, String ticker, double sharePrice, long volume) {
+    public synchronized void createNewStock(String company, String ticker, double sharePrice, long volume) {
         Stocks stocks = new Stocks();
         stocks.setCompany(company);
         stocks.setTicker(ticker);
@@ -54,19 +54,19 @@ public class StockServiceImpl implements StocksService, Runnable{
         stocksDao.save(stocks);
     }
 
-    public Stocks createNewStock2(Stocks stocks) {
+    public synchronized Stocks createNewStock2(Stocks stocks) {
         return stocksDao.save(stocks);
     }
 
     @Override
-    public void removeStock(long stockId) {
+    public synchronized void removeStock(long stockId) {
         Stocks stock = stocksDao.findByStockId(stockId);
         stocksDao.delete(stock);
     }
-
+    //synchronized for thread safety
     @Scheduled(fixedRate = 30000)
     @Override
-    public void fluctuateStockPrice() {
+    public synchronized void fluctuateStockPrice() {
         Iterable<Stocks> list = stocksDao.findAll();
         Random random1 = new Random();
 
@@ -122,7 +122,7 @@ public class StockServiceImpl implements StocksService, Runnable{
      */
 
 
-    public List<Stocks> findAll(){
+    public synchronized List<Stocks> findAll(){
         Iterable<Stocks> stocksIterable = stocksDao.findAll();
         List<Stocks> stocks = new ArrayList<Stocks>();
         for(Stocks stock:stocksIterable){
@@ -131,6 +131,29 @@ public class StockServiceImpl implements StocksService, Runnable{
         return stocks;
     }
 
+    public synchronized List<Stocks> findStocksGreaterThan(double gains){
+            List<Stocks> allStocks = this.findAll();
+            List<Stocks> filtered = new ArrayList<>();
+            for(Stocks stocks:allStocks){
+                Double stockGains = Double.valueOf(stocks.getPnl());
+                if (stockGains >= gains){
+                    filtered.add(stocks);
+                }
+            }
+            return filtered;
+    }
+
+    public List<Stocks> findStocksLessThan(double gains){
+        List<Stocks> allStocks = this.findAll();
+        List<Stocks> filtered = new ArrayList<>();
+        for(Stocks stocks:allStocks){
+            Double stockGains = Double.valueOf(stocks.getPnl());
+            if (stockGains <= gains){
+                filtered.add(stocks);
+            }
+        }
+        return filtered;
+    }
 
     public List<Stocks> returnStockList(long accountId){
         List<StockListEntity> stockListEntities = sleDao.findByAccountId(accountId);
@@ -151,7 +174,7 @@ public class StockServiceImpl implements StocksService, Runnable{
     }
 
     @Scheduled(cron = "0 47 20 * * *")
-    private void setOpeningValues() {
+    private synchronized void setOpeningValues() {
         System.out.println(">>> Setting the opening stock prices!!!");
         List<Stocks>  stocks = this.findAll();
         for(Stocks stock: stocks){
@@ -162,7 +185,7 @@ public class StockServiceImpl implements StocksService, Runnable{
     }
 
     @Scheduled(cron = "0 55 20 * * *")
-    public void setClosingValues() {
+    public synchronized void setClosingValues() {
         System.out.println(">>> Setting the closing stock prices!!!");
         List<Stocks>  stocks = this.findAll();
         for(Stocks stock: stocks) {
@@ -171,7 +194,7 @@ public class StockServiceImpl implements StocksService, Runnable{
             this.save(stock);
         }
     }
-    public void setLastTrade(Stocks stocks, Date lastTrade){
+    public synchronized void setLastTrade(Stocks stocks, Date lastTrade){
         stocks.setLastTrade(lastTrade);
         stocksDao.save(stocks);
     }

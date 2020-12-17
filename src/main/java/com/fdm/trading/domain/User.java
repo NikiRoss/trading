@@ -4,6 +4,7 @@ import com.fdm.trading.security.Authorities;
 import org.springframework.context.annotation.Scope;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class User {
     private String password;
 
     @Column(name = "DOB")
-    private String dob;
+    private Date dob;
 
     @OneToOne
     private Account account;
@@ -97,11 +98,11 @@ public class User {
         this.password = password;
     }
 
-    public String getDob() {
+    public Date getDob() {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(Date dob) {
         this.dob = dob;
     }
 
