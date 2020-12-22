@@ -28,9 +28,10 @@ public class AccountTest {
     @Test
     public void create_An_Account(){
         Account a = accountService.createAnAccount();
-        long val1 = a.getAccountId();
-        assertNotNull(val1);
-        accountService.deleteAccountById(val1);
+        long accountId = a.getAccountId();
+        Account account = accountService.findByAccountId(accountId);
+        assertNotNull(account);
+        accountService.deleteAccountById(accountId);
     }
 
     @Test
@@ -49,7 +50,7 @@ public class AccountTest {
 
     @Test
     public void return_Account_Balance(){
-        Account a =accountService.findByAccountId(1);
+        Account a = accountService.findByAccountId(1);
         double val = a.getAccountBalance();
         assertEquals(val, 88891, 0);
     }

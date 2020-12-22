@@ -154,11 +154,11 @@ public class UserServiceImpl implements UserDetailsService {
 
         try{
             if (hasDigit){
-                logger.info("Username {} contains digits ", input);
+                logger.info("Name {} contains digits ", input);
                 throw new NameFormatException("username contains digits");
 
             }else if (hasSpecial){
-                logger.info("Username {} contains special characters ", input);
+                logger.info("Name {} contains special characters ", input);
                 throw new NameFormatException("username contains special characters");
             }
         } catch(NameFormatException e){
