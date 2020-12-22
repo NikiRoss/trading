@@ -4,6 +4,8 @@ import com.fdm.trading.security.Authorities;
 import org.springframework.context.annotation.Scope;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,13 +25,17 @@ public class User {
     @Column(name = "surname", nullable = false)
     private String surname;
 
+    @NotNull
     @Email
     @Column(name = "email")
     private String email;
 
+    @NotNull
     @Column(name = "username")
     private String username;
 
+    @NotNull
+    @Min(8)
     @Column(name = "password")
     private String password;
 
