@@ -39,7 +39,6 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
-    @Min(8)
     @Column(name = "password")
     private String password;
 
