@@ -96,7 +96,6 @@ public class UserServiceImpl implements UserDetailsService {
 
     public void enableUser(String username) {
         User user = findByUsername(username);
-        System.out.println(">>>>>>>>>>>>enableUser"+user.isEnabled());
         user.setEnabled(true);
         userDao.save(user);
     }
@@ -106,7 +105,6 @@ public class UserServiceImpl implements UserDetailsService {
         user.setEnabled(false);
         logger.debug("{} enabled: {}",user.getUsername(), user.isEnabled());
         userDao.save(user);
-        System.out.println(username + " is disabled.");
     }
 
     public List<User> findAllUsers(){
@@ -115,7 +113,6 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(">>> inside loadByUsername");
             boolean enabled = true;
             boolean accountNonExpired = true;
             boolean credentialsNonExpired = true;
@@ -138,8 +135,6 @@ public class UserServiceImpl implements UserDetailsService {
             throw new RuntimeException(e);
         }
 
-        System.out.println(">>> user log in OK");
-        System.out.println(">>> userDetails:  " + user.getUsername() + user.getPassword() + " " + user.getSurname());
         return new CustomSecurityUser(user);
     }
 
@@ -162,7 +157,6 @@ public class UserServiceImpl implements UserDetailsService {
                 throw new NameFormatException("username contains special characters");
             }
         } catch(NameFormatException e){
-            System.out.println(e);
             listner.sendExceptionEmail(e, LocalDateTime.now());
             return false;
         }
@@ -173,19 +167,16 @@ public class UserServiceImpl implements UserDetailsService {
 
         try{
             if (user.getPassword().toLowerCase().contains("password")){
-                System.out.println(">>>>> " + user.getUsername() + " has a password which contains 'password'");
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains 'password'");
             }
             if (user.getPassword().toLowerCase().contains(user.getFirstName())){
-                System.out.println(">>>>> " + user.getUsername() + " has a password which contains their first name");
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their first name");
             }
             if (user.getPassword().toLowerCase().contains(user.getSurname())){
-                System.out.println(">>>>> " + user.getUsername() + " has a password which contains their surname");
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their surname");
             }
         } catch(UnsecurePasswordException e){
-            System.out.println(e);
+            return false;
         }
             return true;
     }

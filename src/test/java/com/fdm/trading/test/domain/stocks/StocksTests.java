@@ -45,7 +45,6 @@ public class StocksTests {
     public void find_A_Stock_By_Ticker(){
         Stocks s = stockService.findByTicker("RBS");
         assertEquals(s.getStockId(), 10);
-        System.out.println(s.toString());
     }
 
     @Test

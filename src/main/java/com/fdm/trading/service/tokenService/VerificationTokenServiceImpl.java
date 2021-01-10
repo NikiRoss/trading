@@ -30,4 +30,12 @@ public class VerificationTokenServiceImpl {
         return tokenDao.findByToken(token);
     }
 
+    public boolean tokenIsInvalid(VerificationToken token){
+        return token == null;
+    }
+
+    public boolean tokenHasExpired(VerificationToken token, Calendar cal){
+        return (token.getExpiry().getTime() - cal.getTime().getTime()) <= 0;
+    }
+
 }

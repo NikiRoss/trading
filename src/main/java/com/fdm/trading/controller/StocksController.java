@@ -44,10 +44,6 @@ public class StocksController {
         List<Transaction> latestTransactions = transactionService.getLatestTransaction();
         List<Stocks> stocksList = this.stockService.findAll();
         Account account = getAccountFromPrincipal(principal);
-        System.out.println(stocksList);
-        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-        System.out.println(";;;;;;;;"+account+";;;;;;");
-        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
         model.addAttribute("account", account);
         model.addAttribute("stocks", stocksList);
         model.addAttribute("bySharePrice", Comparator.comparing(Stocks::getSharePrice));
@@ -60,7 +56,6 @@ public class StocksController {
     public String getPurchase(@PathVariable int id, Model model, Principal principal){
         Account account = getAccountFromPrincipal(principal);
         Stocks stocks = stockService.findByStockId(id);
-        System.out.println(stocks.getCompany());
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
@@ -92,7 +87,6 @@ public class StocksController {
     public String getSale(@PathVariable int id, Model model, Principal principal){
         Account account = getAccountFromPrincipal(principal);
         Stocks stocks = stockService.findByStockId(id);
-        System.out.println(stocks.getCompany());
         Transaction transaction = new Transaction();
         model.addAttribute("transaction", transaction);
         model.addAttribute("stocks", stocks);
@@ -107,7 +101,6 @@ public class StocksController {
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("messageEnabled", true);
         model.addAttribute("message", transactionService.getMessage());
-        System.out.println(">>>>>>" + transactionService.getMessage());
         model.addAttribute("stocks", stocks);
         model.addAttribute("account", account);
         model.addAttribute("transaction", transaction);

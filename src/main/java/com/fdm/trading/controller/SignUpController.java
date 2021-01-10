@@ -119,20 +119,16 @@ public class SignUpController {
             registered.setEmail(user.getEmail());
             registered.setPassword(passwordEncoder.encode(user.getPassword()));
             registered.setEnabled(false);
-            System.out.println("User details set");
 
             Set<Authorities> authoritiesSet = new HashSet<>();
             Authorities authority = new Authorities();
             authority.setUser(registered);
             authority.setAuthority(authority.getAuthority());
             authoritiesSet.add(authority);
-            System.out.println("Authorities set");
 
             registered.setUserAuthorities(authoritiesSet);
-            System.out.println("User authorities set");
 
             userService.save(registered);
-            System.out.println("New user saved");
 
             authoritiesDao.save(authority);
             String appUrl = request.getRequestURL().toString();
@@ -141,7 +137,9 @@ public class SignUpController {
             System.out.println("Event publisher being called");
 
         } catch (RuntimeException ex) {
-            return new ModelAndView("error", "user", user);
+            ModelAndView modelAndView = new ModelAndView("signup", "user", user);
+            modelAndView.addObject("ErrorMessage",  "EXCEPTIONNN");
+            return modelAndView;
         }
         return new ModelAndView("successRegister", "user", user);
     }
@@ -152,7 +150,7 @@ public class SignUpController {
         Locale locale = request.getLocale();
 
         VerificationToken verificationToken = userService.getVerificationToken(token);
-        if (verificationToken == null) {
+        if (tokenService.tokenIsInvalid(verificationToken)) {
             String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
             return "redirect:/badUser?lang=" + locale.getLanguage();
@@ -160,7 +158,7 @@ public class SignUpController {
 
         User user = verificationToken.getUser();
         Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiry().getTime() - cal.getTime().getTime()) <= 0) {
+        if (tokenService.tokenHasExpired(verificationToken, cal)) {
             String messageValue = messages.getMessage("auth.message.expired", null, locale);
             model.addAttribute("message", messageValue);
             return "redirect:/badUser?lang=" + locale.getLanguage();
@@ -182,5 +180,7 @@ public class SignUpController {
         userService.save(user);
         return "successRegister";
     }
+
+
 
 }
