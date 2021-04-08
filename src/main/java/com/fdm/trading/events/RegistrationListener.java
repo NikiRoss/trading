@@ -46,7 +46,6 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         this.confirmRegistration(event);
         System.out.println("confirm registration done");
     }
-
  
     private void confirmRegistration(final OnRegistrationCompleteEvent event) {
         final User user = event.getUser();

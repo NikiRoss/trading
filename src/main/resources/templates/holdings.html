@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <meta charset="UTF-8">
 <link rel="stylesheet" th:href="@{css/holdings.css}">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 <title>Holdings</title>
 </head>
@@ -36,12 +35,10 @@
     </div>
 </div>
 
-<div>
-    <h1 class="text-primary text-center">Stocks Held</h1>
-</div>
 
-<div class="container h-100" style="padding-top: 50px;">
-    <table class="table table-bordered table-striped">
+<div class="table-container">
+        <h1 id="title">Stocks Held</h1>
+    <table>
         <tr>
             <th>ID</th>
             <th>Company</th>
@@ -52,24 +49,21 @@
         </tr>
         <div th:each="stocks : ${stocksHeld}">
             <tr class="clickable-row">
-                <a th:href="@{'/stocks/sell/' + ${stocks.stockId}}">
-                <td th:text="${stocks.stockId}"></td>
-                <td th:text="${stocks.company}" th:onclick="|loadContent(${stocks.stockId})|"></td>
-                <td th:text="${stocks.volume}"></td>
-                <td th:text="${#numbers.formatDecimal(stocks.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
+                <a th:href="@{'/stocks/sell' + ${stocks.stockId}}">
+                    <td th:text="${stocks.stockId}"></td>
+                    <td th:text="${stocks.company}" th:onclick="|loadContent(${stocks.stockId})|"></td>
+                    <td th:text="${stocks.volume}"></td>
+                    <td th:text="${#numbers.formatDecimal(stocks.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
                 </a>
             </tr>
         </div>
     </table>
 </div>
+
 <script type="text/javascript">
     function loadContent(id) {
         location.href = '/stocks/sale/'+id;
     }
 </script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
 </body>
 </html>

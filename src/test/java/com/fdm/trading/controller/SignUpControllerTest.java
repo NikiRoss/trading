@@ -7,7 +7,6 @@ import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.service.tokenService.VerificationTokenServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
-import com.fdm.trading.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

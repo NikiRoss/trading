@@ -6,7 +6,6 @@ import com.fdm.trading.domain.User;
 import com.fdm.trading.events.RegistrationListener;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
-import com.fdm.trading.service.userServiceImpl.UserService;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import com.fdm.trading.utils.TestUtils;
 import org.junit.Before;
@@ -64,8 +63,8 @@ public class AdminControllerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        user = TestUtils.getUser(1l, "username", "email@email.com", "randomString");
-        admin = TestUtils.getUser(2l, "admin", "email@email.com", "randomString");
+        user = TestUtils.getUser(1, "username", "email@email.com", "randomString");
+        admin = TestUtils.getUser(2, "admin", "email@email.com", "randomString");
         users = new ArrayList<>();
         users.add(user);
         stocks = new Stocks();
@@ -73,7 +72,7 @@ public class AdminControllerTest {
 
     @Test
     @WithMockUser
-    public void testDisableUser() throws Exception {
+    public void testEnableUser() throws Exception {
         when(mockUserService.findAllUsers()).thenReturn(users);
         when(mockUserService.findByUsername(any())).thenReturn(admin);
         when(mockUserService.findByUserId(any(Long.class))).thenReturn(user);

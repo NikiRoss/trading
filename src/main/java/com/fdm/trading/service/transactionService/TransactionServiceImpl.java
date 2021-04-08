@@ -107,8 +107,8 @@ public class TransactionServiceImpl implements TransactionService{
                 dbStockListEntity = new StockListEntity();
                 dbStockListEntity.setAccountId(accountId);
                 dbStockListEntity.setStockId(stockId);
-                dbStockListEntity.setVolume(volume);
             }
+
             dbStockListEntity.setVolume(dbStockListEntity.getVolume()+volume);
             stockListEntityDao.save(dbStockListEntity);
             transaction.setPrice(totalCost);
@@ -187,10 +187,13 @@ public class TransactionServiceImpl implements TransactionService{
         props.add("date");
         for (Stocks stock:stocksList){
             List<Transaction> transactions = transDao.findAll( Sort.by(Sort.Direction.DESC, "date"));
-            Transaction transaction = transactions.get(0);
-            System.out.println(transaction.getDate());
-            stockService.setLastTrade(stock, transaction.getDate());
-            latestTransactions.add(transaction);
+            if (!transactions.isEmpty()){
+                Transaction transaction = transactions.get(0);
+                System.out.println(transaction.getDate());
+                stockService.setLastTrade(stock, transaction.getDate());
+                latestTransactions.add(transaction);
+            }
+
         }
         return latestTransactions;
     }

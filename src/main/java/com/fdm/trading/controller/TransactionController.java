@@ -11,8 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,6 +29,9 @@ public class TransactionController {
         User user = (User) userService.loadUserByUsername(principal.getName());
         Account account = user.getAccount();
         List<Transaction> transList = this.transactionService.findAllTransactions(account.getAccountId());
+        if (transList == null){
+            transList = new ArrayList<Transaction>();
+        }
         model.addAttribute("transList", transList);
 
         return "transactions";

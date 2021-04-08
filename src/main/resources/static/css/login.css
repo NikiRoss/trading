@@ -1,18 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 
-.container-style {
-    padding-top: 30px;
-    background-color: lightgray;
-    opacity: 0.9;
-    padding-bottom: 20px;
-    font-size: 20px;
-    margin-top: 100px;
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
 }
 
-.form-signin-heading {
+body {
+    background: linear-gradient(#34a495, #b6f0e1) no-repeat;
+    height: 100vh;
+}
+
+.wrapper {
+    max-width: 450px;
+    width: 100%;
+    height: auto;
+    background: #fff;
+    padding: 60px 45px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    box-shadow: 30px 30px 20px rgba(0, 0, 0, 0.3);
+}
+
+.wrapper .title {
+    margin-bottom: 20px;
     text-align: center;
-    color: dimgrey;
+    font-size: 26px;
+    font-weight: bolder;
+    color: #34a495;
 }
 
+.wrapper .input-field,
+form {
+    position: relative;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
+.wrapper .input-field,
+form .input {
+    width: 100%;
+    padding: 12px;
+    padding-left: 30px;
+    border: none;
+    overflow: hidden;
+    background: #eeeeee;
+    border-radius: 20px;
+    outline: none;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
 
+.submit {
+    width: 50%;
+    margin: 20px auto 0;
+    background: linear-gradient(#30ebd2, #0ab39d);
+    padding: 12px;
+    text-align: center;
+    border: none;
+    border-radius: 25px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
 
+.submit:focus {
+    box-shadow: 0 0 0 1px rgba(58 57 110);
+    animation: shadow 0.3s forwards;
+}
+
+@keyframes shadow {
+    100% {
+        box-shadow: 0 0 10px 10px rgba(112, 111, 211, 0);
+    }
+}
+
+.link {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top: 30px;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.wrapper form .input-field i {
+    position: absolute;
+    top: 28px;
+    left: 15px;
+    color: #47c9b8;
+    font-size: 18px;
+}

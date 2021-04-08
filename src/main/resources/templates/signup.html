@@ -2,21 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{css/signup.css}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Sign Up </title>
+    <title>Sign Up</title>
 </head>
 <body>
+
+<!-- OLD FORM
 <div class="container">
 
     <h2>Sign Up</h2>
-    <p th:text="${message}"></p>
+
 
     <div class="form__register">
 
-    <form action="signup/user/registration" th:action="@{signup/user/registration}" th:object="${user}" method="post">
+    <form >
         <label for="name">First Name</label>
-            <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
+            <input type="text" th:field="*{firstName}" placeholder="first name"><br/>
         <label for="name">Surname</label>
             <input type="text" th:field="*{surname}" id="surname" placeholder="surname"><br/>
         <label for="email">Email</label>
@@ -27,19 +28,53 @@
             <input type="password" th:field="*{password}" id="password" placeholder="password" minlength="8" required><br/>
         <label for="name">Username</label>
             <input type="text" th:field="*{username}" id="username" placeholder="create a username" required><br/>
-        <!--<label for="name">Credit Card No</label>
+        <label for="name">Credit Card No</label>
             <input type="text" th:field="*{creditCard.cardNo}" id="card no" placeholder="16 digit card number"><br/>
         <label for="name">Card Expiry</label>
             <input type="text" th:field="*{creditCard.expiry}" id="card exp" placeholder="card expiry"><br/>
         <label for="name">CVV</label>
-            <input type="text" th:field="*{creditCard.cvv}" id="card cvv" placeholder="card cvv"><br/>-->
+            <input type="text" th:field="*{creditCard.cvv}" id="card cvv" placeholder="card cvv"><br/>
                 <input type="submit" value="Add User">
-    </form>
+    </form> -->
+
+<!-- NEW FORM START-->
+
+        <div class="wrapper">
+            <p th:text="${message}"></p>
+            <div class="title">Sign Up Here</div>
+
+            <form action="signup/user/registration" th:action="@{signup/user/registration}" th:object="${user}" method="post">
+                <div class="input-field">
+                    <input type="text" th:field="*{firstName}" placeholder="First Name" class="input" required/>
+                </div>
+
+                <div class="input-field">
+                    <input type="text" th:field="*{surname}" placeholder="Surname" class="input" required/>
+                </div>
+
+                <div class="input-field">
+                    <input type="text" th:field="*{dob}" placeholder="DOB" class="input" required/>
+                </div>
+
+                <div class="input-field">
+                    <input type="text" th:field="*{email}" placeholder="Email" class="input" required/>
+                </div>
+
+                <div class="input-field">
+                    <input type="text" th:field="*{username}" placeholder="Username" class="input" required/>
+                </div>
+
+                <div class="input-field">
+                    <input type="password" th:field="*{password} "placeholder="Password" class="input" required/>
+                </div>
+                <input type="submit" class="submit" value="Add User">
+            </form>
+        </div>
+
+
+        <!-- NEW FORM END-->
+
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,56 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
 <meta charset="UTF-8" http-equiv="refresh" content="30">
-<title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks</title>
 <link rel="stylesheet" th:href="@{css/stocks.css}">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-<script src="js/stocks.js"></script>
-
-<style>
-    body {
-        background-image: url("images/stocks-img.jpeg");
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
 </head>
+
 <body>
-
-<!-- SIMPLE NAVBAR -->
-<div class="container-fluid">
-    <div id="navbar">
-        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/userHome}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/transactions}">Transactions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/holdings}">Holdings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">Logout</a>
-                </li>
-
-                <li class="nav-item">
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/admin/users}">Admin</a>
-                </li>
+<!-- NAVBAR START -->
+<div class="navbar">
+    <div class="nav-container flex">
+        <nav>
+            <ul>
+                <li><a th:href="@{/stocks}">Stocks</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/holdings}">Holdings</a></li>
+                <li><a th:href="@{/logout}">Logout</a></li>
+                <li><a th:href="@{/admin}">Admin</a></li>
+                <li><a sec:authorize="hasRole('ROLE_ADMIN')" class="admin-link" th:href="@{/admin/users}">Admin</a></li>
             </ul>
         </nav>
     </div>
 </div>
+<!-- NAVBAR END -->
 
 <div>
     <h1>Stocks List</h1>
 </div>
 
-<div class="container h-100" style="padding-top: 50px;">
-    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+<div class="container">
+    <input id="search" type="text" placeholder="Search.."/>
 
     <select id="selectionOrder">
         <option value="CompanyAsc">Company asc</option>
@@ -58,94 +38,40 @@
         <option value="SharePriceAsc">Share Price asc</option>
         <option value="SharePriceDesc">Share Price desc</option>
     </select>
+</div>
 
-<table class="table table-bordered table-striped" id="myTable">
+
+<!-- DISPLAY START -->
+<div class="table-container">
+<table id="table">
 <thead>
     <tr>
         <th>ID</th>
         <th>Ticker</th>
         <th>Company</th>
+        <th>Last Trade</th>
         <th>Share Price</th>
+        <th>24% Change</th>
     </tr>
 </thead>
     <tbody>
     <div th:each="stock : ${stocks}">
         <tr class="clickable-row">
-            <a th:href="@{'/stocks/purchase/' + ${stock.stockId}}">
+            <tr th:href="@{'/stocks/purchase/' + ${stock.stockId}}" th:onclick="|loadContent(${stock.stockId})|">
                 <td th:text="${stock.stockId}" ></td>
-                <td th:text="${stock.ticker}" th:onclick="|loadContent(${stock.stockId})|"></td>
-                <td th:text="${stock.company}"></td>
+                <td th:text="${stock.ticker}"></td>
+                <td th:text="${stock.company}" ></td>
                 <td th:text="${stock.lastTrade}"></td>
-                <td th:text="${#numbers.formatDecimal(stock.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
-
-
-
+                <td th:text="'£' + ${#numbers.formatDecimal(stock.sharePrice, 0, 'COMMA', 2, 'POINT')}"></td>
+                <td th:text="${stock.pnl}"></td>
+            </tr>
+    </div>
     </tbody>
 </table>
 </div>
-<script type="text/javascript">
-    function loadContent(id) {
-        location.href = '/stocks/purchase/'+id;
-    }
-</script>
-
-<!-- The share price sorting has a bug where SP of 75.41 was higher than 603.11. All other sorting is fine, NEEDS REVISED -->
-<script>
-    const jsonFromHtml = (tbody, thead) => {
-        let tableJson = {rows:[]};
-        [...tbody.children].forEach(tableRow => {
-            let rowEntry = {};
-            [...tableRow.children].forEach((cell, column) => rowEntry[thead.children[0].children[column].textContent] = cell.textContent);
-            tableJson.rows.push(rowEntry);
-        });
-        console.log(tableJson);
-        return tableJson;
-    };
-
-    const arrayToTable = (arr, tbody, thead) => {
-        let rows = [];
-        arr.forEach((row, rowNum) => {
-            row = [...thead.children[0].children].map(th => row[th.textContent] ? row[th.textContent] : '');
-            row = row.map(td => `<td>${td}</td>`);
-            row = `<tr>${row.join('')}</tr>`;
-            rows.push(row);
-        });
-        console.log("--->"+rows)
-        tbody.innerHTML = rows.join('');
-    };
-
-    const myTableTbody = document.querySelector('#myTable tbody');
-    const myTableThead = document.querySelector('#myTable thead');
-
-    const customSort = (arr, key, order) => {
-        let sortCompare = order == 'Desc' ? -1 : 1;
-        return arr.sort((first, second) => first[key]>second[key] ?  sortCompare : first[key]<second[key] ?  -sortCompare : 0);
-    };
+<!-- DISPLAY END -->
 
 
-    document.querySelector('#selectionOrder').addEventListener('change', function(){
-        let sortKey = this.value.match(/[A-Za-z]+/)[0];
-
-        if(sortKey.includes("Asc")){
-            sortKey = sortKey.slice(0, -3);
-        }
-        if(sortKey.includes("Desc")){
-            sortKey = sortKey.slice(0, -4);
-        }
-        if(sortKey == "SharePrice"){
-            sortKey = "Share Price";
-        }
-        console.log(sortKey);
-        let sortOrder = this.value.match(/(A|De)sc/) ? this.value.match(/(A|De)sc/)[0] : 'Asc';
-        console.log(sortOrder);
-        let myTableJson = jsonFromHtml(myTableTbody, myTableThead);
-        console.log(myTableJson);
-        myTableJson.rows = customSort(myTableJson.rows, sortKey, sortOrder);
-        arrayToTable(myTableJson.rows, myTableTbody, myTableThead);
-    });
-</script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script th:src="@{js/stocks.js}"></script>
 </body>
 </html>

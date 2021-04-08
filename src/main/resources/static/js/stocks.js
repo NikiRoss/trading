@@ -1,6 +1,6 @@
 function sortTable() {
     var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("myTable");
+    table = document.getElementById("table");
     switching = true;
     /* Make a loop that will continue until
     no switching has been done: */
@@ -32,3 +32,70 @@ function sortTable() {
         }
     }
 }
+
+const jsonFromHtml = (tbody, thead) => {
+    let tableJson = {rows:[]};
+    [...tbody.children].forEach(tableRow => {
+        let rowEntry = {};
+        [...tableRow.children].forEach((cell, column) => rowEntry[thead.children[0].children[column].textContent] = cell.textContent);
+        tableJson.rows.push(rowEntry);
+    });
+    console.log(tableJson);
+    return tableJson;
+};
+
+const arrayToTable = (arr, tbody, thead) => {
+    let rows = [];
+    arr.forEach((row, rowNum) => {
+        row = [...thead.children[0].children].map(th => row[th.textContent] ? row[th.textContent] : '');
+        row = row.map(td => `<td>${td}</td>`);
+        row = `<tr>${row.join('')}</tr>`;
+        rows.push(row);
+    });
+    console.log("--->"+rows)
+    tbody.innerHTML = rows.join('');
+};
+
+const myTableTbody = document.querySelector('#myTable tbody');
+const myTableThead = document.querySelector('#myTable thead');
+
+const customSort = (arr, key, order) => {
+    let sortCompare = order == 'Desc' ? -1 : 1;
+    return arr.sort((first, second) => first[key]>second[key] ?  sortCompare : first[key]<second[key] ?  -sortCompare : 0);
+};
+
+
+document.querySelector('#selectionOrder').addEventListener('change', function(){
+    let sortKey = this.value.match(/[A-Za-z]+/)[0];
+
+    if(sortKey.includes("Asc")){
+        sortKey = sortKey.slice(0, -3);
+    }
+    if(sortKey.includes("Desc")){
+        sortKey = sortKey.slice(0, -4);
+    }
+    if(sortKey == "SharePrice"){
+        sortKey = "Share Price";
+    }
+    console.log(sortKey);
+    let sortOrder = this.value.match(/(A|De)sc/) ? this.value.match(/(A|De)sc/)[0] : 'Asc';
+    console.log(sortOrder);
+    let myTableJson = jsonFromHtml(myTableTbody, myTableThead);
+    console.log(myTableJson);
+    myTableJson.rows = customSort(myTableJson.rows, sortKey, sortOrder);
+    arrayToTable(myTableJson.rows, myTableTbody, myTableThead);
+});
+
+function loadContent(id) {
+    location.href = '/stocks/purchase/'+id;
+}
+
+function clickable(id){
+
+    var row = document.getElementsByTagName('tr')
+    row((e =>
+    e.addEventListener(onclick(loadContent(id)))))
+}
+
+loadContent(id)
+sortTable()

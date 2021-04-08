@@ -8,13 +8,10 @@ import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +38,6 @@ public class StocksController {
 
     @RequestMapping(value = "/stocks", method = RequestMethod.GET)
     public String getStocks(Model model, Principal principal){
-        List<Transaction> latestTransactions = transactionService.getLatestTransaction();
         List<Stocks> stocksList = this.stockService.findAll();
         Account account = getAccountFromPrincipal(principal);
         model.addAttribute("account", account);
@@ -78,6 +74,7 @@ public class StocksController {
         model.addAttribute("stocks", stocks);
         model.addAttribute("transaction", transaction);
         model.addAttribute("account", account);
+        model.addAttribute("var", "purchased");
         return "purchaseSuccess";
     }
 
@@ -104,7 +101,8 @@ public class StocksController {
         model.addAttribute("stocks", stocks);
         model.addAttribute("account", account);
         model.addAttribute("transaction", transaction);
-        return "sale";
+        model.addAttribute("var", "sold");
+        return "purchaseSuccess";
     }
 
 
