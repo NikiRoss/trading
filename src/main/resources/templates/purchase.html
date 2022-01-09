@@ -38,10 +38,20 @@
         <form action="#" th:action="@{'/stocks/purchase/' + ${stocks.stockId}}" th:object="${transaction}" method="post">
             <p th:text="'Current ' + ${stocks.company} + ' stocks held ' + ${stockListEntity.volume}"></p>
             <br>
-            <p>Select number of stocks to purchase:</p> <input id="stock-number" type="number" min="1" th:field="*{volume}" /> <input type="submit" id="submit" value="Submit" />
+            <p>Select number of stocks to purchase:</p>
+            <input id="stock-number" type="number" min="1" th:field="*{volume}" />
+            <input type="submit" id="submit" value="Submit" />
         </form>
     </div>
     
 </div>
+
+<script>
+    const button = document.getElementById('submit')
+
+    button.addEventListener('click', function() {
+        window.open("confirm.html", "mywindow", "width=450,height=450")
+    })
+</script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -35,5 +36,10 @@ public class TransactionController {
         model.addAttribute("transList", transList);
 
         return "transactions";
+    }
+
+    @GetMapping(value = "/stocks/purchase/confirm.html")
+    public String getConfirmTransaction() {
+        return "confirm.html";
     }
 }

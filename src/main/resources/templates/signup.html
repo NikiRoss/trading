@@ -7,35 +7,6 @@
 </head>
 <body>
 
-<!-- OLD FORM
-<div class="container">
-
-    <h2>Sign Up</h2>
-
-
-    <div class="form__register">
-
-    <form >
-        <label for="name">First Name</label>
-            <input type="text" th:field="*{firstName}" placeholder="first name"><br/>
-        <label for="name">Surname</label>
-            <input type="text" th:field="*{surname}" id="surname" placeholder="surname"><br/>
-        <label for="email">Email</label>
-            <input type="email" th:field="*{email}" id="email" placeholder="email" required><br/>
-        <label for="email">DOB</label>
-            <input type="text" th:field="*{dob}" id="dob" required><br/>
-        <label for="name">Password</label>
-            <input type="password" th:field="*{password}" id="password" placeholder="password" minlength="8" required><br/>
-        <label for="name">Username</label>
-            <input type="text" th:field="*{username}" id="username" placeholder="create a username" required><br/>
-        <label for="name">Credit Card No</label>
-            <input type="text" th:field="*{creditCard.cardNo}" id="card no" placeholder="16 digit card number"><br/>
-        <label for="name">Card Expiry</label>
-            <input type="text" th:field="*{creditCard.expiry}" id="card exp" placeholder="card expiry"><br/>
-        <label for="name">CVV</label>
-            <input type="text" th:field="*{creditCard.cvv}" id="card cvv" placeholder="card cvv"><br/>
-                <input type="submit" value="Add User">
-    </form> -->
 
 <!-- NEW FORM START-->
 
@@ -68,11 +39,16 @@
                     <input type="password" th:field="*{password} "placeholder="Password" class="input" required/>
                 </div>
                 <input type="submit" class="submit" value="Add User">
+
+                <div class="input-field">
+                    <input type="text" th:field="*{creditCard} "placeholder="16 digit number" class="input" required/>
+                </div>
+                <input type="submit" class="submit" value="Add User">
             </form>
         </div>
 
 
-        <!-- NEW FORM END-->
+<!-- NEW FORM END-->
 
     </div>
 </div>

@@ -1,7 +1,9 @@
 package com.fdm.trading.service.cardServiceImpl;
 
 import com.fdm.trading.dao.CreditCardDao;
+import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.domain.CreditCard;
+import com.fdm.trading.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class CardServiceImpl {
 
     @Autowired
     private CreditCardDao cardDao;
+
+    @Autowired
+    private UserDao userDao;
 
     public CreditCard registerCreditCard(String cardNo, String expiry, int cvv, String name){
         CreditCard creditCard = new CreditCard();
@@ -32,5 +37,16 @@ public class CardServiceImpl {
 
     public CreditCard findCardByLongNumber(String number){
         return cardDao.findByCardNo(number);
+    }
+
+    public CreditCard validateCardForTransaction(String enteredLastFour, String username) throws Exception {
+        User user = userDao.findByUsername(username);
+        CreditCard card = user.getCreditCard();
+        String userLastFour = card.getCardNo().substring(card.getCardNo().length() - 4);
+
+        if (!userLastFour.equals(enteredLastFour)) {
+            throw new Exception();
+        }
+        return card;
     }
 }
