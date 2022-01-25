@@ -77,6 +77,6 @@ public class LoginControllerTest {
     public void testUserHomePageSuccess() throws Exception {
         when((User) userService.loadUserByUsername(any())).thenReturn(user);
         when(user.getAccount()).thenReturn(account);
-        mockMvc.perform(get("/userHome")).andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/account")).andExpect(status().is2xxSuccessful());
     }
 }

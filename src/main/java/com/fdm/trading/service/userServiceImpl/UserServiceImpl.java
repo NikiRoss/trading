@@ -113,7 +113,6 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            boolean enabled = true;
             boolean accountNonExpired = true;
             boolean credentialsNonExpired = true;
             boolean accountNonLocked = true;

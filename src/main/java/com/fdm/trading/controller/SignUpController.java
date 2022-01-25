@@ -76,7 +76,7 @@ public class SignUpController {
             return modelAndView;
         }
 
-        return new ModelAndView("successRegister", "user", user);
+        return new ModelAndView("authenticateRegister", "user", user);
     }
 
 /*    @GetMapping("/registrationConfirm")

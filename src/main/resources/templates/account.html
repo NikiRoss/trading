@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account</title>
+    <link rel="stylesheet" th:href="@{css/account.css}" />
+</head>
+
+<body>
+
+<!-- NAVBAR START -->
+<div class="navbar">
+    <div class="nav-container flex">
+        <nav>
+            <ul>
+                <li><a class="nav-link" th:href="@{/stocks}">Stocks</a></li>
+                <li><a class="nav-link" th:href="@{/transactions}">Transactions</a></li>
+                <li><a class="nav-link" th:href="@{/holdings}">Holdings</a></li>
+                <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+                <li class="nav-item">
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/admin/users}">Admin</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- NAVBAR END -->
+
+<div class="display-container">
+
+    <div id="current-cards">
+        <h3>Stored Cards</h3>
+        <select name="stored-cards" id="stored-cards">
+            <option value="card-1">256666111333222</option>
+            <option value="card-2">256666111333223</option>
+            <option value="card-3">256666111333224</option>
+            <option value="card-4">256666111333225</option>
+        </select>
+    </div>
+
+    <div id="add-card">
+        <h3>Add New Card</h3>
+        <form class="card-input">
+            <label>Card No</label>
+            <input type="text" value="Enter 16 digit number" />
+            <br />
+            <label>Expiry</label>
+            <input type="text" value="Expiry" />
+            <br />
+            <label>CVV</label>
+            <input type="text" value="cvv" />
+        </form>
+    </div>
+
+
+    <!-- USER INFO DISPLAY START -->
+    <div class="user-details" id="user-details">
+
+        <h4 class="balance">Your balance is £ <i class="fa fa-usd" aria-hidden="true"></i> <span
+                th:inline="text">£ [[${#numbers.formatDecimal(account.accountBalance, 0, 'COMMA', 2, 'POINT')}]]</span>
+        </h4>
+
+        <h4 class="username" th:text="'Username: ' + ${user.username}"></h4>
+        <h4 class="email" th:text="'Email: ' + ${user.email}"></h4>
+        <h4 class="account" th:text="'Acc No: ' + ${user.account.getAccountNumber()}"></h4>
+    </div>
+    <!-- USER INFO DISPLAY END -->
+
+
+
+</div>
+</body>
+
+</html>

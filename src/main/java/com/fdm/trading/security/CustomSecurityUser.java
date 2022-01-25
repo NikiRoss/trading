@@ -47,6 +47,7 @@ public class CustomSecurityUser extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return super.isEnabled();
+
     }
 }

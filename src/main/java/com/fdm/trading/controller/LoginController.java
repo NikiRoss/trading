@@ -34,7 +34,7 @@ public class LoginController {
 
     @GetMapping("/")
     public String root() {
-        return "redirect:/userHome";
+        return "redirect:/account";
     }
 
     @GetMapping("/login")
@@ -48,13 +48,13 @@ public class LoginController {
     }
 
 
-    @GetMapping("/userHome")
+    @GetMapping("/account")
     public String success(Model model, Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
         Account account = user.getAccount();
         model.addAttribute("user", user);
         model.addAttribute("account", account);
-        return "userHome";
+        return "account";
     }
 
     @GetMapping("/newtemp")

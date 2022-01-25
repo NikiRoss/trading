@@ -52,6 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasAnyRole("USER", "ADMIN").and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/userHome");
+                .defaultSuccessUrl("/account");
     }
 }

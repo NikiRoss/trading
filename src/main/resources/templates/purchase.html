@@ -16,7 +16,7 @@
                 <li><a th:href="@{/transactions}">Transactions</a></li>
                 <li><a th:href="@{/holdings}">Holdings</a></li>
                 <li><a th:href="@{/logout}">Logout</a></li>
-                <li><a th:href="@{/userHome}">Home</a></li>
+                <li><a th:href="@{/account}">Home</a></li>
                 <li><a sec:authorize="hasRole('ROLE_ADMIN')" class="admin-link" th:href="@{/admin/users}">Admin</a></li>
             </ul>
         </nav>
