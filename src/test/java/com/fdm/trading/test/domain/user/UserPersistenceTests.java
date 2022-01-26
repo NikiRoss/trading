@@ -144,7 +144,7 @@ public class UserPersistenceTests {
         user.setPassword("testpass");
         user.setEnabled(false);
         user.setUsername("nikiross84");
-        CreditCard card = cardService.registerCreditCard("1234567890009876", "01/22", 890, "Mr N Ross");
+        Set<CreditCard> card = cardService.registerCreditCard("1234567890009876", "01/22", 890, "Mr N Ross");
         user.setCreditCard(card);
         user.setUserAuthorities(authSet);
         User createdUser = userService.createNewUser(null, user, ROLE_USER);

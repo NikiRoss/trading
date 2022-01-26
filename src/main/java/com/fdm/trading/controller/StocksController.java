@@ -7,6 +7,8 @@ import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Controller
 public class StocksController {
+
+    private static final Logger logger = LoggerFactory.getLogger(StocksController.class);
 
     @Autowired
     StockServiceImpl stockService;
@@ -102,6 +106,17 @@ public class StocksController {
         model.addAttribute("account", account);
         model.addAttribute("transaction", transaction);
         model.addAttribute("var", "sold");
+        return "purchaseSuccess";
+    }
+
+    @PostMapping(value = "/stocks/purchase/validate")
+    public String validateTransaction(@ModelAttribute("cardValidationData") CardValidationData cardValidationData, Principal principal) {
+
+        try {
+            transactionService.validateCardForTransaction(cardValidationData.getLastFourDigitsOfCard(), principal.getName());
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+        }
         return "purchaseSuccess";
     }
 

@@ -2,14 +2,12 @@ package com.fdm.trading.service.transactionService;
 
 import com.fdm.trading.dao.StockListEntityDao;
 import com.fdm.trading.dao.TransactionDao;
-import com.fdm.trading.domain.Account;
-import com.fdm.trading.domain.StockListEntity;
-import com.fdm.trading.domain.Stocks;
-import com.fdm.trading.domain.Transaction;
+import com.fdm.trading.domain.*;
 import com.fdm.trading.exceptions.InsufficientFundsException;
 import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
+import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TransactionServiceImpl implements TransactionService{
@@ -29,6 +28,9 @@ public class TransactionServiceImpl implements TransactionService{
     private StockServiceImpl stockService;
     @Autowired
     private StockListEntityDao stockListEntityDao;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     private String message;
 
@@ -198,7 +200,23 @@ public class TransactionServiceImpl implements TransactionService{
         return latestTransactions;
     }
 
+    public boolean validateCardForTransaction(String enteredLastFour, String username) throws Exception {
+        User user = userService.findByUsername(username);
+        Set<CreditCard> cards = user.getCreditCard();
 
+        boolean isValid = false;
+        for(CreditCard card: cards){
+            String userLastFour = card.getCardNo().substring(card.getCardNo().length() - 4);
+            if (userLastFour.equals(enteredLastFour)) {
+                isValid = true;
+
+            }
+        }
+        if(!isValid ) {
+            throw new Exception("Last four digits not valid!");
+        }
+        return isValid;
+    }
 
 
 }

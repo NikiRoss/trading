@@ -1,9 +1,6 @@
 package com.fdm.trading.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class CreditCard {
@@ -23,6 +20,10 @@ public class CreditCard {
 
     @Column(name = "name_on_card")
     private String nameOnCard;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public long getCardId() {
         return cardId;

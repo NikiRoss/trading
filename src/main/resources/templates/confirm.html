@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Confirm Transaction</title>
@@ -13,9 +13,9 @@
 <body>
 <h1>Validate credit card</h1>
 
-<form>
-    <input type="text" id="card-input" value="Enter the last 4 digits of your credit card"/>
-
+<form form action="#" th:action="@{'/stocks/purchase/validate'}" th:object="${cardValidationData}" method="post">
+    <input type="text" th:field="*{lastFourDigitsOfCard}" id="card-input" value="Enter the last 4 digits of your credit card"/>
+    <input type="submit" id="submit" value="Submit" />
 </form>
 
 </body>

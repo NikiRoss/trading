@@ -4,6 +4,7 @@ import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.dao.UserDao;
 import com.fdm.trading.dao.VerificationTokenDao;
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.CreditCard;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.events.RegistrationListener;
@@ -25,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +59,8 @@ public class UserServiceImpl implements UserDetailsService {
     private RegistrationListener listner;
 
 
-    public User createNewUser(BindingResult result, User user, String role) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+    public User createNewUser(BindingResult result, User user, String role, CreditCard card) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
+        Set<CreditCard> cards = new HashSet<>();
 
         if(result!=null) {
             hasErrors(result, user);
@@ -72,6 +76,8 @@ public class UserServiceImpl implements UserDetailsService {
         user.setPassword(encoder.encode(user.getPassword()));
         Authorities a = new Authorities();
         a.setAuthority(role);
+        cards.add(card);
+        user.setCreditCard(cards);
         a.setUser(user);
         userDao.save(user);
         authoritiesDao.save(a);

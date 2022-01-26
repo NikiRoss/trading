@@ -1,16 +1,19 @@
 package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.Account;
+import com.fdm.trading.domain.CardValidationData;
 import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.service.transactionService.TransactionService;
 import com.fdm.trading.service.transactionService.TransactionServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -39,7 +42,11 @@ public class TransactionController {
     }
 
     @GetMapping(value = "/stocks/purchase/confirm.html")
-    public String getConfirmTransaction() {
+    public String getConfirmTransaction(Model model) {
+        CardValidationData cardValidationData = new CardValidationData();
+        model.addAttribute("cardValidationData", cardValidationData);
         return "confirm.html";
     }
+
 }
+

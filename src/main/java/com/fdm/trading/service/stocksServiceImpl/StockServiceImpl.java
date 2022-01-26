@@ -63,6 +63,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         Stocks stock = stocksDao.findByStockId(stockId);
         stocksDao.delete(stock);
     }
+
     //synchronized for thread safety
     @Scheduled(fixedRate = 30000)
     @Override
@@ -173,7 +174,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         return sleDao.findByAccountIdAndStockId(accountId, stockId);
     }
 
-    @Scheduled(cron = "0 47 20 * * *")
+    @Scheduled(cron = "0 15 17 * * *")
     private synchronized void setOpeningValues() {
         System.out.println(">>> Setting the opening stock prices!!!");
         List<Stocks>  stocks = this.findAll();
@@ -184,7 +185,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         }
     }
 
-    @Scheduled(cron = "0 55 20 * * *")
+    @Scheduled(cron = "0 05 17 * * *")
     public synchronized void setClosingValues() {
         System.out.println(">>> Setting the closing stock prices!!!");
         List<Stocks>  stocks = this.findAll();

@@ -51,8 +51,8 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @OneToOne
-    private CreditCard creditCard;
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="user")
+    private Set<CreditCard> creditCard = new HashSet<>();
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
     private Set<Authorities> userAuthorities = new HashSet<>();
@@ -159,11 +159,11 @@ public class User implements UserDetails {
         this.userAuthorities = userAuthorities;
     }
 
-    public CreditCard getCreditCard() {
+    public Set<CreditCard> getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(CreditCard creditCard) {
+    public void setCreditCard(Set<CreditCard> creditCard) {
         this.creditCard = creditCard;
     }
 

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class CardServiceImpl {
 
@@ -20,15 +23,18 @@ public class CardServiceImpl {
     @Autowired
     private UserDao userDao;
 
-    public CreditCard registerCreditCard(String cardNo, String expiry, int cvv, String name){
+    public Set<CreditCard> registerCreditCard(String cardNo, String expiry, int cvv, String name){
         CreditCard creditCard = new CreditCard();
-        creditCard.setCardNo(encoder.encode(cardNo));
+        String shortenedCardNo = cardNo.substring(0, cardNo.length() - 4);
+        String lastFour = cardNo.substring(cardNo.length() - 4);
+        creditCard.setCardNo(encoder.encode(shortenedCardNo) + lastFour);
         creditCard.setExpiry(encoder.encode(expiry));
         creditCard.setCvv(cvv);
         creditCard.setNameOnCard(name);
         cardDao.save(creditCard);
 
-        return creditCard;
+        Set<CreditCard> cards = new HashSet<>();
+        return cards;
     }
 
     public CreditCard findCardByNameOnCard(String name){
@@ -39,14 +45,6 @@ public class CardServiceImpl {
         return cardDao.findByCardNo(number);
     }
 
-    public CreditCard validateCardForTransaction(String enteredLastFour, String username) throws Exception {
-        User user = userDao.findByUsername(username);
-        CreditCard card = user.getCreditCard();
-        String userLastFour = card.getCardNo().substring(card.getCardNo().length() - 4);
 
-        if (!userLastFour.equals(enteredLastFour)) {
-            throw new Exception();
-        }
-        return card;
-    }
+
 }
