@@ -27,7 +27,7 @@ public class Account {
 
 
     public Account() {
-        this.accountBalance = 1000000.00;
+        this.accountBalance = 50000.00;
     }
 
     public long getAccountId() {

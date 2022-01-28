@@ -87,7 +87,7 @@ public class AdminControllerTest {
     @WithMockUser
     public void testCreateNewAdmin() throws Exception {
         when(mockUserService.findByUsername(any())).thenReturn(admin);
-        when(mockUserService.createNewUser(any(), any(), any())).thenReturn(user);
+        when(mockUserService.createNewUser(any(), any(), any(), any())).thenReturn(user);
         mockMvc.perform(post("/admin/newadmin").principal(principal)).andExpect(status().is2xxSuccessful());
     }
     @Test
@@ -95,7 +95,7 @@ public class AdminControllerTest {
     public void testExceptionEmailSentCreateNewAdminAdminExists() throws Exception {
         when(mockUserService.findByUsername(any())).thenReturn(admin);
         doNothing().when(mockListner).sendExceptionEmail(any(), any());
-        when(mockUserService.createNewUser(any(), any(), any())).thenThrow(NameFormatException.class);
+        when(mockUserService.createNewUser(any(), any(), any(), any())).thenThrow(NameFormatException.class);
         mockMvc.perform(post("/admin/newadmin").principal(principal)).andExpect(status().is2xxSuccessful());
         verify(mockListner).sendExceptionEmail(any(), any());
     }

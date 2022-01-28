@@ -127,7 +127,7 @@ public class UserPersistenceTests {
         authoritiesSet.add(authorities);
         user.setUserAuthorities(authoritiesSet);
         user.setEmail("email@emial.com");
-        userService.createNewUser(null, user, "ROLE_USER");
+        userService.createNewUser(null, user, "ROLE_USER", null);
     }
 
     @Test
@@ -144,10 +144,10 @@ public class UserPersistenceTests {
         user.setPassword("testpass");
         user.setEnabled(false);
         user.setUsername("nikiross84");
-        Set<CreditCard> card = cardService.registerCreditCard("1234567890009876", "01/22", 890, "Mr N Ross");
+        Set<CreditCard> card = cardService.registerCreditCard("1234567890009876", "01/22", 890, "Mr N Ross", user);
         user.setCreditCard(card);
         user.setUserAuthorities(authSet);
-        User createdUser = userService.createNewUser(null, user, ROLE_USER);
+        User createdUser = userService.createNewUser(null, user, ROLE_USER, null);
         User dbUser = userService.findByUserId(createdUser.getUserId());
         //Asserts
         assertNotNull(dbUser);

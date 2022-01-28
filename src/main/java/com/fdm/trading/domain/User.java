@@ -1,6 +1,8 @@
 package com.fdm.trading.domain;
 
 import com.fdm.trading.security.Authorities;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,7 +54,8 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="user")
-    private Set<CreditCard> creditCard = new HashSet<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<CreditCard> creditCard;
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
     private Set<Authorities> userAuthorities = new HashSet<>();

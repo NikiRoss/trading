@@ -67,7 +67,7 @@ public class AdminController {
         model.addAttribute("user", user);
         model.addAttribute("stocks", stocks);
         try {
-            userService.createNewUser(result, user, "ROLE_ADMIN");
+            userService.createNewUser(result, user, "ROLE_ADMIN", null);
         }catch (NameFormatException | UnsecurePasswordException | UserAlreadyExistException nfe){
             listner.sendExceptionEmail(nfe, LocalDateTime.now());
             return "admin";

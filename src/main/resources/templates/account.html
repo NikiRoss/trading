@@ -43,15 +43,16 @@
 
     <div id="add-card">
         <h3>Add New Card</h3>
-        <form class="card-input">
+        <form action="#" th:action="@{/user/addCard}" th:object="${card}" method="POST" class="card-input">
             <label>Card No</label>
-            <input type="text" value="Enter 16 digit number" />
+            <input type="text" th:field="*{cardNo}" value="Enter 16 digit number" />
             <br />
             <label>Expiry</label>
-            <input type="text" value="Expiry" />
+            <input type="text" th:field="*{expiry}"  value="Expiry" />
             <br />
             <label>CVV</label>
-            <input type="text" value="cvv" />
+            <input type="text" th:field="*{cvv}" value="cvv" />
+            <input type="submit" id="submit" value="Submit" />
         </form>
     </div>
 

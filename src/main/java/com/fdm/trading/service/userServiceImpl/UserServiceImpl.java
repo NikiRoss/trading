@@ -55,15 +55,12 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private CardServiceImpl cardService;
 
-    @Autowired
-    private RegistrationListener listner;
 
 
     public User createNewUser(BindingResult result, User user, String role, CreditCard card) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
         Set<CreditCard> cards = new HashSet<>();
-
-        if(result!=null) {
-            hasErrors(result, user);
+        if(hasErrors(result, user)) {
+            return null;
         }
         if(userDao.findByUsername(user.getUsername())!=null){
             throw new UserAlreadyExistException("User " + user.getUsername() + " already exists");
@@ -152,7 +149,6 @@ public class UserServiceImpl implements UserDetailsService {
         boolean hasDigit = checkForDigit.find();
         boolean hasSpecial = checkForSpecial.find();
 
-        try{
             if (hasDigit){
                 logger.info("Name {} contains digits ", input);
                 throw new NameFormatException("username contains digits");
@@ -161,28 +157,20 @@ public class UserServiceImpl implements UserDetailsService {
                 logger.info("Name {} contains special characters ", input);
                 throw new NameFormatException("username contains special characters");
             }
-        } catch(NameFormatException e){
-            listner.sendExceptionEmail(e, LocalDateTime.now());
-            return false;
-        }
         return true;
     }
 
-    public boolean isUserPasswordSecure(User user) throws UnsecurePasswordException {
+    public boolean isUserPasswordSecure(User user) throws UnsecurePasswordException  {
+            if (user.getPassword().toLowerCase().contains("password")) {
 
-        try{
-            if (user.getPassword().toLowerCase().contains("password")){
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains 'password'");
             }
-            if (user.getPassword().toLowerCase().contains(user.getFirstName())){
+            if (user.getPassword().toLowerCase().contains(user.getFirstName())) {
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their first name");
             }
-            if (user.getPassword().toLowerCase().contains(user.getSurname())){
+            if (user.getPassword().toLowerCase().contains(user.getSurname())) {
                 throw new UnsecurePasswordException(user.getUsername() + " has a password which contains their surname");
             }
-        } catch(UnsecurePasswordException e){
-            return false;
-        }
             return true;
     }
 

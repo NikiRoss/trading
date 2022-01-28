@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{css/error.css}"/>
 </head>
 <body>
-<h1>!Fix your code!</h1>
-<p th:text="${message}"></p>
+<div class="display-container">
+    <h1>Error Encountered</h1>
+    <p th:text="${message}"></p>
+    <a th:href="@{/signup}">Click link to return to login/ signup</a>
+</div>
 </body>
 </html>

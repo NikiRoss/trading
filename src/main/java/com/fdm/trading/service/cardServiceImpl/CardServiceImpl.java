@@ -23,17 +23,20 @@ public class CardServiceImpl {
     @Autowired
     private UserDao userDao;
 
-    public Set<CreditCard> registerCreditCard(String cardNo, String expiry, int cvv, String name){
+    public Set<CreditCard> registerCreditCard(String cardNo, String expiry, int cvv, String name, User user){
         CreditCard creditCard = new CreditCard();
         String shortenedCardNo = cardNo.substring(0, cardNo.length() - 4);
         String lastFour = cardNo.substring(cardNo.length() - 4);
         creditCard.setCardNo(encoder.encode(shortenedCardNo) + lastFour);
-        creditCard.setExpiry(encoder.encode(expiry));
+        creditCard.setExpiry(expiry);
         creditCard.setCvv(cvv);
         creditCard.setNameOnCard(name);
         cardDao.save(creditCard);
-
+        Set<CreditCard> creditCards = user.getCreditCard() != null ? user.getCreditCard() : new HashSet<>();
+        creditCards.add(creditCard);
+        user.setCreditCard(creditCards);
         Set<CreditCard> cards = new HashSet<>();
+        cards.add(creditCard);
         return cards;
     }
 

@@ -32,12 +32,12 @@ public class CreditCardTest {
 
     @Test
     public void test_Successful_encryption(){
-        cardService.registerCreditCard("4449990007773456", "11/19", 890, "Mr N Ross");
+        cardService.registerCreditCard("4449990007773456", "11/19", 890, "Mr N Ross", new User());
     }
 
     @Test
     public void find_Card_By_Name(){
-        cardService.registerCreditCard("123456789123456", "12/04/2022", 123, "name");
+        cardService.registerCreditCard("123456789123456", "12/04/2022", 123, "name", new User());
         //CreditCard cc = cardService.findCardByNameOnCard("Mr N Ross");
         //System.out.println(cc.toString());
     }
@@ -74,7 +74,7 @@ public class CreditCardTest {
         Set<Authorities> auths = new HashSet<>();
         auths.add(auth);
         user.setUserAuthorities(auths);
-        userService.createNewUser(null, user, "ROLE_USER");
+        userService.createNewUser(null, user, "ROLE_USER", card);
 
     }
 }

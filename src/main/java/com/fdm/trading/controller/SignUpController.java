@@ -4,6 +4,7 @@ import com.fdm.trading.dao.AuthoritiesDao;
 import com.fdm.trading.domain.User;
 import com.fdm.trading.domain.VerificationToken;
 import com.fdm.trading.events.OnRegistrationCompleteEvent;
+import com.fdm.trading.events.RegistrationListener;
 import com.fdm.trading.exceptions.NameFormatException;
 import com.fdm.trading.exceptions.UnsecurePasswordException;
 import com.fdm.trading.exceptions.UserAlreadyExistException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 
 @Controller
@@ -46,6 +48,9 @@ public class SignUpController {
     @Autowired
     AuthoritiesDao authoritiesDao;
 
+    @Autowired
+    private RegistrationListener listner;
+
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messages;
@@ -63,7 +68,7 @@ public class SignUpController {
         System.out.println("IN HERE!");
 
         try {
-            User registered = userService.createNewUser(result, user, "ROLE_USER");
+            User registered = userService.createNewUser(result, user, "ROLE_USER", null);
 
             String appUrl = request.getRequestURL().toString();
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
@@ -71,38 +76,15 @@ public class SignUpController {
             System.out.println("Event publisher being called");
 
         } catch (RuntimeException | NameFormatException | UnsecurePasswordException | UserAlreadyExistException ex) {
-            ModelAndView modelAndView = new ModelAndView("signup", "user", user);
-            modelAndView.addObject("ErrorMessage",  "EXCEPTIONNN");
+            listner.sendExceptionEmail(ex, LocalDateTime.now());
+            ModelAndView modelAndView = new ModelAndView("error", "user", user);
+            modelAndView.addObject("message",  ex.getMessage());
             return modelAndView;
         }
 
         return new ModelAndView("authenticateRegister", "user", user);
     }
 
-/*    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(WebRequest request, Model model, @RequestParam("token") String token) {
-
-        Locale locale = request.getLocale();
-
-        VerificationToken verificationToken = userService.getVerificationToken(token);
-        if (tokenService.tokenIsInvalid(verificationToken)) {
-            String message = messages.getMessage("auth.message.invalidToken", null, locale);
-            model.addAttribute("message", message);
-            return "redirect:/badUser?lang=" + locale.getLanguage();
-        }
-
-        User user = verificationToken.getUser();
-        Calendar cal = Calendar.getInstance();
-        if (tokenService.tokenHasExpired(verificationToken, cal)) {
-            String messageValue = messages.getMessage("auth.message.expired", null, locale);
-            model.addAttribute("message", messageValue);
-            return "redirect:/badUser?lang=" + locale.getLanguage();
-        }
-
-        user.setEnabled(true);
-        userService.save(user);
-        return "redirect:/login";
-    }*/
 
     @GetMapping("/signup/user/registration/registrationConfirm/{token}")
     public String verificationSuccess(@PathVariable String token){

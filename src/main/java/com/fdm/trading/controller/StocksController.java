@@ -110,7 +110,7 @@ public class StocksController {
     }
 
     @PostMapping(value = "/stocks/purchase/validate")
-    public String validateTransaction(@ModelAttribute("cardValidationData") CardValidationData cardValidationData, Principal principal) {
+    public String validateTransaction(@ModelAttribute Transaction transaction, @ModelAttribute Stocks stocks, @ModelAttribute("cardValidationData") CardValidationData cardValidationData, Principal principal) {
 
         try {
             transactionService.validateCardForTransaction(cardValidationData.getLastFourDigitsOfCard(), principal.getName());

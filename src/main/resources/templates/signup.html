@@ -39,13 +39,10 @@
                     <input type="password" th:field="*{password} "placeholder="Password" class="input" required/>
                 </div>
                 <input type="submit" class="submit" value="Add User">
-
-                <div class="input-field">
-                    <input type="text" th:field="*{creditCard} "placeholder="16 digit number" class="input" required/>
-                </div>
-                <input type="submit" class="submit" value="Add User">
             </form>
+            <a class="link" th:href="@{/login}">Go back to login</a>
         </div>
+
 
 
 <!-- NEW FORM END-->
