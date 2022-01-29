@@ -68,7 +68,10 @@ public class UserServiceImpl implements UserDetailsService {
         Account account = null;
         if(!role.equals("ROLE_ADMIN")){
             account = accountService.createAnAccount();
+        }else {
+            user.setEnabled(true);
         }
+
         user.setAccount(account);
         user.setPassword(encoder.encode(user.getPassword()));
         Authorities a = new Authorities();
@@ -187,6 +190,15 @@ public class UserServiceImpl implements UserDetailsService {
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenDao.save(myToken);
+    }
+
+    public Set<String> getUserAuthorities(User user) {
+        Set<Authorities> userAuthorities = user.getUserAuthorities();
+        Set<String> auths = new HashSet<>();
+        for(Authorities auth: userAuthorities){
+            auths.add(auth.getAuthority());
+        }
+        return auths;
     }
 
 

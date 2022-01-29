@@ -41,9 +41,9 @@
                 <label for="ticker">Ticker</label>
                 <input type="text" id="ticker" th:field="*{ticker}">
                 <label for="share-price">Share Price</label>
-                <input type="text" id="share-price" th:field="*{sharePrice}">
+                <input type="number" step="0.01" id="share-price" th:field="*{sharePrice}">
                 <label for="volume">Volume</label>
-                <input type="text" id="volume" th:field="*{volume}">
+                <input type="number" id="volume" th:field="*{volume}">
                 <button class="button">Submit</button>
             </form>
         </div>
@@ -63,11 +63,11 @@
                 <tbody>
                 <div th:each="user : ${userlist}">
                     <tr>
-                        <td th:text="${user.userId}">01</td>
-                        <td th:text="${user.firstName}">Niki</td>
-                        <td th:text="${user.surname}">Ross</td>
-                        <td th:text="${user.email}">Email</td>
-                        <td>01</td>
+                        <td th:text="${user.userId}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.surname}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.account?.accountNumber}"></td>
                         <td><a th:href="@{'/admin/disable/' + ${user.userId}} ">Enable/Disable</a></td>
                     </tr>
                 </div>

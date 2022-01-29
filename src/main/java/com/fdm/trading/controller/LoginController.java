@@ -4,6 +4,7 @@ import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.CreditCard;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.User;
+import com.fdm.trading.security.Authorities;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class LoginController {
@@ -58,15 +60,16 @@ public class LoginController {
         model.addAttribute("user", user);
         model.addAttribute("account", account);
         model.addAttribute("card", card);
-        return "account";
-    }
 
-    @GetMapping("/newtemp")
-    public String newTemp(Model model, @ModelAttribute User user, Principal principal) {
-        user = (User) userService.loadUserByUsername(principal.getName());
-        model.addAttribute("user", user);
-        System.out.println(user.toString());
-        return "newtemp";
+        Set<String> userAuths = userService.getUserAuthorities(user);
+        if(userAuths.contains("ROLE_ADMIN")) {
+            List<User> users = userService.findAllUsers();
+            model.addAttribute("newAdmin", new User());
+            model.addAttribute("stocks", new Stocks());
+            model.addAttribute("userList", users);
+            return "admin";
+        }
+        return "account";
     }
 
 

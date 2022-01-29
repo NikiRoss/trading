@@ -66,6 +66,8 @@ public class AdminController {
         model.addAttribute("admin", admin);
         model.addAttribute("user", user);
         model.addAttribute("stocks", stocks);
+        model.addAttribute("userList", userService.findAllUsers());
+
         try {
             userService.createNewUser(result, user, "ROLE_ADMIN", null);
         }catch (NameFormatException | UnsecurePasswordException | UserAlreadyExistException nfe){
