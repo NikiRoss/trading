@@ -10,22 +10,19 @@
 </head>
 
 <body>
-
 <!-- NAVBAR START -->
 <div class="navbar">
-    <div class="nav-container flex">
-        <nav>
-            <ul>
-                <li><a class="nav-link" th:href="@{/stocks}">Stocks</a></li>
-                <li><a class="nav-link" th:href="@{/transactions}">Transactions</a></li>
-                <li><a class="nav-link" th:href="@{/holdings}">Holdings</a></li>
-                <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
-                <li class="nav-item">
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link" th:href="@{/admin/users}">Admin</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <navbar>
+        <ul class="nav-list">
+            <li class="nav-item"><a th:href="@{/stocks}">Stocks</a></li>
+            <li class="nav-item"><a th:href="@{/transactions}">Transactions</a></li>
+            <li class="nav-item"><a th:href="@{/holdings}">Holdings</a></li>
+            <li class="nav-item"><a th:href="@{/logout}">Logout</a></li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('ROLE_ADMIN')" class="admin-link" th:href="@{/admin/users}">Admin</a>
+            </li>
+        </ul>
+    </navbar>
 </div>
 <!-- NAVBAR END -->
 

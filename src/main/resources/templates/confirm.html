@@ -2,16 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Confirm Transaction</title>
-    <style>
-        #card-input {
-            height: 50px;
-            width: 100px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/confirm.css}" />
 </head>
+
 <body>
 <h1>Validate credit card</h1>
+
 
 <form form action="#" th:action="@{'/stocks/purchase/validate'}" th:object="${cardValidationData}" method="post">
     <input type="text" th:field="*{lastFourDigitsOfCard}" id="card-input" value="Enter the last 4 digits of your credit card"/>
@@ -19,4 +18,12 @@
 </form>
 
 </body>
+<script>
+    const button = document.getElementById('submit')
+
+    button.addEventListener('click', function() {
+        window.oper = self;
+        window.close();
+    })
+</script>
 </html>

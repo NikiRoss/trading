@@ -1,0 +1,143 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background: linear-gradient(#34a495, #b6f0e1) no-repeat;
+    height: 100vh;
+    font-family: "Poppins", sans-serif;
+    justify-content: center;
+    align-items: center;
+}
+
+.display-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.grid-container {
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 2fr 2fr;
+    grid-template-rows: 2fr 2fr;
+    grid-gap: 5px;
+    grid-template-areas:
+        "add-user user-field"
+        "add-user user-field"
+        "stock-add user-field"
+        "stock-add user-field"
+;
+}
+
+#add-user {
+    grid-area: add-user;
+    max-width: 380px;
+    padding: 1rem;
+    margin: 2rem auto;
+}
+
+#add-user label {
+    display: block;
+    padding: 3px;
+}
+
+#add-user input {
+    display: block;
+    border: none;
+    border-radius: 5px;
+}
+
+#add-user input:hover {
+    background-color: rgb(240, 229, 229);
+    transition: .2s;
+}
+
+#stock-add {
+    grid-area: stock-add;
+    /* margin-top: 55%;
+    margin-left: 15%; */
+    max-width: 380px;
+    padding: 1rem;
+    margin: 2rem auto;
+}
+
+#stock-add label {
+    display: block;
+    padding: 3px;
+}
+
+#stock-add input {
+    display: block;
+    border: none;
+    border-radius: 5px;
+}
+
+#stock-add input:hover {
+    background-color: rgb(240, 229, 229);
+    transition: .2s;
+}
+
+#user-field {
+    border: solid purple 1px;
+    grid-area: user-field;
+    height: 75%;
+    margin-left: 5%;
+}
+
+table {
+    border-collapse: collapse;
+    box-shadow: 0 5px 10px rgb(240, 229, 229);
+    background-color: white;
+    text-align: left;
+    overflow: hidden;
+}
+
+thead {
+    box-shadow: 0 5px 10px rgb(240, 229, 229);
+}
+
+th {
+    padding: 1rem 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+td {
+    padding: 1rem 2rem;
+    font-size: 0.68rem;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(224, 208, 208);
+}
+
+input {
+    height: 30px;
+    width: 350px
+}
+
+button {
+    border: 0;
+    background-color: rgb(180, 148, 202);
+    padding: 0.5rem;
+    color: #ffffff;
+    margin-top: 1rem;
+    width: auto;
+    text-transform: uppercase;
+    border-radius: 5px;
+}
+
+button:hover {
+    transition: .25s;
+    background-color: rgb(89, 44, 121);
+    cursor: pointer;
+}

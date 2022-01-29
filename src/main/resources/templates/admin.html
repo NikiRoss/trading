@@ -2,68 +2,83 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <title>Admin</title>
 </head>
 <body>
-<h1 th:text="'Hi, Admin!' + ${admin.username}"></h1>
 
-<table class="table table-bordered table-striped" id="myTable">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Surname</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Account ID</th>
-    </tr>
-    </thead>
-    <tbody>
-    <div th:each="user : ${userlist}">
-        <tr class="clickable-row">
-                <td th:text="${user.userId}" ></td>
-                <td th:text="${user.firstName}" ></td>
-                <td th:text="${user.surname}"></td>
-                <td th:text="${user.email}"></td>
-            <td><a th:href="@{'/admin/disable/' + ${user.userId}} ">Enable/Disable</a></td>
-        </tr>
+<div class="display-container">
+    <div class="grid-container">
+
+        <div id="add-user">
+            <h2>Add admin</h2>
+            <form action="#" class="add-user-form" th:action="@{/admin/newadmin}" th:object="${newAdmin}" method="post">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" th:field="*{firstName}">
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" th:field="*{surname}">
+                <label for="email">Email</label>
+                <input type="text" id="email" th:field="*{email}">
+                <label for="password">Password</label>
+                <input type="text" id="password" th:field="*{password}">
+                <label for="username">Username</label>
+                <input type="text" id="username" th:field="*{username}">
+                <button class="button">Submit</button>
+            </form>
+        </div>
+
+        <br>
+        <br>
+
+
+        <div id="stock-add">
+            <h2>Add a new stock</h2>
+            <form action="#" th:action="@{/admin/addstock}" th:object="${stocks}" method="post">
+                <label for="company">Company</label>
+                <input type="text" id="company" th:field="*{company}">
+                <label for="ticker">Ticker</label>
+                <input type="text" id="ticker" th:field="*{ticker}">
+                <label for="share-price">Share Price</label>
+                <input type="text" id="share-price" th:field="*{sharePrice}">
+                <label for="volume">Volume</label>
+                <input type="text" id="volume" th:field="*{volume}">
+                <button class="button">Submit</button>
+            </form>
+        </div>
+
+
+        <div id="user-field">
+            <table>
+                <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>First Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Account Id</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="user : ${userlist}">
+                    <tr>
+                        <td th:text="${user.userId}">01</td>
+                        <td th:text="${user.firstName}">Niki</td>
+                        <td th:text="${user.surname}">Ross</td>
+                        <td th:text="${user.email}">Email</td>
+                        <td>01</td>
+                        <td><a th:href="@{'/admin/disable/' + ${user.userId}} ">Enable/Disable</a></td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-    </tbody>
-</table>
 
-<h2>Register a new admin</h2>
-
-<form action="#" th:action="@{/admin/newadmin}" th:object="${newAdmin}" method="post">
-    <label for="name">First Name</label>
-        <input type="text" th:field="*{firstName}" id="name" placeholder="first name"><br/>
-    <label for="name">Surname</label>
-        <input type="text" th:field="*{surname}" id="surname" placeholder="surname"><br/>
-    <label for="email">Email</label>
-        <input type="text" th:field="*{email}" id="email" placeholder="email"><br/>
-    <label for="name">Password</label>
-        <input type="text" th:field="*{password}" id="password" placeholder="password"><br/>
-    <label for="name">Username</label>
-        <input type="text" th:field="*{username}" id="username" placeholder="create a username"><br/>
-            <input type="submit" value="Add Admin">
-</form>
-
-<br>
-<br>
-
-<h2>Register a new stock</h2>
-
-<form action="#" th:action="@{/admin/addstock}" th:object="${stocks}" method="post">
-    <label for="company">Company</label>
-        <input type="text" th:field="*{company}" id="company" placeholder="company"><br/>
-    <label for="ticker">Ticker</label>
-        <input type="text" th:field="*{ticker}" id="ticker" placeholder="ticker"><br/>
-    <label for="sharePrice">Share Price</label>
-        <input type="text" th:field="*{sharePrice}" id="sharePrice" placeholder="share price"><br/>
-    <label for="volume">Volume</label>
-        <input type="text" th:field="*{volume}" id="volume" placeholder="volume"><br/>
-
-    <input type="submit" value="Add Stock">
-</form>
+</div>
 
 </body>
 </html>
+

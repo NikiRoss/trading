@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserDetailsService {
             return null;
         }
         if(userDao.findByUsername(user.getUsername())!=null){
-            throw new UserAlreadyExistException("User " + user.getUsername() + " already exists");
+            throw new UserAlreadyExistException("User " + user.getUsername() + " already exists, please try a different username");
         }
         Account account = null;
         if(!role.equals("ROLE_ADMIN")){
