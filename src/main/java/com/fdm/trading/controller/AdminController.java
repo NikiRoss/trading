@@ -74,7 +74,7 @@ public class AdminController {
             listner.sendExceptionEmail(nfe, LocalDateTime.now());
             return "admin";
         }
-        return "admin";
+        return "redirect:/admin/users";
     }
 
     @PostMapping(value = "/addstock")
@@ -88,7 +88,7 @@ public class AdminController {
         model.addAttribute("admin", admin);
         model.addAttribute("newAdmin", newAdmin);
         stockService.createNewStock2(stocks);
-        return "admin";
+        return "redirect:/admin/users";
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)

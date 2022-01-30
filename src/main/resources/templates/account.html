@@ -30,12 +30,14 @@
 
     <div id="current-cards">
         <h3>Stored Cards</h3>
-        <select name="stored-cards" id="stored-cards">
-            <option value="card-1">256666111333222</option>
-            <option value="card-2">256666111333223</option>
-            <option value="card-3">256666111333224</option>
-            <option value="card-4">256666111333225</option>
+        <form th:action="@{'user/setActiveCard'}" method="POST">
+        <select name="stored-cards" id="stored-cards" th:object="${dbUser}">
+            <div th:each="cCard : ${cardList}" >
+            <option th:value="*{activeCard}" th:text="${'**** **** **** ' + #strings.substring(cCard.cardNo, #strings.length(cCard.cardNo) -4, #strings.length(cCard.cardNo))}"></option>
+            </div>
+            <input type="submit">Submit</input>
         </select>
+        </form>
     </div>
 
     <div id="add-card">

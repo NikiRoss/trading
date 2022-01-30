@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,7 +25,7 @@ public class CardServiceImpl {
     @Autowired
     private UserDao userDao;
 
-    public Set<CreditCard> registerCreditCard(String cardNo, String expiry, int cvv, String name, User user){
+    public List<CreditCard> registerCreditCard(String cardNo, String expiry, int cvv, String name, User user){
         CreditCard creditCard = new CreditCard();
         String shortenedCardNo = cardNo.substring(0, cardNo.length() - 4);
         String lastFour = cardNo.substring(cardNo.length() - 4);
@@ -31,13 +33,13 @@ public class CardServiceImpl {
         creditCard.setExpiry(expiry);
         creditCard.setCvv(cvv);
         creditCard.setNameOnCard(name);
+        creditCard.setUser(user);
         cardDao.save(creditCard);
-        Set<CreditCard> creditCards = user.getCreditCard() != null ? user.getCreditCard() : new HashSet<>();
+        List<CreditCard> creditCards = user.getCreditCard() != null ? user.getCreditCard() : new ArrayList<>();
         creditCards.add(creditCard);
         user.setCreditCard(creditCards);
-        Set<CreditCard> cards = new HashSet<>();
-        cards.add(creditCard);
-        return cards;
+        userDao.save(user);
+        return creditCards;
     }
 
     public CreditCard findCardByNameOnCard(String name){
@@ -46,6 +48,16 @@ public class CardServiceImpl {
 
     public CreditCard findCardByLongNumber(String number){
         return cardDao.findByCardNo(number);
+    }
+
+    public List<CreditCard> getListOfCardsForUser(User user) {
+        return cardDao.findByUser(user);
+    }
+
+    public void setActiveCard(User user, CreditCard card) {
+        String lastFour = card.getCardNo().substring(card.getCardNo().length()-4, card.getCardNo().length());
+        user.setActiveCard(lastFour);
+        userDao.save(user);
     }
 
 

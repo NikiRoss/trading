@@ -202,16 +202,14 @@ public class TransactionServiceImpl implements TransactionService{
 
     public boolean validateCardForTransaction(String enteredLastFour, String username) throws Exception {
         User user = userService.findByUsername(username);
-        Set<CreditCard> cards = user.getCreditCard();
+        String activeCard = user.getActiveCard();
 
         boolean isValid = false;
-        for(CreditCard card: cards){
-            String userLastFour = card.getCardNo().substring(card.getCardNo().length() - 4);
-            if (userLastFour.equals(enteredLastFour)) {
-                isValid = true;
 
-            }
+        if(enteredLastFour.equals(activeCard)) {
+            isValid = true;
         }
+
         if(!isValid ) {
             throw new Exception("Last four digits not valid!");
         }

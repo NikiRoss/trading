@@ -1,8 +1,5 @@
 package com.fdm.trading.domain;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 
 @Entity
@@ -25,7 +22,7 @@ public class CreditCard {
     private String nameOnCard;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public long getCardId() {
@@ -68,7 +65,6 @@ public class CreditCard {
         this.nameOnCard = nameOnCard;
     }
 
-    @ManyToOne
     public User getUser() {
         return user;
     }

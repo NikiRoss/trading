@@ -14,7 +14,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEnti
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RunWith(SpringRunner.class)
@@ -65,7 +67,7 @@ public class CreditCardTest {
         card.setNameOnCard("name");
         card.setExpiry("12/04/2022");
         card.setCvv(123);
-        Set<CreditCard> cards = new HashSet<>();
+        List<CreditCard> cards = new ArrayList<>();
         cards.add(card);
         cardDao.save(card);
         user.setCreditCard(cards);

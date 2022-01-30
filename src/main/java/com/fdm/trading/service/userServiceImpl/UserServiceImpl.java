@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserDetailsService {
 
 
     public User createNewUser(BindingResult result, User user, String role, CreditCard card) throws NameFormatException, UnsecurePasswordException, UserAlreadyExistException {
-        Set<CreditCard> cards = new HashSet<>();
+        List<CreditCard> cards = new ArrayList<>();
         if(hasErrors(result, user)) {
             return null;
         }

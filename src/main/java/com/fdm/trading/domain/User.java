@@ -1,24 +1,19 @@
 package com.fdm.trading.domain;
 
 import com.fdm.trading.security.Authorities;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 @Scope("session")
 @Entity
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,9 +48,11 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="user")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private Set<CreditCard> creditCard;
+    @Column(name = "active_card")
+    private String activeCard;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
+    private List<CreditCard> creditCard = new ArrayList<>();
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
     private Set<Authorities> userAuthorities = new HashSet<>();
@@ -162,12 +159,21 @@ public class User implements UserDetails {
         this.userAuthorities = userAuthorities;
     }
 
-    public Set<CreditCard> getCreditCard() {
+    public List<CreditCard> getCreditCard() {
         return creditCard;
     }
 
-    public void setCreditCard(Set<CreditCard> creditCard) {
+    public void setCreditCard(List<CreditCard> creditCard) {
         this.creditCard = creditCard;
+    }
+
+
+    public String getActiveCard() {
+        return activeCard;
+    }
+
+    public void setActiveCard(String activeCard) {
+        this.activeCard = activeCard;
     }
 
     @Override
