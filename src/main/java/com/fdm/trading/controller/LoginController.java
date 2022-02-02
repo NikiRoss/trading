@@ -38,11 +38,6 @@ public class LoginController {
     CardServiceImpl cardService;
 
 
-    /*@GetMapping("/index")
-    public String home() {
-        return "index";
-    }*/
-
     @GetMapping("/")
     public String root() {
         return "redirect:/account";

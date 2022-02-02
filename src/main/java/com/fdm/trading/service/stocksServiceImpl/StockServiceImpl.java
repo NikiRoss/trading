@@ -174,7 +174,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         return sleDao.findByAccountIdAndStockId(accountId, stockId);
     }
 
-    @Scheduled(cron = "0 36 22 * * *")
+    @Scheduled(fixedRate = 70500)
     private synchronized void setOpeningValues() {
         System.out.println(">>> Setting the opening stock prices!!!");
         List<Stocks>  stocks = this.findAll();
@@ -185,7 +185,7 @@ public class StockServiceImpl implements StocksService, Runnable{
         }
     }
 
-    @Scheduled(cron = "0 35 22 * * *")
+    @Scheduled(fixedRate = 70000)
     public synchronized void setClosingValues() {
         System.out.println(">>> Setting the closing stock prices!!!");
         List<Stocks>  stocks = this.findAll();

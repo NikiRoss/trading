@@ -62,22 +62,4 @@ public class Account {
         this.stocksList = stocksList;
     }
 
-   /* public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }*/
-/*
-    @Override
-    public String toString() {
-        return "Account{" +
-                "accountId=" + accountId +
-                ", accountNumber='" + accountNumber + '\'' +
-                ", accountBalance=" + accountBalance +
-                ", stocksList=" + stocksList +
-                ", transactionList=" + transactionList +
-                '}';
-    }*/
 }

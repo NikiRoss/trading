@@ -8,7 +8,6 @@ import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -52,6 +51,5 @@ public class CardController {
         modelMap.put("dbUser", dbUser);
         return new ModelAndView("redirect:/", modelMap);
     }
-
 
 }

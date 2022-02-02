@@ -6,24 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Account</title>
-    <link rel="stylesheet" th:href="@{css/account.css}" />
+    <link rel="stylesheet" th:href="@{/css/account.css}" />
 </head>
 
 <body>
 
 <!-- NAVBAR START -->
 <div class="navbar">
-    <div class="nav-container flex">
-        <nav>
-            <ul>
-                <li><a class="nav-link" th:href="@{/stocks}">Stocks</a></li>
-                <li><a class="nav-link" th:href="@{/transactions}">Transactions</a></li>
-                <li><a class="nav-link" th:href="@{/holdings}">Holdings</a></li>
-                <li><a class="nav-link" th:href="@{/logout}">Logout</a></li>
-                <li><a th:href="@{/account}">Home</a></li>
-            </ul>
-        </nav>
-    </div>
+    <navbar>
+        <ul class="nav-list">
+            <li class="nav-item"><a th:href="@{/stocks}">Stocks</a></li>
+            <li class="nav-item"><a th:href="@{/transactions}">Transactions</a></li>
+            <li class="nav-item"><a th:href="@{/holdings}">Holdings</a></li>
+            <li class="nav-item"><a th:href="@{/logout}">Logout</a></li>
+            <li class="nav-item"><a th:href="@{/account}">Account</a></li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('ROLE_ADMIN')" class="admin-link" th:href="@{/admin/users}">Admin</a>
+            </li>
+        </ul>
+    </navbar>
 </div>
 <!-- NAVBAR END -->
 <h1>Successfully registered your card!</h1>

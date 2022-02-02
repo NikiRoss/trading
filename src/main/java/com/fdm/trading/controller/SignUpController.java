@@ -90,11 +90,9 @@ public class SignUpController {
     public String verificationSuccess(@PathVariable String token){
         VerificationToken dbToken = tokenService.findByToken(token);
         User user = dbToken.getUser();
-        //Remove if doesn't work
         User dbUser = userService.findByUsername(user.getUsername());
         dbUser.setEnabled(true);
 
-        //dbUser.setEnabled(true);
         userService.save(dbUser);
         return "successRegister";
     }
