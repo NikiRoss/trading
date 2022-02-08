@@ -29,15 +29,24 @@
 <div class="display-container">
 
     <div id="current-cards">
-        <h3>Stored Cards</h3>
-        <form th:action="@{'user/setActiveCard'}" method="POST">
-        <select name="stored-cards" id="stored-cards" th:object="${dbUser}">
-            <div th:each="cCard : ${cardList}" >
-            <option th:value="*{activeCard}" th:text="${'**** **** **** ' + #strings.substring(cCard.cardNo, #strings.length(cCard.cardNo) -4, #strings.length(cCard.cardNo))}"></option>
+        <table>
+            <thead>
+            <tr>
+                <th>Card Number</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <div th:each="creditCard : ${cardList}">
+                <tr>
+                    <td th:text="${'*** *** **** ' + #strings.substring(creditCard.cardNo, #strings.length(creditCard.cardNo) -4, #strings.length(creditCard.cardNo))}"></td>
+                    <td th:text="${creditCard.enabled} ? 'ENABLED' : 'DISABLED'"></td>
+                    <td><a th:href="@{'/user/toggle/card/' + ${creditCard.cardId}} ">Enable/Disable</a></td>
+                </tr>
             </div>
-            <input type="submit">Submit</input>
-        </select>
-        </form>
+            </tbody>
+        </table>
     </div>
 
     <div id="add-card">

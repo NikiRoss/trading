@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -79,7 +80,9 @@ public class StocksController {
         model.addAttribute("transaction", transaction);
         model.addAttribute("account", account);
         model.addAttribute("var", "purchased");
-        return "purchaseSuccess";
+        CardValidationData cardValidationData = new CardValidationData();
+        model.addAttribute("cardValidationData", cardValidationData);
+        return "confirm.html";
     }
 
 
@@ -110,12 +113,28 @@ public class StocksController {
     }
 
     @PostMapping(value = "/stocks/purchase/validate")
-    public String validateTransaction(@ModelAttribute Transaction transaction, @ModelAttribute Stocks stocks, @ModelAttribute("cardValidationData") CardValidationData cardValidationData, Principal principal) {
+    public String validateTransaction(@ModelAttribute Transaction trans1, Model model, @ModelAttribute Stocks stocks, @ModelAttribute("cardValidationData") CardValidationData cardValidationData, Principal principal) {
+        Account account = getAccountFromPrincipal(principal);
+        List<Transaction> transactions = transactionService.listOfAccountPurchases(account.getAccountId());
+
+        Collections.sort(transactions, new Comparator<Transaction>() {
+            public int compare(Transaction m1, Transaction m2) {
+                return m2.getDate().compareTo(m1.getDate());
+            }
+        });
+        Transaction transaction = transactions.get(0);
+        model.addAttribute("stocks", transaction.getStocks());
+        model.addAttribute("transaction", transaction);
+        model.addAttribute("account", account);
+        model.addAttribute("var", "purchased");
+        model.addAttribute("cardValidationData", cardValidationData);
 
         try {
             transactionService.validateCardForTransaction(cardValidationData.getLastFourDigitsOfCard(), principal.getName());
         } catch (Exception e) {
             logger.warn(e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            return "error";
         }
         return "purchaseSuccess";
     }

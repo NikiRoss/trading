@@ -48,9 +48,6 @@ public class User implements UserDetails, Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "active_card")
-    private String activeCard;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="user")
     private List<CreditCard> creditCard = new ArrayList<>();
 
@@ -167,14 +164,6 @@ public class User implements UserDetails, Serializable {
         this.creditCard = creditCard;
     }
 
-
-    public String getActiveCard() {
-        return activeCard;
-    }
-
-    public void setActiveCard(String activeCard) {
-        this.activeCard = activeCard;
-    }
 
     @Override
     public String toString() {

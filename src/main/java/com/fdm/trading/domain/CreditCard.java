@@ -25,6 +25,9 @@ public class CreditCard {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
     public long getCardId() {
         return cardId;
     }
@@ -71,6 +74,14 @@ public class CreditCard {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

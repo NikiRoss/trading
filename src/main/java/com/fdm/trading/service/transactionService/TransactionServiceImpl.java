@@ -5,6 +5,7 @@ import com.fdm.trading.dao.TransactionDao;
 import com.fdm.trading.domain.*;
 import com.fdm.trading.exceptions.InsufficientFundsException;
 import com.fdm.trading.exceptions.LimitedStockException;
+import com.fdm.trading.exceptions.UnvalidatedCardException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
 import com.fdm.trading.service.userServiceImpl.UserServiceImpl;
@@ -200,20 +201,20 @@ public class TransactionServiceImpl implements TransactionService{
         return latestTransactions;
     }
 
-    public boolean validateCardForTransaction(String enteredLastFour, String username) throws Exception {
+    public boolean validateCardForTransaction(String enteredLastFour, String username) throws UnvalidatedCardException {
         User user = userService.findByUsername(username);
-        String activeCard = user.getActiveCard();
-
+        List<CreditCard> cards = user.getCreditCard();
         boolean isValid = false;
-
-        if(enteredLastFour.equals(activeCard)) {
-            isValid = true;
+        for (CreditCard card: cards) {
+            if (enteredLastFour.equals(card.getCardNo().substring(card.getCardNo().length() - 4))) {
+                isValid = true;
+                break;
+            }
         }
-
-        if(!isValid ) {
-            throw new Exception("Last four digits not valid!");
+        if(!isValid) {
+            throw new UnvalidatedCardException("Last four digits not valid!");
         }
-        return isValid;
+        return true;
     }
 
 

@@ -54,10 +54,14 @@ public class CardServiceImpl {
         return cardDao.findByUser(user);
     }
 
-    public void setActiveCard(User user, CreditCard card) {
-        String lastFour = card.getCardNo().substring(card.getCardNo().length()-4, card.getCardNo().length());
-        user.setActiveCard(lastFour);
-        userDao.save(user);
+    public CreditCard findByCardId(long cardId) {
+        return cardDao.findByCardId(cardId);
+    }
+
+    public void toggleCardStatus(long cardId) {
+        CreditCard creditCard = findByCardId(cardId);
+        creditCard.setEnabled(!creditCard.isEnabled());
+        cardDao.save(creditCard);
     }
 
 
