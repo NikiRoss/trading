@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.w3c.dom.Document;
 
 import java.io.File;
@@ -33,22 +34,24 @@ public class ExportController {
     @Autowired
     private StockServiceImpl stockService;
 
-    @GetMapping("/transData")
-    public ResponseEntity<Resource> downloadTransData(){
-        return exportData("transaction");
+    @GetMapping("/transData/{filetype}")
+    public ResponseEntity<Resource> downloadTransData(@PathVariable String filetype){
+        return exportData("transaction", filetype);
     }
 
-    @GetMapping("/transData/Json")
-    public ResponseEntity<Resource> downloadTransDataJson(){
-        return exportDataJson("transaction");
+    @GetMapping("/stocksData/{filetype}")
+    public ResponseEntity<Resource> downloadStocksData(@PathVariable String filetype){
+        return exportData("stocks", filetype);
     }
 
-    @GetMapping("/stocksData")
-    public ResponseEntity<Resource> downloadStocksData(){
-        return exportData("stocks");
+    public ResponseEntity<Resource> exportData(String type, String filetype){
+        if("xml".equals(filetype)) {
+            return exportDataXML(type);
+        }
+        return exportDataJson(type);
     }
 
-    public ResponseEntity<Resource> exportData(String type){
+    public ResponseEntity<Resource> exportDataXML(String type){
         DataConverter dc;
         Document doc = null;
         if(type.equals("transaction")){
@@ -87,9 +90,8 @@ public class ExportController {
             List<Stocks> stocks = stockService.findAll();
             doc = (JsonElement) dc.convert(stocks);
         }
-        String docString = doc.getAsString();
-        String filename = type + "_" + String.valueOf(System.currentTimeMillis()) + ".xml";
-        new JsonWriter().writeData(docString, filename);
+        String filename = type + "_" + System.currentTimeMillis() + ".json";
+        new JsonWriter().writeData(doc.toString(), filename);
         File file = new File(filename);
         Path path = Paths.get(file.getAbsolutePath());
         ByteArrayResource resource = null;

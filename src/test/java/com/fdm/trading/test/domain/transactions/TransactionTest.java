@@ -4,6 +4,7 @@ import com.fdm.trading.domain.Account;
 import com.fdm.trading.domain.Stocks;
 import com.fdm.trading.domain.Transaction;
 import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.InsufficientHoldingsForSaleException;
 import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountService;
 import com.fdm.trading.service.stocksServiceImpl.StocksService;
@@ -35,14 +36,14 @@ public class TransactionTest {
 
 
     @Test(expected = LimitedStockException.class)
-    public void fail_A_Transaction_If_No_Stocks_Available() throws LimitedStockException, InsufficientFundsException {
+    public void fail_A_Transaction_If_No_Stocks_Available() throws Exception {
         Stocks stocks = stocksService.findByStockId(6);
         stocks.setVolume(10);
         transService.createPurchaseTransaction(6, 2, 90);
     }
 
     @Test(expected = InsufficientFundsException.class)
-    public void fail_A_Transaction_If_Not_Enough_Funds_Available() throws LimitedStockException, InsufficientFundsException {
+    public void fail_A_Transaction_If_Not_Enough_Funds_Available() throws Exception {
         Account account = accountService.findByAccountId(3);
         account.setAccountBalance(ZERO);
         transService.createPurchaseTransaction(8, 41, 3);
@@ -50,14 +51,14 @@ public class TransactionTest {
     }
 
     @Test
-    public void create_A_Purchase_Transaction() throws LimitedStockException, InsufficientFundsException {
+    public void create_A_Purchase_Transaction() throws Exception {
         transService.createPurchaseTransaction(6, 2, 9);
         List<Transaction> transactions = transService.listOfHeldStocks(6, 2);
         assertTrue(transactions.get(ZERO).getVolume() == 9);
     }
 
     @Test
-    public void create_A_sale_Transaction(){
+    public void create_A_sale_Transaction() throws Exception {
         transService.createSaleTransaction(7, 2,47);
         List<Transaction> transactions = transService.getLatestTransaction();
         assertTrue(transactions.get(ZERO).getVolume() == 9);

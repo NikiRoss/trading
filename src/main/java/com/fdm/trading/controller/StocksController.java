@@ -1,7 +1,9 @@
 package com.fdm.trading.controller;
 
 import com.fdm.trading.domain.*;
+import com.fdm.trading.events.RegistrationListener;
 import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.InsufficientHoldingsForSaleException;
 import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
 import com.fdm.trading.service.stocksServiceImpl.StockServiceImpl;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -35,6 +38,9 @@ public class StocksController {
 
     @Autowired
     AccountServiceImpl accountService;
+
+    @Autowired
+    private RegistrationListener listner;
 
     private Account getAccountFromPrincipal(Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
@@ -74,7 +80,15 @@ public class StocksController {
     @RequestMapping(value = "/stocks/purchase/{id}", method = RequestMethod.POST)
     public String postPurchase(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal) throws LimitedStockException, InsufficientFundsException {
         Account account = getAccountFromPrincipal(principal);
-        transactionService.createPurchaseTransaction(id, (int) account.getAccountId(), transaction.getVolume());
+        try {
+            transactionService.createPurchaseTransaction(id, (int) account.getAccountId(), transaction.getVolume());
+        } catch (Exception e) {
+
+            listner.sendExceptionEmail(e, LocalDateTime.now());
+            logger.warn(e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("stocks", stocks);
         model.addAttribute("transaction", transaction);
@@ -101,7 +115,16 @@ public class StocksController {
     @RequestMapping(value = "/stocks/sale/{id}", method = RequestMethod.POST)
     public String postSale(@PathVariable int id, Model model, @ModelAttribute Transaction transaction, Principal principal){
         Account account = getAccountFromPrincipal(principal);
-        transactionService.createSaleTransaction(id, (int) account.getAccountId(), transaction.getVolume());
+        try {
+            transactionService.createSaleTransaction(id, (int) account.getAccountId(), transaction.getVolume());
+        } catch (Exception e) {
+
+            listner.sendExceptionEmail(e, LocalDateTime.now());
+            logger.warn(e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
+
         Stocks stocks = stockService.findByStockId(id);
         model.addAttribute("messageEnabled", true);
         model.addAttribute("message", transactionService.getMessage());
@@ -132,6 +155,8 @@ public class StocksController {
         try {
             transactionService.validateCardForTransaction(cardValidationData.getLastFourDigitsOfCard(), principal.getName());
         } catch (Exception e) {
+
+            listner.sendExceptionEmail(e, LocalDateTime.now());
             logger.warn(e.getMessage());
             model.addAttribute("message", e.getMessage());
             return "error";

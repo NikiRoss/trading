@@ -4,6 +4,7 @@ import com.fdm.trading.dao.StockListEntityDao;
 import com.fdm.trading.dao.TransactionDao;
 import com.fdm.trading.domain.*;
 import com.fdm.trading.exceptions.InsufficientFundsException;
+import com.fdm.trading.exceptions.InsufficientHoldingsForSaleException;
 import com.fdm.trading.exceptions.LimitedStockException;
 import com.fdm.trading.exceptions.UnvalidatedCardException;
 import com.fdm.trading.service.accountServiceImpl.AccountServiceImpl;
@@ -64,6 +65,13 @@ public class TransactionServiceImpl implements TransactionService{
         return purchaseFilter;
     }
 
+    public void validateNegNumbers(long volume) throws Exception {
+        if (volume < 0){
+            throw new Exception("Number cannot be less than 0");
+        }
+
+    }
+
     public List<Transaction> listOfAccountSales(long accountId){
         List<Transaction> sales = transDao.findByAccount_AccountId(accountId);
         List<Transaction> purchaseFilter = new ArrayList<>();
@@ -78,7 +86,8 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     @Transactional
-    public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) throws InsufficientFundsException, LimitedStockException {
+    public Transaction createPurchaseTransaction(int stockId, int accountId, long volume) throws Exception {
+        validateNegNumbers(volume);
         Stocks stocks = stockService.findByStockId(stockId);
         Account account = accountService.findByAccountId(accountId);
         Transaction transaction = new Transaction();
@@ -125,7 +134,8 @@ public class TransactionServiceImpl implements TransactionService{
         return transaction;
     }
 
-    public Transaction createSaleTransaction(int stockId, int accountId, long volume){
+    public Transaction createSaleTransaction(int stockId, int accountId, long volume) throws Exception {
+        validateNegNumbers(volume);
         Stocks stocks = stockService.findByStockId(stockId);
         Account account = accountService.findByAccountId(accountId);
         Date date = new Date();
@@ -133,13 +143,10 @@ public class TransactionServiceImpl implements TransactionService{
         if (volume <= stockListEntity.getVolume()) {
             if (volume == stockListEntity.getVolume()) {
                 stockListEntityDao.delete(stockListEntity);
-            } if (volume < stockListEntity.getVolume() && volume > 0) {
+            } else if (volume < stockListEntity.getVolume() && volume > 0) {
                 stockListEntity.setVolume(stockListEntity.getVolume() - volume);
                 stockListEntityDao.save(stockListEntity);
-            } if (volume > stockListEntity.getVolume()) {
-                System.out.println("You do not own this amount of stock to sell!!!");
-            } else {
-                System.out.println("You do not hold " + volume + " units of this stock, please revise your sale");
+            } else if(volume > stockListEntity.getVolume()) {
             }
 
             Transaction transaction = new Transaction();
@@ -162,8 +169,7 @@ public class TransactionServiceImpl implements TransactionService{
             message = "Sale successful!!";
             return transaction;
         } else {
-            message = "You do not own this amount of stock to sell!!!";
-            return new Transaction();
+            throw new InsufficientHoldingsForSaleException("You do not hold " + volume + " units of this stock, please revise your sale");
         }
     }
 
